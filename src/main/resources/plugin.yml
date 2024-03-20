@@ -1,0 +1,4 @@
+name: HorsePoop
+version: '${project.version}'
+main: mintychochip.mintychochip.horsepoop.HorsePoop
+api-version: '1.20'
