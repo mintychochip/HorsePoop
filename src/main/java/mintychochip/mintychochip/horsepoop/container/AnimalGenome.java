@@ -7,8 +7,8 @@ import mintychochip.mintychochip.horsepoop.HorseConfig;
 import mintychochip.mintychochip.horsepoop.UnitConversions;
 import mintychochip.mintychochip.horsepoop.container.attributes.GeneticAttribute;
 import mintychochip.mintychochip.horsepoop.factories.GeneFactory;
-import org.bukkit.Bukkit;
 import org.bukkit.Particle;
+import org.bukkit.entity.EntityType;
 
 import java.util.*;
 
@@ -17,6 +17,7 @@ public class AnimalGenome {
         MALE,
         FEMALE
     }
+
     @SerializedName("genes")
     private List<Gene> genes = new ArrayList<>();
     @SerializedName("gender")
@@ -26,48 +27,54 @@ public class AnimalGenome {
     @SerializedName("mutations")
     private int mutations;
 
-    private AnimalGenome(GeneFactory geneFactory, int mutations) {
+    private AnimalGenome(GeneFactory geneFactory, EntityType entityType, int mutations) {
         Random random = Genesis.RANDOM;
         this.gender = random.nextBoolean() ? Gender.MALE : Gender.FEMALE;
         this.mutations = mutations;
         HorseConfig horseConfig = geneFactory.getHorseConfig();
-        List<Trait> enabledAttributes = horseConfig.getEnabledAttributes();
+        List<Trait> enabledAttributes = horseConfig.getEntityTypeTraitMap().get(entityType);
         for (Trait enabledAttribute : enabledAttributes) {
-             if (horseConfig.getConserved(enabledAttribute)) {
-                genes.add(geneFactory.createInstance(enabledAttribute));
+            if (horseConfig.getConserved(enabledAttribute, entityType)) {
+                genes.add(geneFactory.createInstance(enabledAttribute, entityType));
             }
         }
         for (int i = 0; i < this.mutations; i++) {
             int index = random.nextInt(0, enabledAttributes.size());
             Trait value = enabledAttributes.get(index);
-            if(!isInGenes(value)) {
-                genes.add(geneFactory.createInstance(value));
+            if (!isInGenes(value)) {
+                genes.add(geneFactory.createInstance(value, entityType));
             }
         }
-        Bukkit.broadcastMessage(genes.toString());
+    }
+    public Map<Trait, Gene> getAttributes() {
+        Map<Trait, Gene> attributes = new HashMap<>();
+        for (Gene gene : genes) {
+            attributes.put(gene.getTrait(),gene);
+        }
+        return attributes;
     }
     private boolean isInGenes(Trait trait) {
         for (Gene gene : genes) {
-            if(trait == gene.getTrait()) {
+            if (trait == gene.getTrait()) {
                 return true;
             }
         }
         return false;
     }
 
-    private AnimalGenome(GeneFactory geneFactory, List<Gene> genes, int mutations) {
+    private AnimalGenome(GeneFactory geneFactory, EntityType entityType, List<Gene> genes, int mutations) {
         Random random = Genesis.RANDOM;
         this.gender = random.nextBoolean() ? Gender.MALE : Gender.FEMALE;
         this.mutations = mutations;
         this.genes = genes;
     }
 
-    public static AnimalGenome createInstance(GeneFactory geneFactory, int mutations) {
-        return new AnimalGenome(geneFactory, mutations);
+    public static AnimalGenome createInstance(GeneFactory geneFactory, EntityType entityType, int mutations) {
+        return new AnimalGenome(geneFactory, entityType, mutations);
     }
 
-    public static AnimalGenome createInstance(GeneFactory geneFactory, List<Gene> genes, int mutations) {
-        return new AnimalGenome(geneFactory, genes, mutations);
+    public static AnimalGenome createInstance(GeneFactory geneFactory, EntityType entityType, List<Gene> genes, int mutations) {
+        return new AnimalGenome(geneFactory, entityType, genes, mutations);
     }
 
     public List<Gene> getGenes() {
@@ -95,9 +102,10 @@ public class AnimalGenome {
         }
         return new Gson().fromJson(this.getGeneFromTrait(geneticAttribute).getValue(), double.class);
     }
+
     public Gene getGeneFromTrait(Trait trait) {
         for (Gene gene : genes) {
-            if(trait == gene.getTrait()) {
+            if (trait == gene.getTrait()) {
                 return gene;
             }
         }

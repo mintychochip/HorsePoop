@@ -5,7 +5,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import mintychochip.mintychochip.horsepoop.container.attributes.GeneticAttribute;
 import mintychochip.mintychochip.horsepoop.container.attributes.SheepAttribute;
-import org.bukkit.Bukkit;
 
 import java.io.IOException;
 

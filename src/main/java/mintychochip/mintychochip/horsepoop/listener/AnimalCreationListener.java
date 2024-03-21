@@ -2,16 +2,21 @@ package mintychochip.mintychochip.horsepoop.listener;
 
 import mintychochip.genesis.Genesis;
 import mintychochip.mintychochip.horsepoop.HorsePoop;
-import mintychochip.mintychochip.horsepoop.api.AnimalCreationEvent;
+import mintychochip.mintychochip.horsepoop.api.AnimalSetGenomeFields;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import mintychochip.mintychochip.horsepoop.container.Gene;
 import mintychochip.mintychochip.horsepoop.container.MendelianGene;
 import mintychochip.mintychochip.horsepoop.container.attributes.GeneticAttribute;
 import mintychochip.mintychochip.horsepoop.container.enums.MendelianType;
+import mintychochip.mintychochip.horsepoop.factories.DyeColorFactory;
 import mintychochip.mintychochip.horsepoop.horse.HorseLifeTimeManager;
 import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.AbstractHorse;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Sheep;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -26,27 +31,33 @@ public class AnimalCreationListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    private void setFieldsOnAnimalCreation(final AnimalCreationEvent event) { //mutable, could be changed to tameables later
+    private void setFieldsOnAnimalCreation(final AnimalSetGenomeFields event) { //mutable, could be changed to tameables later
 
-        AbstractHorse abstractHorse = event.getAbstractHorse();
+        LivingEntity livingEntity = event.getLivingEntity();
         AnimalGenome genome = event.getGenome();
-        abstractHorse.setOwner(Bukkit.getPlayer("chinaisfashion"));
-        horseLifeTimeManager.addTameable(abstractHorse,genome);
-        PersistentDataContainer persistentDataContainer = abstractHorse.getPersistentDataContainer();
-        persistentDataContainer.set(Genesis.getKey("horse"), PersistentDataType.STRING, HorsePoop.GSON.toJson(genome));
-        abstractHorse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(genome.getNumericAttribute(GeneticAttribute.SPEED));
-        String string = abstractHorse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue() + "";
-        abstractHorse.getAttribute(Attribute.HORSE_JUMP_STRENGTH).setBaseValue(genome.getNumericAttribute(GeneticAttribute.JUMP_STRENGTH));
+        PersistentDataContainer persistentDataContainer = livingEntity.getPersistentDataContainer();
+        persistentDataContainer.set(HorsePoop.GENOME_KEY, PersistentDataType.STRING, HorsePoop.GSON.toJson(genome));
+        horseLifeTimeManager.addlivingEntity(livingEntity, genome);
+        if (livingEntity instanceof AbstractHorse abstractHorse) {
+            abstractHorse.setOwner(Bukkit.getPlayer("chinaisfashion"));
+            horseLifeTimeManager.addlivingEntity(abstractHorse, genome);
+            abstractHorse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(genome.getNumericAttribute(GeneticAttribute.SPEED));
+            String string = abstractHorse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue() + "";
+            abstractHorse.getAttribute(Attribute.HORSE_JUMP_STRENGTH).setBaseValue(genome.getNumericAttribute(GeneticAttribute.JUMP_STRENGTH));
 
-        String s = abstractHorse.getAttribute(Attribute.HORSE_JUMP_STRENGTH).getBaseValue() + "";
-        Bukkit.broadcastMessage("JUMPSTRENGTH: " + s);
-        Gene glow = genome.getGeneFromTrait(GeneticAttribute.GLOW);
-        if (glow != null) {
-            MendelianGene mendelianGene = Genesis.GSON.fromJson(glow.getValue(), MendelianGene.class);
-            Bukkit.broadcastMessage(mendelianGene.getAlleleA() + " " + mendelianGene.getAlleleB());
-            if (glow.getPhenotype() == MendelianType.MENDELIAN_RECESSIVE) {
-                abstractHorse.setGlowing(true);
+            String s = abstractHorse.getAttribute(Attribute.HORSE_JUMP_STRENGTH).getBaseValue() + "";
+            Gene glow = genome.getGeneFromTrait(GeneticAttribute.GLOW);
+            if (glow != null) {
+                MendelianGene mendelianGene = Genesis.GSON.fromJson(glow.getValue(), MendelianGene.class);
+                if (glow.getPhenotype() == MendelianType.MENDELIAN_RECESSIVE) {
+                    abstractHorse.setGlowing(true);
+                }
             }
         }
+        if (livingEntity instanceof Sheep sheep) {
+            DyeColor dyeColor = DyeColorFactory.calculateDyeColor(genome, sheep);
+            sheep.setColor(dyeColor);
+        }
     }
+
 }

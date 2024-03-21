@@ -1,13 +1,9 @@
 package mintychochip.mintychochip.horsepoop.listener;
 
-import com.google.gson.Gson;
 import mintychochip.genesis.Genesis;
 import mintychochip.mintychochip.horsepoop.HorsePoop;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import mintychochip.mintychochip.horsepoop.container.Gene;
-import mintychochip.mintychochip.horsepoop.container.Trait;
-import mintychochip.mintychochip.horsepoop.container.attributes.GeneticAttribute;
-import mintychochip.mintychochip.horsepoop.container.attributes.SheepAttribute;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -18,10 +14,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.Map;
-
-import static net.md_5.bungee.chat.ComponentSerializer.toJson;
-
 public class AnimalPlayerListener implements Listener {
 
     @EventHandler
@@ -31,10 +23,10 @@ public class AnimalPlayerListener implements Listener {
             return;
         }
         PersistentDataContainer persistentDataContainer = rightClicked.getPersistentDataContainer();
-        if (persistentDataContainer.has(Genesis.getKey("horse"))) {
-            AnimalGenome horse = Genesis.GSON.fromJson(persistentDataContainer.get(Genesis.getKey("horse"), PersistentDataType.STRING), AnimalGenome.class);
+        if (persistentDataContainer.has(HorsePoop.GENOME_KEY)) {
+            AnimalGenome horse = Genesis.GSON.fromJson(persistentDataContainer.get(HorsePoop.GENOME_KEY, PersistentDataType.STRING), AnimalGenome.class);
             for (Gene gene : horse.getGenes()) {
-                Bukkit.broadcastMessage(gene.getTrait().getNamespacedKey());
+                Bukkit.broadcastMessage(gene.toString());
             }
 
         }

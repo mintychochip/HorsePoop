@@ -3,7 +3,6 @@ package mintychochip.mintychochip.horsepoop.listener;
 import com.google.gson.Gson;
 import mintychochip.genesis.Genesis;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
-import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -53,6 +52,5 @@ public class ParticleListener implements Listener {
 
             location.getWorld().spawnParticle(Particle.CHERRY_LEAVES,location.add(0,0.5,0),5,0.3,0.3,0.3,0,dustTransition,false);
         }
-
     }
 }

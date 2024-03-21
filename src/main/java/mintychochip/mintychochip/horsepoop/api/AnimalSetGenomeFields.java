@@ -2,27 +2,25 @@ package mintychochip.mintychochip.horsepoop.api;
 
 import mintychochip.genesis.events.AbstractEvent;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
-import org.bukkit.entity.AbstractHorse;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
-import org.jetbrains.annotations.NotNull;
 
-public class AnimalCreationEvent extends AbstractEvent implements Cancellable {
+public class AnimalSetGenomeFields extends AbstractEvent implements Cancellable {
 
     private boolean cancelled = false;
-    private final AbstractHorse abstractHorse;
+    private final LivingEntity livingEntity;
 
     private final AnimalGenome genome;
-    public AnimalCreationEvent(AbstractHorse abstractHorse, AnimalGenome genome) {
-        this.abstractHorse = abstractHorse;
+    public AnimalSetGenomeFields(LivingEntity livingEntity, AnimalGenome genome) {
+        this.livingEntity = livingEntity;
         this.genome = genome;
     }
     public AnimalGenome getGenome() {
         return genome;
     }
-    public AbstractHorse getAbstractHorse() {
-        return abstractHorse;
+
+    public LivingEntity getLivingEntity() {
+        return livingEntity;
     }
 
     @Override

@@ -1,7 +1,6 @@
 package mintychochip.mintychochip.horsepoop.container.attributes;
 
 import mintychochip.mintychochip.horsepoop.container.Trait;
-import org.bukkit.NamespacedKey;
 
 public enum GeneticAttribute implements Trait {
     CONSTITUTION("constitution"),
@@ -29,7 +28,7 @@ public enum GeneticAttribute implements Trait {
 
     @Override
     public String getNamespacedKey() {
-        return "\"genetic:\"" + key;
+        return "genetic:"+ key;
     }
 
     @Override

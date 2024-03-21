@@ -2,6 +2,10 @@ package mintychochip.mintychochip.horsepoop;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import mintychochip.genesis.Genesis;
+import mintychochip.genesis.commands.abstraction.GenericMainCommandManager;
+import mintychochip.mintychochip.horsepoop.commands.EnabledEntitiesCommand;
+import mintychochip.mintychochip.horsepoop.commands.EntityTraitCommand;
 import mintychochip.mintychochip.horsepoop.container.Trait;
 import mintychochip.mintychochip.horsepoop.container.TraitTypeAdapter;
 import mintychochip.mintychochip.horsepoop.factories.GeneFactory;
@@ -9,12 +13,9 @@ import mintychochip.mintychochip.horsepoop.factories.GenomeFactory;
 import mintychochip.mintychochip.horsepoop.horse.HorseLifeTimeManager;
 import mintychochip.mintychochip.horsepoop.listener.*;
 import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
+import org.bukkit.NamespacedKey;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,8 @@ import java.util.Random;
 
 public final class HorsePoop extends JavaPlugin {
     private final Random random = new Random(System.currentTimeMillis());
+
+    public static NamespacedKey GENOME_KEY = null;
 
     public static final Gson GSON = new GsonBuilder().registerTypeHierarchyAdapter(Trait.class, new TraitTypeAdapter()).create();
 
@@ -31,6 +34,7 @@ public final class HorsePoop extends JavaPlugin {
     public void onEnable() {
         INSTANCE = this;
         // Plugin startup logic
+        GENOME_KEY = Genesis.getKey("genome");
         ConfigManager configManager = ConfigManager.instanceConfigManager(this);
         GeneFactory geneFactory = GeneFactory.createInstance(configManager.getHorseConfig());
         HorseLifeTimeManager horseLifeTimeManager = new HorseLifeTimeManager(this);
@@ -43,6 +47,11 @@ public final class HorsePoop extends JavaPlugin {
         listeners.forEach(x -> {
             Bukkit.getPluginManager().registerEvents(x, this);
         });
+        GenericMainCommandManager genericMainCommandManager = new GenericMainCommandManager("entity", "asdasd");
+        genericMainCommandManager.instantiateSubCommandManager("list", "asdad")
+                .addSubCommand(new EnabledEntitiesCommand("enabled", "aasdasd", configManager.getHorseConfig()))
+                .addSubCommand(new EntityTraitCommand("trait", "lists traits", configManager.getHorseConfig().getEnabledEntityTypes(), configManager.getHorseConfig()));
+        getCommand("entity").setExecutor(genericMainCommandManager);
     }
 
     public static HorsePoop getInstance() {

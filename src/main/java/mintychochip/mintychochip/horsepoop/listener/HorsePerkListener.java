@@ -1,13 +1,13 @@
 package mintychochip.mintychochip.horsepoop.listener;
 
 import mintychochip.genesis.Genesis;
+import mintychochip.mintychochip.horsepoop.HorsePoop;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import mintychochip.mintychochip.horsepoop.container.Gene;
 import mintychochip.mintychochip.horsepoop.container.attributes.GeneticAttribute;
 import mintychochip.mintychochip.horsepoop.container.enums.MendelianType;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -32,11 +32,11 @@ public class HorsePerkListener implements Listener {
             return;
         }
         PersistentDataContainer persistentDataContainer = abstractHorse.getPersistentDataContainer();
-        if (!persistentDataContainer.has(Genesis.getKey("horse"), PersistentDataType.STRING)) {
+        if (!persistentDataContainer.has(HorsePoop.GENOME_KEY, PersistentDataType.STRING)) {
             return;
         }
-        NamespacedKey horse = Genesis.getKey("horse");
-        AnimalGenome animalGenome = Genesis.GSON.fromJson(persistentDataContainer.get(horse, PersistentDataType.STRING), AnimalGenome.class);
+
+        AnimalGenome animalGenome = Genesis.GSON.fromJson(persistentDataContainer.get(HorsePoop.GENOME_KEY, PersistentDataType.STRING), AnimalGenome.class);
 
         double numericAttribute = animalGenome.getNumericAttribute(GeneticAttribute.JUMP_STRENGTH);
         if (numericAttribute < fallDamageThreshHold) { //change magic number
@@ -58,10 +58,10 @@ public class HorsePerkListener implements Listener {
             return;
         }
         PersistentDataContainer persistentDataContainer = abstractHorse.getPersistentDataContainer();
-        if(!persistentDataContainer.has(Genesis.getKey("horse"),PersistentDataType.STRING)) {
+        if(!persistentDataContainer.has(HorsePoop.GENOME_KEY,PersistentDataType.STRING)) {
             return;
         }
-        AnimalGenome animalGenome = Genesis.GSON.fromJson(persistentDataContainer.get(Genesis.getKey("horse"), PersistentDataType.STRING), AnimalGenome.class);
+        AnimalGenome animalGenome = Genesis.GSON.fromJson(persistentDataContainer.get(HorsePoop.GENOME_KEY, PersistentDataType.STRING), AnimalGenome.class);
 
         Gene fire = animalGenome.getGeneFromTrait(GeneticAttribute.FIRE_RESISTANT);
         if(fire != null) {
@@ -80,10 +80,10 @@ public class HorsePerkListener implements Listener {
             return;
         }
         PersistentDataContainer persistentDataContainer = abstractHorse.getPersistentDataContainer();
-        if(!persistentDataContainer.has(Genesis.getKey("horse"),PersistentDataType.STRING)) {
+        if(!persistentDataContainer.has(HorsePoop.GENOME_KEY,PersistentDataType.STRING)) {
             return;
         }
-        AnimalGenome animalGenome = Genesis.GSON.fromJson(persistentDataContainer.get(Genesis.getKey("horse"), PersistentDataType.STRING), AnimalGenome.class);
+        AnimalGenome animalGenome = Genesis.GSON.fromJson(persistentDataContainer.get(HorsePoop.GENOME_KEY, PersistentDataType.STRING), AnimalGenome.class);
 
         Gene fire = animalGenome.getGeneFromTrait(GeneticAttribute.FIRE_RESISTANT);
         if(fire != null) {
@@ -106,10 +106,10 @@ public class HorsePerkListener implements Listener {
             return;
         }
         PersistentDataContainer persistentDataContainer = abstractHorse.getPersistentDataContainer();
-        if(!persistentDataContainer.has(Genesis.getKey("horse"),PersistentDataType.STRING)) {
+        if(!persistentDataContainer.has(HorsePoop.GENOME_KEY,PersistentDataType.STRING)) {
             return;
         }
-        AnimalGenome animalGenome = Genesis.GSON.fromJson(persistentDataContainer.get(Genesis.getKey("horse"), PersistentDataType.STRING), AnimalGenome.class);
+        AnimalGenome animalGenome = Genesis.GSON.fromJson(persistentDataContainer.get(HorsePoop.GENOME_KEY, PersistentDataType.STRING), AnimalGenome.class);
 
         Gene iceWalking = animalGenome.getGeneFromTrait(GeneticAttribute.ICE_WALKER);
         if(iceWalking != null) {

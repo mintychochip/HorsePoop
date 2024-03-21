@@ -17,7 +17,7 @@ public enum SheepAttribute implements Trait {
     }
     @Override
     public String getNamespacedKey() {
-        return "\"sheep:\"" + key;
+        return "sheep:" + key;
     }
 
     @Override
