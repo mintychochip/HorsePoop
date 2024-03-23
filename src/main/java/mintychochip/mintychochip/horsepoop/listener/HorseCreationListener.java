@@ -7,7 +7,6 @@ import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import mintychochip.mintychochip.horsepoop.factories.GeneFactory;
 import mintychochip.mintychochip.horsepoop.factories.GenomeFactory;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Breedable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -26,7 +25,6 @@ public class HorseCreationListener implements Listener { //monitor listeners onl
 
     private List<LivingEntity> bredHorses = new ArrayList<>();
     private final GeneFactory geneFactory;
-
     private final GenomeFactory genomeFactory;
 
     public HorseCreationListener(GeneFactory geneFactory, GenomeFactory genomeFactory) {
@@ -78,7 +76,7 @@ public class HorseCreationListener implements Listener { //monitor listeners onl
             return;
         }
         if (bredHorses.contains(entity)) {
-            Bukkit.broadcastMessage("cancelled natural spawning");
+            bredHorses.remove(entity);
             return;
         }
         if (event.isCancelled()) {

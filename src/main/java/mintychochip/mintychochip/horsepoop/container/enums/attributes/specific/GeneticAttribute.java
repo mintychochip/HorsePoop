@@ -1,6 +1,7 @@
-package mintychochip.mintychochip.horsepoop.container.attributes;
+package mintychochip.mintychochip.horsepoop.container.enums.attributes.specific;
 
 import mintychochip.mintychochip.horsepoop.container.Trait;
+import mintychochip.mintychochip.horsepoop.container.enums.attributes.TraitType;
 
 public enum GeneticAttribute implements Trait {
     CONSTITUTION("constitution"),
@@ -28,7 +29,7 @@ public enum GeneticAttribute implements Trait {
 
     @Override
     public String getNamespacedKey() {
-        return "genetic:"+ key;
+        return TraitType.HORSE.getKey() + ":" + key;
     }
 
     @Override

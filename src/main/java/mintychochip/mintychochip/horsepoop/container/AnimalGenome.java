@@ -3,9 +3,9 @@ package mintychochip.mintychochip.horsepoop.container;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import mintychochip.genesis.Genesis;
-import mintychochip.mintychochip.horsepoop.HorseConfig;
+import mintychochip.mintychochip.horsepoop.EntityConfig;
 import mintychochip.mintychochip.horsepoop.UnitConversions;
-import mintychochip.mintychochip.horsepoop.container.attributes.GeneticAttribute;
+import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.GeneticAttribute;
 import mintychochip.mintychochip.horsepoop.factories.GeneFactory;
 import org.bukkit.Particle;
 import org.bukkit.entity.EntityType;
@@ -31,10 +31,10 @@ public class AnimalGenome {
         Random random = Genesis.RANDOM;
         this.gender = random.nextBoolean() ? Gender.MALE : Gender.FEMALE;
         this.mutations = mutations;
-        HorseConfig horseConfig = geneFactory.getHorseConfig();
-        List<Trait> enabledAttributes = horseConfig.getEntityTypeTraitMap().get(entityType);
+        EntityConfig entityConfig = geneFactory.getHorseConfig();
+        List<Trait> enabledAttributes = entityConfig.getEntityTypeTraitMap().get(entityType);
         for (Trait enabledAttribute : enabledAttributes) {
-            if (horseConfig.getConserved(enabledAttribute, entityType)) {
+            if (entityConfig.getConserved(enabledAttribute, entityType)) {
                 genes.add(geneFactory.createInstance(enabledAttribute, entityType));
             }
         }

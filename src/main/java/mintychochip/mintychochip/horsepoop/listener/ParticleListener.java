@@ -1,7 +1,7 @@
 package mintychochip.mintychochip.horsepoop.listener;
 
 import com.google.gson.Gson;
-import mintychochip.genesis.Genesis;
+import mintychochip.mintychochip.horsepoop.HorsePoop;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -35,10 +35,10 @@ public class ParticleListener implements Listener {
         Entity vehicle = event.getPlayer().getVehicle();
         if(vehicle instanceof AbstractHorse abstractHorse) {
             PersistentDataContainer persistentDataContainer = abstractHorse.getPersistentDataContainer();
-            if(!persistentDataContainer.has(Genesis.getKey("horse"), PersistentDataType.STRING)) {
+            if (!persistentDataContainer.has(HorsePoop.GENOME_KEY, PersistentDataType.STRING)) {
                 return;
             }
-            String s = persistentDataContainer.get(Genesis.getKey("horse"), PersistentDataType.STRING);
+            String s = persistentDataContainer.get(HorsePoop.GENOME_KEY, PersistentDataType.STRING);
             AnimalGenome animalGenome = gson.fromJson(s, AnimalGenome.class);
             Particle particle = animalGenome.getParticle();
             if(particle == null) {

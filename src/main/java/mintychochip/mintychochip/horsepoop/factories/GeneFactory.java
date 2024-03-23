@@ -2,7 +2,7 @@ package mintychochip.mintychochip.horsepoop.factories;
 
 import com.google.gson.Gson;
 import mintychochip.genesis.Genesis;
-import mintychochip.mintychochip.horsepoop.HorseConfig;
+import mintychochip.mintychochip.horsepoop.EntityConfig;
 import mintychochip.mintychochip.horsepoop.HorsePoop;
 import mintychochip.mintychochip.horsepoop.container.Gene;
 import mintychochip.mintychochip.horsepoop.container.MendelianGene;
@@ -10,24 +10,24 @@ import mintychochip.mintychochip.horsepoop.container.Trait;
 import org.bukkit.entity.EntityType;
 
 public class GeneFactory {
-    private final HorseConfig horseConfig;
+    private final EntityConfig entityConfig;
 
     private final Gson gson = HorsePoop.GSON;
 
-    private GeneFactory(HorseConfig horseConfig) {
-        this.horseConfig = horseConfig;
+    private GeneFactory(EntityConfig entityConfig) {
+        this.entityConfig = entityConfig;
     }
 
-    public static GeneFactory createInstance(HorseConfig horseConfig) {
-        return new GeneFactory(horseConfig);
+    public static GeneFactory createInstance(EntityConfig entityConfig) {
+        return new GeneFactory(entityConfig);
     }
 
     public Gene createInstance(Trait trait, EntityType entityType) {
-        return Gene.createInstance(trait, entityType, horseConfig, this);
+        return Gene.createInstance(trait, entityType, entityConfig, this);
     }
 
-    public HorseConfig getHorseConfig() {
-        return horseConfig;
+    public EntityConfig getHorseConfig() {
+        return entityConfig;
     }
 
     public Gene crossGene(Gene father, Gene mother, EntityType entityType) {
@@ -49,7 +49,7 @@ public class GeneFactory {
                     } else {
                         child = rollNumberVal(fatherVal,motherVal);
                     }
-                    return Gene.createInstance(father.getTrait(), entityType, horseConfig, gson.toJson(child),this);
+                    return Gene.createInstance(father.getTrait(), entityType, entityConfig, gson.toJson(child),this);
                 }
                 case ENUM -> {
                     //not gonna write it no enum classes yet
@@ -57,7 +57,7 @@ public class GeneFactory {
                 case MENDELIAN -> {
                     MendelianGene fatherGene = gson.fromJson(father.getValue(), MendelianGene.class);
                     MendelianGene motherGene = gson.fromJson(mother.getValue(), MendelianGene.class);
-                    return Gene.createInstance(father.getTrait(), entityType, horseConfig, gson.toJson(fatherGene.crossGenes(motherGene)), this);
+                    return Gene.createInstance(father.getTrait(), entityType, entityConfig, gson.toJson(fatherGene.crossGenes(motherGene)), this);
                 }
                 case INTEGER -> {
                     Integer fatherVal = gson.fromJson(father.getValue(), int.class);
@@ -69,7 +69,7 @@ public class GeneFactory {
                     else {
                         child = rollNumberVal(fatherVal,motherVal);
                     }
-                    return Gene.createInstance(father.getTrait(), entityType, horseConfig, gson.toJson(child),this);
+                    return Gene.createInstance(father.getTrait(), entityType, entityConfig, gson.toJson(child),this);
                 }
             }
         }

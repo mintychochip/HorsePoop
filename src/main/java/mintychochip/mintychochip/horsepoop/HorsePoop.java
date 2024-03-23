@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import mintychochip.genesis.Genesis;
 import mintychochip.genesis.commands.abstraction.GenericMainCommandManager;
 import mintychochip.mintychochip.horsepoop.commands.EnabledEntitiesCommand;
+import mintychochip.mintychochip.horsepoop.commands.EnchantCommand;
 import mintychochip.mintychochip.horsepoop.commands.EntityTraitCommand;
 import mintychochip.mintychochip.horsepoop.container.Trait;
 import mintychochip.mintychochip.horsepoop.container.TraitTypeAdapter;
@@ -39,10 +40,11 @@ public final class HorsePoop extends JavaPlugin {
         GeneFactory geneFactory = GeneFactory.createInstance(configManager.getHorseConfig());
         HorseLifeTimeManager horseLifeTimeManager = new HorseLifeTimeManager(this);
         List<Listener> listeners = new ArrayList<>();
-        listeners.add(new HorseCreationListener(geneFactory, GenomeFactory.createInstance(geneFactory)));
-        listeners.add(new AnimalPlayerListener());
+        listeners.add(new HorseCreationListener(geneFactory, GenomeFactory.createInstance(geneFactory, configManager)));
+        listeners.add(new AnimalPlayerListener(configManager));
         listeners.add(new AnimalCreationListener(horseLifeTimeManager));
         listeners.add(new HorsePerkListener());
+        listeners.add(new AnimalDeathListener(configManager));
         listeners.add(ParticleListener.createParticleListener(this, new Gson()));
         listeners.forEach(x -> {
             Bukkit.getPluginManager().registerEvents(x, this);
@@ -50,7 +52,8 @@ public final class HorsePoop extends JavaPlugin {
         GenericMainCommandManager genericMainCommandManager = new GenericMainCommandManager("entity", "asdasd");
         genericMainCommandManager.instantiateSubCommandManager("list", "asdad")
                 .addSubCommand(new EnabledEntitiesCommand("enabled", "aasdasd", configManager.getHorseConfig()))
-                .addSubCommand(new EntityTraitCommand("trait", "lists traits", configManager.getHorseConfig().getEnabledEntityTypes(), configManager.getHorseConfig()));
+                .addSubCommand(new EntityTraitCommand("trait", "lists traits", configManager.getHorseConfig().getEnabledEntityTypes(), configManager.getHorseConfig()))
+                .addSubCommand(new EnchantCommand("enchant", "enchant"));
         getCommand("entity").setExecutor(genericMainCommandManager);
     }
 

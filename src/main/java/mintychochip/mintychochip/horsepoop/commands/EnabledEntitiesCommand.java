@@ -2,20 +2,20 @@ package mintychochip.mintychochip.horsepoop.commands;
 
 import mintychochip.genesis.commands.abstraction.GenericCommandObject;
 import mintychochip.genesis.commands.abstraction.SubCommand;
-import mintychochip.mintychochip.horsepoop.HorseConfig;
+import mintychochip.mintychochip.horsepoop.EntityConfig;
 import org.bukkit.entity.Player;
 
 public class EnabledEntitiesCommand extends GenericCommandObject implements SubCommand {
 
-    private final HorseConfig horseConfig;
-    public EnabledEntitiesCommand(String executor, String description, HorseConfig horseConfig) {
+    private final EntityConfig entityConfig;
+    public EnabledEntitiesCommand(String executor, String description, EntityConfig entityConfig) {
         super(executor, description);
-        this.horseConfig = horseConfig;
+        this.entityConfig = entityConfig;
     }
 
     @Override
     public boolean execute(String[] strings, Player player) {
-        player.sendMessage(horseConfig.getEnabledEntityTypes().toString());
+        player.sendMessage(entityConfig.getEnabledEntityTypes().toString());
         return true;
     }
 }

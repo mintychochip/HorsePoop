@@ -2,15 +2,15 @@ package mintychochip.mintychochip.horsepoop.commands;
 
 import mintychochip.genesis.commands.abstraction.GenericCommandObject;
 import mintychochip.genesis.commands.abstraction.SubCommand;
-import mintychochip.mintychochip.horsepoop.HorseConfig;
+import mintychochip.mintychochip.horsepoop.EntityConfig;
 import org.bukkit.entity.Player;
 
 public class Debug extends GenericCommandObject implements SubCommand {
 
-    private HorseConfig horseConfig;
-    public Debug(String executor, String description, int depth, HorseConfig horseConfig) {
+    private EntityConfig entityConfig;
+    public Debug(String executor, String description, int depth, EntityConfig entityConfig) {
         super(executor, description, depth);
-        this.horseConfig = horseConfig;
+        this.entityConfig = entityConfig;
     }
 
     @Override

@@ -1,25 +1,38 @@
-package mintychochip.mintychochip.horsepoop.factories;
+package mintychochip.mintychochip.horsepoop.container.enums.attributes.specific;
 
 import com.google.gson.Gson;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import mintychochip.mintychochip.horsepoop.container.Gene;
-import mintychochip.mintychochip.horsepoop.container.attributes.SheepAttribute;
+import mintychochip.mintychochip.horsepoop.container.Trait;
 import mintychochip.mintychochip.horsepoop.container.enums.MendelianType;
-import org.bukkit.Bukkit;
+import mintychochip.mintychochip.horsepoop.container.enums.attributes.TraitType;
 import org.bukkit.DyeColor;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 
-public class DyeColorFactory {
+public enum SheepTrait implements Trait { //traits designed for sheep
+    RED("red"),
+    BLUE("blue"),
+    GREEN("green"),
+    WHITE_OVERRIDE("override"), //dominant phenotypes always exhibit white, allows for masking of colors
+    BRIGHTNESS("brightness");
 
+    // numeric
+    private final String key;
+
+    SheepTrait(String key) {
+        this.key = key;
+    }
     private enum SheepColor { //temporary
-        PINK("red0",DyeColor.PINK),
+        PINK("red0", DyeColor.PINK),
         RED("red1",DyeColor.RED),
         GREEN("green1",DyeColor.GREEN),
         BLUE("blue1",DyeColor.BLUE),
         LIGHT_BLUE("blue0",DyeColor.LIGHT_BLUE),
         LIME("green0",DyeColor.LIME),
         ORANGE("red1green0",DyeColor.ORANGE),
+        ORANGE2("red0green1", DyeColor.ORANGE),
+        ORANGE3("red1green1", DyeColor.ORANGE),
         CYAN("blue1green1",DyeColor.CYAN),
         CYAN2("blue1green0",DyeColor.CYAN),
         PURPLE("red0blue0",DyeColor.PURPLE),
@@ -49,12 +62,12 @@ public class DyeColorFactory {
             return null;
         }
         Gson gson = new Gson();
-        Gene red = genome.getGeneFromTrait(SheepAttribute.RED);
-        Gene blue = genome.getGeneFromTrait(SheepAttribute.BLUE);
-        Gene green = genome.getGeneFromTrait(SheepAttribute.GREEN);
-        Gene brightness = genome.getGeneFromTrait(SheepAttribute.BRIGHTNESS);
+        Gene red = genome.getGeneFromTrait(SheepTrait.RED);
+        Gene blue = genome.getGeneFromTrait(SheepTrait.BLUE);
+        Gene green = genome.getGeneFromTrait(SheepTrait.GREEN);
+        Gene brightness = genome.getGeneFromTrait(SheepTrait.BRIGHTNESS);
 
-        Gene override = genome.getGeneFromTrait(SheepAttribute.WHITE_OVERRIDE);
+        Gene override = genome.getGeneFromTrait(SheepTrait.WHITE_OVERRIDE);
         if(override == null) {
             return DyeColor.WHITE;
         }
@@ -71,7 +84,7 @@ public class DyeColorFactory {
                 default -> DyeColor.WHITE;
             };
         }
-        String s = formKey(red, blue, green, brightnessValue);
+        String s = formKey(red, blue, green);
         for (SheepColor value : SheepColor.values()) {
             if(value.getKey().equalsIgnoreCase(s)) {
                 return value.getDyeColor();
@@ -81,7 +94,7 @@ public class DyeColorFactory {
         return DyeColor.BROWN;
     }
 
-    private static String formKey(Gene red, Gene blue, Gene green, int brightnessValue) {
+    private static String formKey(Gene red, Gene blue, Gene green) {
         StringBuilder stringBuilder = new StringBuilder();
         if (red != null) {
             stringBuilder.append("red").append(red.getPhenotype().getCode());
@@ -93,5 +106,15 @@ public class DyeColorFactory {
             stringBuilder.append("green").append(green.getPhenotype().getCode());
         }
         return stringBuilder.toString();
+    }
+
+    @Override
+    public String getNamespacedKey() {
+        return TraitType.SHEEP.getKey() + ":" + key;
+    }
+
+    @Override
+    public String getKey() {
+        return key;
     }
 }

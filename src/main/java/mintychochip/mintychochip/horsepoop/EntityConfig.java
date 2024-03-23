@@ -4,25 +4,35 @@ import mintychochip.genesis.config.abstraction.GenericConfig;
 import mintychochip.genesis.config.abstraction.GenesisConfigurationSection;
 import mintychochip.genesis.util.EnumUtil;
 import mintychochip.mintychochip.horsepoop.container.Trait;
-import mintychochip.mintychochip.horsepoop.container.attributes.GeneticAttribute;
-import mintychochip.mintychochip.horsepoop.container.attributes.SheepAttribute;
+import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.CowTrait;
+import mintychochip.mintychochip.horsepoop.container.enums.attributes.GenericTrait;
+import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.GeneticAttribute;
+import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.SheepTrait;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 
-public class HorseConfig extends GenericConfig {
+public class EntityConfig extends GenericConfig {
 
     private final Map<EntityType,List<Trait>> entityTypeTraitMap = new HashMap<>();
     private final Set<String> enabledEntityTypes = new HashSet<>();
-    private final List<Trait> allTraits = new ArrayList<>();
+    private final List<Trait> allTraits;
     private final GenesisConfigurationSection enabledEntities = getMainConfigurationSection("enabled-entities");
     private final GenesisConfigurationSection settings = getMainConfigurationSection("settings");
 
-    public HorseConfig(String path, JavaPlugin plugin) {
+    private List<Trait> loadAllTraits() {
+        List<Trait> traits = new ArrayList<>();
+        traits.addAll(Arrays.stream(GeneticAttribute.values()).toList());
+        traits.addAll(Arrays.stream(SheepTrait.values()).toList());
+        traits.addAll(Arrays.stream(GenericTrait.values()).toList());
+        traits.addAll(Arrays.stream(CowTrait.values()).toList());
+        return traits;
+    }
+    public EntityConfig(String path, JavaPlugin plugin) {
         super(path, plugin);
-        allTraits.addAll(Arrays.stream(GeneticAttribute.values()).toList());
-        allTraits.addAll(Arrays.stream(SheepAttribute.values()).toList());
+
+        this.allTraits = loadAllTraits();
 
         for (String key : enabledEntities.getKeys(false)) {
             if(EnumUtil.isInEnum(EntityType.class,key)) {
@@ -40,7 +50,10 @@ public class HorseConfig extends GenericConfig {
             }
             entityTypeTraitMap.put(EntityType.valueOf(enabledEntityType),entityTypeTraits);
         }
+    }
 
+    public boolean isTraitEnabled(EntityType type, Trait trait) {
+       return getEnabledAttributes(type).stream().anyMatch(x -> x == trait);
     }
     private Trait isATrait(String key) {
         for (Trait allTrait : allTraits) {

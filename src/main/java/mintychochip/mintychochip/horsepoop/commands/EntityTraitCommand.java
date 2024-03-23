@@ -3,7 +3,7 @@ package mintychochip.mintychochip.horsepoop.commands;
 import mintychochip.genesis.commands.abstraction.GenericCommand;
 import mintychochip.genesis.commands.abstraction.SubCommand;
 import mintychochip.genesis.util.EnumUtil;
-import mintychochip.mintychochip.horsepoop.HorseConfig;
+import mintychochip.mintychochip.horsepoop.EntityConfig;
 import mintychochip.mintychochip.horsepoop.container.Trait;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -12,11 +12,11 @@ import java.util.Set;
 
 public class EntityTraitCommand extends GenericCommand implements SubCommand {
 
-    private final HorseConfig horseConfig;
+    private final EntityConfig entityConfig;
 
-    public EntityTraitCommand(String executor, String description, Set<String> strings, HorseConfig horseConfig) {
+    public EntityTraitCommand(String executor, String description, Set<String> strings, EntityConfig entityConfig) {
         super(executor, description, strings);
-        this.horseConfig = horseConfig;
+        this.entityConfig = entityConfig;
     }
     @Override
     public boolean execute(String[] strings, Player player) {
@@ -27,7 +27,7 @@ public class EntityTraitCommand extends GenericCommand implements SubCommand {
         if (!EnumUtil.isInEnum(EntityType.class, executor)) {
             return false;
         }
-        for (Trait trait : horseConfig.getEntityTypeTraitMap().get(EntityType.valueOf(executor))) {
+        for (Trait trait : entityConfig.getEntityTypeTraitMap().get(EntityType.valueOf(executor))) {
             player.sendMessage(trait.getNamespacedKey());
         }
         return true;

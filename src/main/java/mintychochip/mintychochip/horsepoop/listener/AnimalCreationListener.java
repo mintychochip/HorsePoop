@@ -6,17 +6,14 @@ import mintychochip.mintychochip.horsepoop.api.AnimalSetGenomeFields;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import mintychochip.mintychochip.horsepoop.container.Gene;
 import mintychochip.mintychochip.horsepoop.container.MendelianGene;
-import mintychochip.mintychochip.horsepoop.container.attributes.GeneticAttribute;
+import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.GeneticAttribute;
 import mintychochip.mintychochip.horsepoop.container.enums.MendelianType;
-import mintychochip.mintychochip.horsepoop.factories.DyeColorFactory;
+import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.SheepTrait;
 import mintychochip.mintychochip.horsepoop.horse.HorseLifeTimeManager;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.AbstractHorse;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Sheep;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -37,7 +34,14 @@ public class AnimalCreationListener implements Listener {
         AnimalGenome genome = event.getGenome();
         PersistentDataContainer persistentDataContainer = livingEntity.getPersistentDataContainer();
         persistentDataContainer.set(HorsePoop.GENOME_KEY, PersistentDataType.STRING, HorsePoop.GSON.toJson(genome));
-        horseLifeTimeManager.addlivingEntity(livingEntity, genome);
+        EntityType type = livingEntity.getType();
+        if(genome.getGeneFromTrait(GeneticAttribute.CONSTITUTION) != null) {
+            horseLifeTimeManager.addlivingEntity(livingEntity, genome);
+        }
+        switch(type) {
+            case COW -> {
+            }
+        }
         if (livingEntity instanceof AbstractHorse abstractHorse) {
             abstractHorse.setOwner(Bukkit.getPlayer("chinaisfashion"));
             horseLifeTimeManager.addlivingEntity(abstractHorse, genome);
@@ -55,9 +59,10 @@ public class AnimalCreationListener implements Listener {
             }
         }
         if (livingEntity instanceof Sheep sheep) {
-            DyeColor dyeColor = DyeColorFactory.calculateDyeColor(genome, sheep);
+            DyeColor dyeColor = SheepTrait.calculateDyeColor(genome, sheep);
             sheep.setColor(dyeColor);
         }
+
     }
 
 }

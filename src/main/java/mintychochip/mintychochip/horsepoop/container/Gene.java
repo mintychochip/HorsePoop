@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import mintychochip.genesis.Genesis;
 import mintychochip.genesis.config.abstraction.GenesisConfigurationSection;
-import mintychochip.mintychochip.horsepoop.HorseConfig;
+import mintychochip.mintychochip.horsepoop.EntityConfig;
 import mintychochip.mintychochip.horsepoop.HorseMarker;
 import mintychochip.mintychochip.horsepoop.HorsePoop;
 import mintychochip.mintychochip.horsepoop.container.enums.MendelianAllele;
@@ -37,17 +37,17 @@ public class Gene {
     @SerializedName("entity-type")
     private final EntityType entityType;
 
-    private Gene(Trait trait, EntityType entityType, HorseConfig horseConfig) {
+    private Gene(Trait trait, EntityType entityType, EntityConfig entityConfig) {
 
         Gson gson = HorsePoop.GSON;
         this.trait = gson.toJson(trait);
         Random random = Genesis.RANDOM;
-        GenesisConfigurationSection attribute = horseConfig.getAttribute(trait, entityType);
+        GenesisConfigurationSection attribute = entityConfig.getAttribute(trait, entityType);
         this.crossable = attribute.getBoolean(HorseMarker.crossable);
         this.conserved = attribute.getBoolean(HorseMarker.conserved);
         this.geneType = attribute.enumFromSection(GeneType.class, HorseMarker.gene_type);
         this.entityType = entityType;
-        GenesisConfigurationSection meta = horseConfig.getMeta(trait, entityType);
+        GenesisConfigurationSection meta = entityConfig.getMeta(trait, entityType);
         switch (this.geneType) {
             case NUMERIC -> {
                 double minimum = meta.getDouble(HorseMarker.minimum);
@@ -71,10 +71,10 @@ public class Gene {
         }
     }
 
-    private Gene(Trait trait, EntityType entityType, HorseConfig horseConfig, String value) {
+    private Gene(Trait trait, EntityType entityType, EntityConfig entityConfig, String value) {
         this.trait = HorsePoop.GSON.toJson(trait);
         this.value = value;
-        GenesisConfigurationSection attribute = horseConfig.getAttribute(trait, entityType);
+        GenesisConfigurationSection attribute = entityConfig.getAttribute(trait, entityType);
         this.crossable = attribute.getBoolean(HorseMarker.crossable);
         this.conserved = attribute.getBoolean(HorseMarker.conserved);
         this.geneType = attribute.enumFromSection(GeneType.class, HorseMarker.gene_type);
@@ -114,12 +114,12 @@ public class Gene {
         return MendelianType.MENDELIAN_HETEROZYGOUS;
     }
 
-    public static Gene createInstance(Trait trait, EntityType entityType, HorseConfig horseConfig, GeneFactory instance) { //do something with factory instance after
-        return new Gene(trait, entityType, horseConfig);
+    public static Gene createInstance(Trait trait, EntityType entityType, EntityConfig entityConfig, GeneFactory instance) { //do something with factory instance after
+        return new Gene(trait, entityType, entityConfig);
     }
 
-    public static Gene createInstance(Trait trait, EntityType entityType, HorseConfig horseConfig, String value, GeneFactory instance) {
-        return new Gene(trait, entityType, horseConfig, value);
+    public static Gene createInstance(Trait trait, EntityType entityType, EntityConfig entityConfig, String value, GeneFactory instance) {
+        return new Gene(trait, entityType, entityConfig, value);
     }
 
     public Trait getTrait() {

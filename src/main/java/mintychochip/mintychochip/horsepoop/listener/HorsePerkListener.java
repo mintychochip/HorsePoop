@@ -4,7 +4,7 @@ import mintychochip.genesis.Genesis;
 import mintychochip.mintychochip.horsepoop.HorsePoop;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import mintychochip.mintychochip.horsepoop.container.Gene;
-import mintychochip.mintychochip.horsepoop.container.attributes.GeneticAttribute;
+import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.GeneticAttribute;
 import mintychochip.mintychochip.horsepoop.container.enums.MendelianType;
 import org.bukkit.Location;
 import org.bukkit.Material;

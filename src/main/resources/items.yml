@@ -1,0 +1,6 @@
+spider-milk:
+  material: MILK_BUCKET
+  custom-model: 1
+  lore: ['milky milk']
+  display-name: spidermilk
+  rarity: UNCOMMON

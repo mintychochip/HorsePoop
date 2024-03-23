@@ -19,8 +19,8 @@ public class MendelianGene { //could just do diploids
 
     public MendelianGene crossGenes(MendelianGene mendelianGene) { //can add some form of recombinance
         Random random = Genesis.RANDOM;
-        MendelianAllele alleleA = random.nextBoolean() ? mendelianGene.alleleA : this.alleleA;
-        MendelianAllele alleleB = random.nextBoolean() ? mendelianGene.alleleA : this.alleleB;
+        MendelianAllele alleleA = random.nextBoolean() ? mendelianGene.alleleA : mendelianGene.alleleB;
+        MendelianAllele alleleB = random.nextBoolean() ? this.alleleA : this.alleleB;
         return new MendelianGene(alleleA,alleleB);
     }
     public MendelianAllele getAlleleA() {
