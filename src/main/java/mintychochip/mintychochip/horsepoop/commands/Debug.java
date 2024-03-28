@@ -2,7 +2,7 @@ package mintychochip.mintychochip.horsepoop.commands;
 
 import mintychochip.genesis.commands.abstraction.GenericCommandObject;
 import mintychochip.genesis.commands.abstraction.SubCommand;
-import mintychochip.mintychochip.horsepoop.EntityConfig;
+import mintychochip.mintychochip.horsepoop.config.EntityConfig;
 import org.bukkit.entity.Player;
 
 public class Debug extends GenericCommandObject implements SubCommand {

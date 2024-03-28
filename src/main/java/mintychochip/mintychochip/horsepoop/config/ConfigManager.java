@@ -1,8 +1,6 @@
-package mintychochip.mintychochip.horsepoop;
+package mintychochip.mintychochip.horsepoop.config;
 
 import mintychochip.genesis.manager.GenericConfigManager;
-import mintychochip.mintychochip.horsepoop.config.AnimalItemConfig;
-import mintychochip.mintychochip.horsepoop.config.SettingsConfig;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ConfigManager extends GenericConfigManager {
@@ -18,7 +16,11 @@ public class ConfigManager extends GenericConfigManager {
         settingsConfig = new SettingsConfig("settings.yml", plugin);
         itemConfig = new AnimalItemConfig("items.yml",plugin);
     }
-
+    public void reload() {
+        entityConfig.reload();
+        settingsConfig.reload();
+        itemConfig.reload();
+    }
     public static ConfigManager instanceConfigManager(JavaPlugin plugin) {
         if (!plugin.getName().equalsIgnoreCase("horsepoop")) {
             return null;
@@ -30,7 +32,7 @@ public class ConfigManager extends GenericConfigManager {
         return itemConfig;
     }
 
-    public EntityConfig getHorseConfig() {
+    public EntityConfig getEntityConfig() {
         return entityConfig;
     }
 

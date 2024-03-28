@@ -1,2 +1,102 @@
-attributes:
-  STRENGTH: pp
+enabled-entities:
+  HORSE:
+    strength:
+      gene-type: numeric
+      conserved: true
+      crossable: true
+      meta:
+        minimum: 3599999
+        maximum: 3600000
+    speed:
+      gene-type: numeric
+      conserved: true
+      crossable: true
+      meta:
+        minimum: 0.59
+        maximum: 0.6
+    constitution:
+      gene-type: numeric
+      conserved: true
+      crossable: true
+      meta:
+        minimum: 150099
+        maximum: 160000
+    jumping-strength:
+      gene-type: numeric
+      conserved: true
+      crossable: true
+      meta:
+        minimum: 40.0
+        maximum: 500.0
+    fire:
+      gene-type: mendelian
+      conserved: false
+      crossable: true
+      meta:
+        chance: 0.5
+    particle:
+      gene-type: enum
+      meta:
+    glow:
+      gene-type: mendelian
+      conserved: false
+      crossable: true
+      meta:
+        chance: 0.5
+    ice-walker:
+      gene-type: mendelian
+      crossable: true
+      meta:
+        chance: 0.3
+  SHEEP:
+    override:
+      gene-type: mendelian
+      conserved: true
+      crossable: true
+      meta:
+        chance: 0.5
+    brightness:
+      gene-type: integer
+      conserved: true
+      crossable: true
+      meta:
+        minimum: 0
+        maximum: 4
+    red:
+      gene-type: mendelian
+      conserved: false
+      crossable: true
+      meta:
+        chance: 0.5
+    green:
+      gene-type: mendelian
+      conserved: false
+      crossable: true
+      meta:
+        chance: 0.5
+    blue:
+      gene-type: mendelian
+      conserved: false
+      crossable: true
+      meta:
+        chance: 0.5
+    yield:
+      gene-type: integer
+      conserved: true
+      crossable: true
+      meta:
+        minimum: 1
+        maximum: 6
+  COW:
+    mooshroom:
+      gene-type: mendelian
+      conserved: true
+      crossable: true
+      meta:
+        chance: 0.5
+    milk:
+      gene-type: mendelian
+      conserved: true
+      crossable: true
+      meta:
+        chance: 0.5        

@@ -71,7 +71,8 @@ public enum SheepTrait implements Trait { //traits designed for sheep
         if(override == null) {
             return DyeColor.WHITE;
         }
-        if (override.getPhenotype() == MendelianType.MENDELIAN_DOMINANT) {
+
+        if (override.getMendelian().getPhenotype() == MendelianType.MENDELIAN_DOMINANT) {
             return DyeColor.WHITE;
         }
 
@@ -97,13 +98,13 @@ public enum SheepTrait implements Trait { //traits designed for sheep
     private static String formKey(Gene red, Gene blue, Gene green) {
         StringBuilder stringBuilder = new StringBuilder();
         if (red != null) {
-            stringBuilder.append("red").append(red.getPhenotype().getCode());
+            stringBuilder.append("red").append(red.getMendelian().getPhenotype().getCode());
         }
         if (blue != null) {
-            stringBuilder.append("blue").append(blue.getPhenotype().getCode());
+            stringBuilder.append("blue").append(blue.getMendelian().getPhenotype().getCode());
         }
         if (green != null) {
-            stringBuilder.append("green").append(green.getPhenotype().getCode());
+            stringBuilder.append("green").append(green.getMendelian().getPhenotype().getCode());
         }
         return stringBuilder.toString();
     }

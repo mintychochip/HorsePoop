@@ -1,161 +1,179 @@
 package mintychochip.mintychochip.horsepoop.container;
 
+import static net.md_5.bungee.chat.ComponentSerializer.toJson;
+
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import mintychochip.genesis.Genesis;
 import mintychochip.genesis.config.abstraction.GenesisConfigurationSection;
-import mintychochip.mintychochip.horsepoop.EntityConfig;
+import mintychochip.genesis.util.MathUtil;
+import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.HorseMarker;
 import mintychochip.mintychochip.horsepoop.HorsePoop;
+import mintychochip.mintychochip.horsepoop.config.EntityConfig;
 import mintychochip.mintychochip.horsepoop.container.enums.MendelianAllele;
 import mintychochip.mintychochip.horsepoop.container.enums.MendelianType;
 import mintychochip.mintychochip.horsepoop.factories.GeneFactory;
-import org.bukkit.Particle;
 import org.bukkit.entity.EntityType;
 
-import java.util.Random;
+import org.jetbrains.annotations.NotNull;
 
 
 public class Gene {
-    public enum GeneType { //determines the instancing sequence they will take
-        ENUM, //list of values the gene can take
-        MENDELIAN, //classical mendelian
-        NUMERIC, //range of values the gene can take, for example, speed can have different numerical value,
-        INTEGER;
+
+  public enum GeneType { //determines the instancing sequence they will take
+    ENUM, //list of values the gene can take
+    MENDELIAN, //classical mendelian
+    NUMERIC, //range of values the gene can take, for example, speed can have different numerical value,
+    INTEGER
+  }
+  @SerializedName("trait")
+  private final String trait;
+  @SerializedName("value")
+  private final String value;
+  @SerializedName("conserved")
+  private final boolean conserved; //the animal retains this after breeding always
+  @SerializedName("crossable")
+  private final boolean crossable; //prevents animal crossing from retaining this gene
+  @SerializedName("gene-type")
+  private final GeneType geneType;
+
+  private Gene(String trait, String value, boolean conserved, boolean crossable,
+      GeneType geneType) {
+    this.trait = trait;
+    this.value = value;
+    this.conserved = conserved;
+    this.crossable = crossable;
+    this.geneType = geneType;
+  }
+
+  public static Gene createInstance(@NotNull Trait trait, @NotNull String value, boolean conserved,
+      boolean crossable, @NotNull GeneType geneType, GeneFactory geneFactory) {
+    return new Gene(HorsePoop.GSON.toJson(trait), value, conserved, crossable, geneType);
+  }
+
+  public static Gene createInstance(@NotNull Trait trait, @NotNull EntityType entityType,
+      @NotNull ConfigManager configManager, @NotNull GeneFactory geneFactory) {
+    GenesisConfigurationSection attribute = configManager.getEntityConfig()
+        .getAttribute(trait, entityType);
+    if (attribute.isNull()) {
+      return null;
     }
+    if (!configManager.getEntityConfig().isEntityEnabled(entityType)) {
+      return null;
+    }
+    if (!configManager.getEntityConfig().isTraitEnabled(trait, entityType)) {
+      return null;
+    }
+    String traitString = HorsePoop.GSON.toJson(trait);
+    boolean crossable = attribute.getBoolean(HorseMarker.crossable);
+    boolean conserved = attribute.getBoolean(HorseMarker.conserved);
+    GeneType geneType = attribute.enumFromSection(GeneType.class, HorseMarker.gene_type);
+    GenesisConfigurationSection meta = configManager.getEntityConfig().getMeta(trait, entityType);
+    if (meta.isNull()) {
+      return null;
+    }
+    String value = GeneFactory.generateValue(trait, meta, geneType);
+    if (value == null) {
+      return null;
+    }
+    return new Gene(traitString, value, conserved, crossable, geneType);
+  }
 
-    @SerializedName("trait")
-    private final String trait;
-    @SerializedName("value")
-    private String value = null;
-    @SerializedName("conserved")
-    private final boolean conserved; //the animal retains this after breeding always
-    @SerializedName("crossable")
-    private final boolean crossable; //prevents animal crossing from retaining this gene
-    @SerializedName("gene-type")
-    private final GeneType geneType;
-    @SerializedName("entity-type")
-    private final EntityType entityType;
+  public boolean isCrossable() {
+    return crossable;
+  }
 
-    private Gene(Trait trait, EntityType entityType, EntityConfig entityConfig) {
+  public Trait getTrait() {
+    return HorsePoop.GSON.fromJson(trait, Trait.class);
+  }
 
-        Gson gson = HorsePoop.GSON;
-        this.trait = gson.toJson(trait);
-        Random random = Genesis.RANDOM;
-        GenesisConfigurationSection attribute = entityConfig.getAttribute(trait, entityType);
-        this.crossable = attribute.getBoolean(HorseMarker.crossable);
-        this.conserved = attribute.getBoolean(HorseMarker.conserved);
-        this.geneType = attribute.enumFromSection(GeneType.class, HorseMarker.gene_type);
-        this.entityType = entityType;
-        GenesisConfigurationSection meta = entityConfig.getMeta(trait, entityType);
-        switch (this.geneType) {
-            case NUMERIC -> {
-                double minimum = meta.getDouble(HorseMarker.minimum);
-                double maximum = meta.getDouble(HorseMarker.maximum);
-                this.value = gson.toJson(random.nextDouble(minimum, maximum));
-            }
-            case MENDELIAN -> { //when spawning, dominant/recessive is random
-                double chance = meta.getDouble(HorseMarker.chance);
-                this.value = gson.toJson(MendelianGene.createInstance(MendelianAllele.createAllele(chance), MendelianAllele.createAllele(chance)));
-            }
-            case ENUM -> {
-                Particle[] values = Particle.values();
-                int i = random.nextInt(0, values.length);
-                this.value = values[i].toString();
-            }
-            case INTEGER -> {
-                int minimum = meta.getInt(HorseMarker.minimum);
-                int maximum = meta.getInt(HorseMarker.maximum);
-                this.value = gson.toJson(random.nextInt(minimum,maximum));
-            }
+  public String getValue() {
+    return value;
+  }
+
+  public boolean isConserved() {
+    return conserved;
+  }
+
+  public GeneType getGeneType() {
+    return geneType;
+  }
+
+  public Gene crossGene(@NotNull Gene mother, EntityType entityType) {
+    Gene.GeneType motherGeneType = mother.getGeneType();
+    if (this.geneType != motherGeneType) {
+      return null;
+    }
+    Trait trait = this.getTrait();
+    if (trait != mother.getTrait()) {
+      return null;
+    }
+    if (this.isCrossable() && mother.isCrossable()) {
+      Gson gson = new Gson();
+      String value = null;
+      switch (motherGeneType) {
+        case NUMERIC -> {
+          Double fatherVal = gson.fromJson(this.value, double.class);
+          Double motherVal = gson.fromJson(mother.getValue(), double.class);
+          value = gson.toJson(
+              fatherVal.equals(motherVal) ? fatherVal : rollNumberVal(fatherVal, motherVal));
         }
-    }
-
-    private Gene(Trait trait, EntityType entityType, EntityConfig entityConfig, String value) {
-        this.trait = HorsePoop.GSON.toJson(trait);
-        this.value = value;
-        GenesisConfigurationSection attribute = entityConfig.getAttribute(trait, entityType);
-        this.crossable = attribute.getBoolean(HorseMarker.crossable);
-        this.conserved = attribute.getBoolean(HorseMarker.conserved);
-        this.geneType = attribute.enumFromSection(GeneType.class, HorseMarker.gene_type);
-        this.entityType = entityType;
-    }
-
-    public boolean isCrossable() {
-        return crossable;
-    }
-
-    public MendelianType getPhenotype() {
-        if (this.geneType != GeneType.MENDELIAN) {
-            return null;
+        case ENUM -> {
+          //not gonna write it no enum classes yet
         }
-        MendelianGene mendelianGene = HorsePoop.GSON.fromJson(value, MendelianGene.class);
-        if (mendelianGene.getAlleleA() == MendelianAllele.RECESSIVE && mendelianGene.getAlleleB() == MendelianAllele.RECESSIVE) {
-            return MendelianType.MENDELIAN_RECESSIVE;
+        case MENDELIAN -> {
+          value = gson.toJson(this.getMendelian().crossGenes(mother.getMendelian()));
         }
-        return MendelianType.MENDELIAN_DOMINANT;
-    }
-
-    public EntityType getEntityType() {
-        return entityType;
-    }
-
-    public MendelianType getGenotype() {
-        if (this.geneType != GeneType.MENDELIAN) {
-            return null;
+        case INTEGER -> {
+          Integer fatherVal = gson.fromJson(this.value, int.class);
+          Integer motherVal = gson.fromJson(mother.getValue(), int.class);
+            value = gson.toJson(
+                fatherVal.equals(motherVal) ? fatherVal : rollNumberVal(fatherVal, motherVal));
         }
-        if (this.getPhenotype() == MendelianType.MENDELIAN_RECESSIVE) {
-            return MendelianType.MENDELIAN_RECESSIVE;
-        }
-        MendelianGene mendelianGene = HorsePoop.GSON.fromJson(value, MendelianGene.class);
-        if (mendelianGene.getAlleleA() == MendelianAllele.DOMINANT && mendelianGene.getAlleleB() == MendelianAllele.DOMINANT) {
-            return MendelianType.MENDELIAN_DOMINANT;
-        }
-        return MendelianType.MENDELIAN_HETEROZYGOUS;
+      }
     }
+    if(value == null) {
+        return null;
+    }
+    return new Gene(HorsePoop.GSON.toJson(trait),value,this.conserved,this.crossable,geneType);
+  }
 
-    public static Gene createInstance(Trait trait, EntityType entityType, EntityConfig entityConfig, GeneFactory instance) { //do something with factory instance after
-        return new Gene(trait, entityType, entityConfig);
+  public MendelianGene getMendelian() {
+    if (geneType != GeneType.MENDELIAN) {
+      return null;
     }
+    return new Gson().fromJson(value, MendelianGene.class);
+  }
 
-    public static Gene createInstance(Trait trait, EntityType entityType, EntityConfig entityConfig, String value, GeneFactory instance) {
-        return new Gene(trait, entityType, entityConfig, value);
-    }
+  @SuppressWarnings("unchecked")
 
-    public Trait getTrait() {
-        return HorsePoop.GSON.fromJson(trait, Trait.class);
+  private <T extends Number> T rollNumberVal(T a, T b) { //this name and function sucks
+    T min;
+    T max;
+    if (a instanceof Double && b instanceof Double) {
+      min = (T) (Double) Math.min(a.doubleValue(), b.doubleValue());
+      max = (T) (Double) Math.max(a.doubleValue(), b.doubleValue());
+      return (T) (Double) Genesis.RANDOM.nextDouble(min.doubleValue(), max.doubleValue());
+    } else if (a instanceof Integer || b instanceof Integer) {
+      min = (T) (Integer) Math.min(a.intValue(), b.intValue());
+      max = (T) (Integer) Math.max(a.intValue(), b.intValue());
+      return (T) (Integer) Genesis.RANDOM.nextInt(min.intValue(), max.intValue());
+    } else {
+      throw new IllegalArgumentException(
+          "Unsupported type. Only double and int are supported.");
     }
+  }
 
-    public String getValue() {
-        return value;
-    }
-
-    public boolean isConserved() {
-        return conserved;
-    }
-
-    public GeneType getGeneType() {
-        return geneType;
-    }
-
-    @Override
-    public String toString() {
-        Gson gson = HorsePoop.GSON;
-        StringBuilder stringBuilder = new StringBuilder(this.getTrait().getNamespacedKey() + ": ");
-        switch (this.geneType) {
-            case MENDELIAN -> {
-                return stringBuilder.append(gson.fromJson(this.value, MendelianGene.class).toString()).toString();
-            }
-            case NUMERIC -> {
-                return stringBuilder.append(gson.fromJson(this.value, double.class)).toString();
-            }
-            case ENUM -> {
-                return stringBuilder.append(value).toString();
-            }
-            case INTEGER -> {
-                return stringBuilder.append(gson.fromJson(this.value,int.class).toString()).toString();
-            }
-        }
-        return "";
-    }
+  @Override
+  public String toString() {
+    Gson gson = new Gson();
+    return switch (this.geneType) {
+      case MENDELIAN -> gson.fromJson(this.value, MendelianGene.class).toString();
+      case NUMERIC ->
+          Double.toString(MathUtil.roundToDecimals(gson.fromJson(this.value, Double.class), 3));
+      case ENUM -> this.value;
+      case INTEGER -> Integer.toString(gson.fromJson(this.value, Integer.class));
+    };
+  }
 }

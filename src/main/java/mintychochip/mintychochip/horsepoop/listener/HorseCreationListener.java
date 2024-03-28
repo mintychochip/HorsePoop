@@ -3,9 +3,11 @@ package mintychochip.mintychochip.horsepoop.listener;
 import com.google.gson.Gson;
 import mintychochip.mintychochip.horsepoop.HorsePoop;
 import mintychochip.mintychochip.horsepoop.api.AnimalSetGenomeFields;
+import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import mintychochip.mintychochip.horsepoop.factories.GeneFactory;
 import mintychochip.mintychochip.horsepoop.factories.GenomeFactory;
+import mintychochip.mintychochip.horsepoop.util.DataExtractor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Breedable;
 import org.bukkit.entity.Entity;
@@ -23,65 +25,76 @@ import java.util.List;
 
 public class HorseCreationListener implements Listener { //monitor listeners only
 
-    private List<LivingEntity> bredHorses = new ArrayList<>();
-    private final GeneFactory geneFactory;
-    private final GenomeFactory genomeFactory;
+  private List<LivingEntity> bredHorses = new ArrayList<>();
+  private final GeneFactory geneFactory;
+  private final GenomeFactory genomeFactory;
 
-    public HorseCreationListener(GeneFactory geneFactory, GenomeFactory genomeFactory) {
-        this.geneFactory = geneFactory;
-        this.genomeFactory = genomeFactory;
+  private final ConfigManager configManager;
+  public HorseCreationListener(ConfigManager configManager,GeneFactory geneFactory, GenomeFactory genomeFactory) {
+    this.geneFactory = geneFactory;
+    this.genomeFactory = genomeFactory;
+    this.configManager = configManager;
+  }
+
+  @EventHandler(priority = EventPriority.LOWEST)
+  private void conservativeCrossBreeding(final EntityBreedEvent event) {
+    LivingEntity father = event.getFather();
+    LivingEntity mother = event.getMother();
+    AnimalGenome fatherGenes = DataExtractor.extractGenomicData(father);
+    AnimalGenome motherGenes = DataExtractor.extractGenomicData(mother);
+    if (fatherGenes == null || motherGenes == null) {
+      return;
     }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    private void conservativeCrossBreeding(final EntityBreedEvent event) {
-        LivingEntity father = event.getFather();
-        LivingEntity mother = event.getMother();
-        AnimalGenome fatherGenes = extractData(father);
-        AnimalGenome motherGenes = extractData(mother);
-        bredHorses.add(event.getEntity());
-        Bukkit.getPluginManager().callEvent(new AnimalSetGenomeFields(event.getEntity(), genomeFactory.crossGenome(fatherGenes, motherGenes, event.getEntityType())));
-
+    bredHorses.add(event.getEntity());
+    AnimalGenome animalGenome = fatherGenes.crossGenome(motherGenes,event.getEntityType(),geneFactory);
+    if (animalGenome == null) {
+      Bukkit.broadcastMessage("ehre");
+      event.setCancelled(true);
     }
+      Bukkit.getPluginManager()
+          .callEvent(new AnimalSetGenomeFields(event.getEntity(), animalGenome));
+  }
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    private void cancelSameSexBreeding(final EntityBreedEvent event) {
-        LivingEntity father = event.getFather();
-        LivingEntity mother = event.getMother();
-        if (father instanceof Breedable f && mother instanceof Breedable m) {
-            if (checkForSameSex(extractData(father), extractData(mother))) { //if they are homo, then cancel
-                event.setCancelled(true);
-                f.setBreed(false);
-                m.setBreed(false);
-            }
-        }
-    }
 
-    private AnimalGenome extractData(LivingEntity livingEntity) {
-        PersistentDataContainer persistentDataContainer = livingEntity.getPersistentDataContainer();
-        String s = persistentDataContainer.get(HorsePoop.GENOME_KEY, PersistentDataType.STRING);
-        return new Gson().fromJson(s, AnimalGenome.class);
+  @EventHandler(priority = EventPriority.LOW)
+  private void cancelSameSexBreeding(final EntityBreedEvent event) {
+    LivingEntity father = event.getFather();
+    LivingEntity mother = event.getMother();
+    if (father instanceof Breedable f && mother instanceof Breedable m) {
+      AnimalGenome fatherGene = DataExtractor.extractGenomicData(father);
+      AnimalGenome motherGene = DataExtractor.extractGenomicData(mother);
+      if (fatherGene == null || motherGene == null) {
+        return;
+      }
+      if (fatherGene.getGender() == motherGene.getGender()) { //if they are homo, then cancel
+        event.setCancelled(true);
+        f.setBreed(false);
+        m.setBreed(false);
+      }
+      //add homosexual experience
     }
+  }
 
-    private boolean checkForSameSex(AnimalGenome f, AnimalGenome m) {
-        return f.getGender() == m.getGender(); // returns true if they are homo
-    }
+  private boolean checkForSameSex(AnimalGenome f, AnimalGenome m) {
+    return f.getGender() == m.getGender(); // returns true if they are homo
+  }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    private void onHorseSpawn(final EntitySpawnEvent event) {
-        Entity entity = event.getEntity();
-        if (!(entity instanceof LivingEntity livingEntity)) {
-            return;
-        }
-        if (!geneFactory.getHorseConfig().getEnabledEntityTypes().contains(livingEntity.getType().toString())) {
-            return;
-        }
-        if (bredHorses.contains(entity)) {
-            bredHorses.remove(entity);
-            return;
-        }
-        if (event.isCancelled()) {
-            return;
-        }
-        Bukkit.getPluginManager().callEvent(new AnimalSetGenomeFields(livingEntity, AnimalGenome.createInstance(geneFactory, event.getEntityType(), 3)));
+  @EventHandler(priority = EventPriority.MONITOR)
+  private void onHorseSpawn(final EntitySpawnEvent event) {
+    Entity entity = event.getEntity();
+    if (!(entity instanceof LivingEntity livingEntity)) {
+      return;
     }
+    if (!geneFactory.getHorseConfig().getEnabledEntityTypes().contains(livingEntity.getType())) {
+      return;
+    }
+    if (bredHorses.contains(entity)) {
+      bredHorses.remove(entity);
+      return;
+    }
+    if (event.isCancelled()) {
+      return;
+    }
+    Bukkit.getPluginManager().callEvent(new AnimalSetGenomeFields(livingEntity, genomeFactory.createInstance(entity.getType(),configManager,geneFactory,genomeFactory)));
+  }
 }

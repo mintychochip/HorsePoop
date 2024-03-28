@@ -5,7 +5,6 @@ import mintychochip.mintychochip.horsepoop.container.Trait;
 public enum GenericTrait implements Trait {
     YIELD("yield"),
     TEMPERANCE("temperance");
-
     private final String key;
 
     GenericTrait(String key) {

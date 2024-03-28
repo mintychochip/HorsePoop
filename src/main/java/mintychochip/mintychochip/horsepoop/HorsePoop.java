@@ -7,6 +7,8 @@ import mintychochip.genesis.commands.abstraction.GenericMainCommandManager;
 import mintychochip.mintychochip.horsepoop.commands.EnabledEntitiesCommand;
 import mintychochip.mintychochip.horsepoop.commands.EnchantCommand;
 import mintychochip.mintychochip.horsepoop.commands.EntityTraitCommand;
+import mintychochip.mintychochip.horsepoop.commands.Reload;
+import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.container.Trait;
 import mintychochip.mintychochip.horsepoop.container.TraitTypeAdapter;
 import mintychochip.mintychochip.horsepoop.factories.GeneFactory;
@@ -23,46 +25,54 @@ import java.util.List;
 import java.util.Random;
 
 public final class HorsePoop extends JavaPlugin {
-    private final Random random = new Random(System.currentTimeMillis());
 
-    public static NamespacedKey GENOME_KEY = null;
+  private final Random random = new Random(System.currentTimeMillis());
 
-    public static final Gson GSON = new GsonBuilder().registerTypeHierarchyAdapter(Trait.class, new TraitTypeAdapter()).create();
+  public static NamespacedKey GENOME_KEY = null;
 
-    private static HorsePoop INSTANCE;
+  public static final Gson GSON = new GsonBuilder().registerTypeHierarchyAdapter(Trait.class,
+      new TraitTypeAdapter()).create();
 
-    @Override
-    public void onEnable() {
-        INSTANCE = this;
-        // Plugin startup logic
-        GENOME_KEY = Genesis.getKey("genome");
-        ConfigManager configManager = ConfigManager.instanceConfigManager(this);
-        GeneFactory geneFactory = GeneFactory.createInstance(configManager.getHorseConfig());
-        HorseLifeTimeManager horseLifeTimeManager = new HorseLifeTimeManager(this);
-        List<Listener> listeners = new ArrayList<>();
-        listeners.add(new HorseCreationListener(geneFactory, GenomeFactory.createInstance(geneFactory, configManager)));
-        listeners.add(new AnimalPlayerListener(configManager));
-        listeners.add(new AnimalCreationListener(horseLifeTimeManager));
-        listeners.add(new HorsePerkListener());
-        listeners.add(new AnimalDeathListener(configManager));
-        listeners.add(ParticleListener.createParticleListener(this, new Gson()));
-        listeners.forEach(x -> {
-            Bukkit.getPluginManager().registerEvents(x, this);
-        });
-        GenericMainCommandManager genericMainCommandManager = new GenericMainCommandManager("entity", "asdasd");
-        genericMainCommandManager.instantiateSubCommandManager("list", "asdad")
-                .addSubCommand(new EnabledEntitiesCommand("enabled", "aasdasd", configManager.getHorseConfig()))
-                .addSubCommand(new EntityTraitCommand("trait", "lists traits", configManager.getHorseConfig().getEnabledEntityTypes(), configManager.getHorseConfig()))
-                .addSubCommand(new EnchantCommand("enchant", "enchant"));
-        getCommand("entity").setExecutor(genericMainCommandManager);
-    }
+  private static HorsePoop INSTANCE;
 
-    public static HorsePoop getInstance() {
-        return INSTANCE;
-    }
+  @Override
+  public void onEnable() {
+    INSTANCE = this;
+    // Plugin startup logic
+    GENOME_KEY = Genesis.getKey("genome");
+    ConfigManager configManager = ConfigManager.instanceConfigManager(this);
+    GeneFactory geneFactory = GeneFactory.createInstance(configManager);
+    //HorseLifeTimeManager horseLifeTimeManager = new HorseLifeTimeManager(this);
+    List<Listener> listeners = new ArrayList<>();
+    listeners.add(new HorseCreationListener(configManager, geneFactory,
+        GenomeFactory.createInstance(geneFactory, configManager)));
+    listeners.add(new AnimalPlayerListener(configManager));
+    listeners.add(new AnimalCreationListener());
+    listeners.add(new HorsePerkListener());
+    listeners.add(new AnimalPerkListener(configManager));
+    listeners.add(new ParticleListener(new Gson()));
+    listeners.forEach(x -> {
+      Bukkit.getPluginManager().registerEvents(x, this);
+    });
+    GenericMainCommandManager genericMainCommandManager = new GenericMainCommandManager("entity",
+        "asdasd");
+    genericMainCommandManager.addSubCommand(new Reload("reload", "reloads", configManager));
+    genericMainCommandManager.instantiateSubCommandManager("list", "asdad")
+        .addSubCommand(
+            new EnabledEntitiesCommand("enabled", "aasdasd", configManager.getEntityConfig()))
+        .addSubCommand(new EntityTraitCommand("trait", "lists traits",
+            configManager.getEntityConfig().getStringEnabledEntityTypes(),
+            configManager.getEntityConfig()))
+        .addSubCommand(new EnchantCommand("enchant", "enchant"));
+    getCommand("entity").setExecutor(genericMainCommandManager);
+  }
 
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
-    }
+  public static HorsePoop getInstance() {
+    return INSTANCE;
+  }
+
+  @Override
+  public void onDisable() {
+    // Plugin shutdown logic
+  }
 }

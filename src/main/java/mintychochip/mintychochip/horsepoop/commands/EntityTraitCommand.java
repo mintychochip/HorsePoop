@@ -3,7 +3,7 @@ package mintychochip.mintychochip.horsepoop.commands;
 import mintychochip.genesis.commands.abstraction.GenericCommand;
 import mintychochip.genesis.commands.abstraction.SubCommand;
 import mintychochip.genesis.util.EnumUtil;
-import mintychochip.mintychochip.horsepoop.EntityConfig;
+import mintychochip.mintychochip.horsepoop.config.EntityConfig;
 import mintychochip.mintychochip.horsepoop.container.Trait;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;

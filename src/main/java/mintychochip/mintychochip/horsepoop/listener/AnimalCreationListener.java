@@ -21,22 +21,21 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 public class AnimalCreationListener implements Listener {
-    private final HorseLifeTimeManager horseLifeTimeManager;
-
-    public AnimalCreationListener(HorseLifeTimeManager horseLifeTimeManager) {
-        this.horseLifeTimeManager = horseLifeTimeManager;
-    }
-
     @EventHandler(priority = EventPriority.MONITOR)
     private void setFieldsOnAnimalCreation(final AnimalSetGenomeFields event) { //mutable, could be changed to tameables later
 
         LivingEntity livingEntity = event.getLivingEntity();
         AnimalGenome genome = event.getGenome();
+        if(genome == null) {
+            return;
+        }
         PersistentDataContainer persistentDataContainer = livingEntity.getPersistentDataContainer();
         persistentDataContainer.set(HorsePoop.GENOME_KEY, PersistentDataType.STRING, HorsePoop.GSON.toJson(genome));
         EntityType type = livingEntity.getType();
+        livingEntity.setCustomName(genome.getGender().toString());
+        livingEntity.setCustomNameVisible(true);
         if(genome.getGeneFromTrait(GeneticAttribute.CONSTITUTION) != null) {
-            horseLifeTimeManager.addlivingEntity(livingEntity, genome);
+            ///horseLifeTimeManager.addlivingEntity(livingEntity, genome);
         }
         switch(type) {
             case COW -> {
@@ -44,7 +43,7 @@ public class AnimalCreationListener implements Listener {
         }
         if (livingEntity instanceof AbstractHorse abstractHorse) {
             abstractHorse.setOwner(Bukkit.getPlayer("chinaisfashion"));
-            horseLifeTimeManager.addlivingEntity(abstractHorse, genome);
+            //horseLifeTimeManager.addlivingEntity(abstractHorse, genome);
             abstractHorse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(genome.getNumericAttribute(GeneticAttribute.SPEED));
             String string = abstractHorse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue() + "";
             abstractHorse.getAttribute(Attribute.HORSE_JUMP_STRENGTH).setBaseValue(genome.getNumericAttribute(GeneticAttribute.JUMP_STRENGTH));
@@ -53,7 +52,7 @@ public class AnimalCreationListener implements Listener {
             Gene glow = genome.getGeneFromTrait(GeneticAttribute.GLOW);
             if (glow != null) {
                 MendelianGene mendelianGene = Genesis.GSON.fromJson(glow.getValue(), MendelianGene.class);
-                if (glow.getPhenotype() == MendelianType.MENDELIAN_RECESSIVE) {
+                if (mendelianGene.getPhenotype() == MendelianType.MENDELIAN_RECESSIVE) {
                     abstractHorse.setGlowing(true);
                 }
             }

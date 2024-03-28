@@ -1,6 +1,8 @@
 spider-milk:
   material: MILK_BUCKET
   custom-model: 1
-  lore: ['milky milk']
-  display-name: spidermilk
+  display-name: Experience-Enriched Milk
   rarity: UNCOMMON
+  events:
+    - '{"type" : CONSUME, "key": buss, "packet": {"action": EXECUTE_COMMAND,"value": "xp add chinaisfashion 5 levels"}, "desc" : "&8This item adds &a5 experience levels &8on consumption."}'
+    - '{"type" : CONSUME, "key": busssing, "packet": {"action": SEND_MESSAGE,"value": "You had &a5 levels &fadded!"}}'

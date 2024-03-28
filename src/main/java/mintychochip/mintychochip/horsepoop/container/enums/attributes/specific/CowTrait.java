@@ -6,7 +6,7 @@ import mintychochip.mintychochip.horsepoop.container.enums.attributes.TraitType;
 public enum CowTrait implements Trait {
 
     MOOSHROOM_GENE("mooshroom"),
-    MILK("milk"); //gives a different item if it has the gene
+    STRAWBERRY_MILK("strawberry-milk"); //gives a different item if it has the gene
     private final String key;
 
     CowTrait(String key) {

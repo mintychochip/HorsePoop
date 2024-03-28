@@ -6,6 +6,7 @@ import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import mintychochip.mintychochip.horsepoop.container.Gene;
 import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.GeneticAttribute;
 import mintychochip.mintychochip.horsepoop.container.enums.MendelianType;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.AbstractHorse;
@@ -87,7 +88,7 @@ public class HorsePerkListener implements Listener {
 
         Gene fire = animalGenome.getGeneFromTrait(GeneticAttribute.FIRE_RESISTANT);
         if(fire != null) {
-            if(fire.getPhenotype() == MendelianType.MENDELIAN_RECESSIVE) {
+            if(fire.getMendelian().getPhenotype() == MendelianType.MENDELIAN_RECESSIVE) {
                 abstractHorse.setFireTicks(0);
                 event.setCancelled(true);
             }
@@ -110,14 +111,24 @@ public class HorsePerkListener implements Listener {
             return;
         }
         AnimalGenome animalGenome = Genesis.GSON.fromJson(persistentDataContainer.get(HorsePoop.GENOME_KEY, PersistentDataType.STRING), AnimalGenome.class);
-
+        double radius = 2.5;
         Gene iceWalking = animalGenome.getGeneFromTrait(GeneticAttribute.ICE_WALKER);
         if(iceWalking != null) {
-            if(iceWalking.getPhenotype() == MendelianType.MENDELIAN_DOMINANT) {
+            if(iceWalking.getMendelian().getPhenotype() == MendelianType.MENDELIAN_DOMINANT) {
                 Location location = player.getLocation().subtract(0,1,0);
-                if(location.getBlock().getType() == Material.WATER) {
-                    location.getBlock().setType(Material.FROSTED_ICE);
+                for(double i = radius * -1; i < radius; i++) {
+                    for(double j = -1 * radius; j < radius; j++) {
+                        Location newLocation = new Location(location.getWorld(), location.getX() + i,
+                            location.getY(),
+                            location.getZ() + j);
+                        if(location.distance(newLocation) < radius) {
+                            if(newLocation.getBlock().getType() == Material.WATER) {
+                                newLocation.getBlock().setType(Material.FROSTED_ICE);
+                            }
+                        }
+                    }
                 }
+
             }
         }
     }

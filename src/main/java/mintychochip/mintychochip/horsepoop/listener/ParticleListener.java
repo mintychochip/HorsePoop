@@ -3,6 +3,8 @@ package mintychochip.mintychochip.horsepoop.listener;
 import com.google.gson.Gson;
 import mintychochip.mintychochip.horsepoop.HorsePoop;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
+import mintychochip.mintychochip.horsepoop.container.Gene;
+import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.GeneticAttribute;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -19,7 +21,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class ParticleListener implements Listener {
 
     private final Gson gson;
-    private ParticleListener(Gson gson) {
+    public ParticleListener(Gson gson) {
         this.gson = gson;
     }
     public static ParticleListener createParticleListener(JavaPlugin plugin, Gson gson) {
@@ -40,7 +42,8 @@ public class ParticleListener implements Listener {
             }
             String s = persistentDataContainer.get(HorsePoop.GENOME_KEY, PersistentDataType.STRING);
             AnimalGenome animalGenome = gson.fromJson(s, AnimalGenome.class);
-            Particle particle = animalGenome.getParticle();
+            Gene geneFromTrait = animalGenome.getGeneFromTrait(GeneticAttribute.PARTICLE);
+            Particle particle = new Gson().fromJson(geneFromTrait.getValue(),Particle.class);
             if(particle == null) {
                 return;
             }
