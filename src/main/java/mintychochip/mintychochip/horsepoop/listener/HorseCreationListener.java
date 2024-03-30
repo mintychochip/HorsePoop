@@ -1,7 +1,5 @@
 package mintychochip.mintychochip.horsepoop.listener;
 
-import com.google.gson.Gson;
-import mintychochip.mintychochip.horsepoop.HorsePoop;
 import mintychochip.mintychochip.horsepoop.api.AnimalSetGenomeFields;
 import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
@@ -17,8 +15,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +44,6 @@ public class HorseCreationListener implements Listener { //monitor listeners onl
     bredHorses.add(event.getEntity());
     AnimalGenome animalGenome = fatherGenes.crossGenome(motherGenes,event.getEntityType(),geneFactory);
     if (animalGenome == null) {
-      Bukkit.broadcastMessage("ehre");
       event.setCancelled(true);
     }
       Bukkit.getPluginManager()
@@ -95,6 +90,6 @@ public class HorseCreationListener implements Listener { //monitor listeners onl
     if (event.isCancelled()) {
       return;
     }
-    Bukkit.getPluginManager().callEvent(new AnimalSetGenomeFields(livingEntity, genomeFactory.createInstance(entity.getType(),configManager,geneFactory,genomeFactory)));
+    Bukkit.getPluginManager().callEvent(new AnimalSetGenomeFields(livingEntity, genomeFactory.createInstance(entity.getType(),geneFactory,genomeFactory)));
   }
 }

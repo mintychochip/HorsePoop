@@ -5,13 +5,19 @@ import com.google.gson.annotations.SerializedName;
 import java.util.stream.Collectors;
 import mintychochip.genesis.Genesis;
 import mintychochip.genesis.util.Rarity;
+import mintychochip.genesis.util.WeightedRandom;
+import mintychochip.mintychochip.horsepoop.config.AnimalTraitWrapper;
 import mintychochip.mintychochip.horsepoop.config.ConfigManager;
+import mintychochip.mintychochip.horsepoop.config.configs.EntityConfig;
+import mintychochip.mintychochip.horsepoop.container.Gene.GeneType;
 import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.GeneticAttribute;
 import mintychochip.mintychochip.horsepoop.factories.GeneFactory;
-import mintychochip.mintychochip.horsepoop.factories.GenomeFactory;
+import mintychochip.mintychochip.horsepoop.listener.display.RGB;
 import mintychochip.mintychochip.horsepoop.util.GeneUtil;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.Particle;
 import org.bukkit.entity.EntityType;
 
 import java.util.*;
@@ -19,8 +25,20 @@ import java.util.*;
 public class AnimalGenome {
 
   public enum Gender {
-    MALE,
-    FEMALE;
+    MALE('♂'),
+    FEMALE('♀');
+
+    private final char unicode;
+
+    Gender(char unicode) {
+      this.unicode = unicode;
+    }
+
+    public Component getUnicode() {
+      TextColor textColor = this == FEMALE ? TextColor.color(new RGB(255, 192, 203))
+          : TextColor.color(NamedTextColor.BLUE);
+      return Component.text(unicode).color(textColor);
+    }
 
     @Override
     public String toString() {
@@ -48,32 +66,35 @@ public class AnimalGenome {
     return new AnimalGenome(genes, gender, System.currentTimeMillis(), rarity);
   }
 
-  public static AnimalGenome createInstance(EntityType entityType, ConfigManager configManager,
+  public static AnimalGenome createInstance(EntityType entityType,
       GeneFactory geneFactory) {
     Random random = Genesis.RANDOM;
+    ConfigManager configManager = geneFactory.getConfigManager();
+    EntityConfig entityConfig = configManager.getEntityConfig();
+    Rarity rarity = configManager.getRandomWeight().chooseOne();
 
-    Rarity rarity = Rarity.getRandomRarity(random);
-
-    List<Trait> traits = configManager.getEntityConfig()
+    List<AnimalTraitWrapper> traitWrappers = entityConfig
         .getEntityTypeTraitMap().get(entityType);
-    List<Gene> genes = new ArrayList<>(traits.stream()
-        .filter(trait -> configManager.getEntityConfig().getConserved(trait, entityType))
-        .map(trait -> geneFactory.createInstance(trait, entityType, configManager)).toList());
+    List<Gene> genes = new ArrayList<>(traitWrappers.stream()
+        .filter(AnimalTraitWrapper::conserved)
+        .map(trait -> geneFactory.createInstance(trait, entityType, rarity)).toList());
 
-    if(rarity == Rarity.ARTIFACT && configManager.getEntityConfig().isTraitEnabled(GeneticAttribute.PARTICLE,entityType)) {
-      genes.add(geneFactory.createInstance(GeneticAttribute.PARTICLE,entityType,configManager));
+    if (rarity == Rarity.ARTIFACT && entityConfig
+        .isTraitEnabled(GeneticAttribute.PARTICLE, entityType)) {
+      genes.add(geneFactory.createInstance(GeneticAttribute.PARTICLE, entityType, rarity));
     }
 
+    Bukkit.broadcastMessage(rarity.toString());
     int mutations = configManager.getSettingsConfig().getMutationsByRarity(rarity);
     if (mutations == -1) {
       mutations = 3;
     }
 
     for (int i = 0; i < mutations; i++) {
-      int j = random.nextInt(traits.size());
-      Trait trait = traits.get(j);
-      if (!GeneUtil.isTraitInList(genes, trait)) {
-        genes.add(geneFactory.createInstance(trait, entityType, configManager));
+      int j = random.nextInt(traitWrappers.size());
+      Trait traitFromWrapper = entityConfig.getTraitFromWrapper(traitWrappers.get(j));
+      if (!GeneUtil.isTraitInList(genes, traitFromWrapper)) {
+        genes.add(geneFactory.createInstance(traitFromWrapper, entityType, rarity));
       }
     }
 
@@ -111,26 +132,26 @@ public class AnimalGenome {
         .filter(
             Objects::nonNull).toList());
     //
+    Rarity rarity = geneFactory.getConfigManager().getRandomWeight().chooseOne();
     double recombinanceChance = configManager.getSettingsConfig().getRecombinanceChance();
     if (recombinanceChance < 0) {
       recombinanceChance = 0.5;
     }
-    int maxCount = configManager.getSettingsConfig().getRecombinanceMaxCount();
+    int maxCount = configManager.getSettingsConfig().getMutationsByRarity(rarity);
     if (maxCount < 0) {
-      maxCount = 3;
+      maxCount = 1;
     }
     //third step for all unique traits, we are given a chance to roll for recombinance
     int recombinanceCount = 0;
     for (Gene gene : uniqueGenes(mother)) {
       if (gene.isCrossable()) {
         if (random.nextDouble() <= recombinanceChance && recombinanceCount <= maxCount) {
-          if (!configManager.getEntityConfig().getAttribute(gene.getTrait(), entityType).isNull()) {
-            Gene generatedGene = gene.crossGene(
-                geneFactory.createInstance(gene.getTrait(), entityType, configManager), entityType);
-            if (generatedGene != null) {
-              genes.add(generatedGene);
-              recombinanceCount++;
-            }
+          Gene generatedGene = gene.crossGene(
+              geneFactory.createInstance(gene.getTrait(), entityType, rarity), entityType);
+          if (generatedGene != null) {
+            genes.add(generatedGene);
+            Bukkit.broadcastMessage(gene.getTrait().getKey() + "successful added");
+            recombinanceCount++;
           }
         }
       }
@@ -138,7 +159,7 @@ public class AnimalGenome {
     //fourth step accoutn for deletions
     double deletionChance = 0.5;
     return new AnimalGenome(genes, random.nextBoolean() ? Gender.MALE : Gender.FEMALE,
-        System.currentTimeMillis(), Rarity.getRandomRarity(random));
+        System.currentTimeMillis(), rarity);
   }
 
   private Set<Gene> uniqueGenes(AnimalGenome mother) {

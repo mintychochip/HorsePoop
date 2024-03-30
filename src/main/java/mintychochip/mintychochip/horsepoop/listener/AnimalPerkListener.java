@@ -2,21 +2,16 @@ package mintychochip.mintychochip.horsepoop.listener;
 
 import com.google.gson.Gson;
 import mintychochip.genesis.Genesis;
-import mintychochip.genesis.config.abstraction.GenesisConfigurationSection;
 
-import mintychochip.genesis.items.container.AbstractItem;
-import mintychochip.genesis.items.container.AppraisableItemData;
+import mintychochip.mintychochip.horsepoop.api.events.EventCreator;
+import mintychochip.mintychochip.horsepoop.api.events.FawnyMilkEvent;
+import mintychochip.mintychochip.horsepoop.api.events.FawnyRidingMoveEvent;
 import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.HorsePoop;
-import mintychochip.mintychochip.horsepoop.config.AnimalItemConfig;
-import mintychochip.mintychochip.horsepoop.config.SettingsConfig;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome.Gender;
 import mintychochip.mintychochip.horsepoop.container.Gene;
-import mintychochip.mintychochip.horsepoop.container.MendelianGene;
-import mintychochip.mintychochip.horsepoop.container.enums.MendelianType;
 import mintychochip.mintychochip.horsepoop.container.enums.attributes.GenericTrait;
-import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.CowTrait;
 import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.SheepTrait;
 import mintychochip.mintychochip.horsepoop.util.DataExtractor;
 import org.bukkit.*;
@@ -26,8 +21,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockShearEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -39,9 +37,38 @@ public class AnimalPerkListener implements Listener {
 
   private final ConfigManager configManager;
 
+  private final EventCreator eventCreator;
+
   public AnimalPerkListener(ConfigManager configManager) {
     this.configManager = configManager;
+    this.eventCreator = new EventCreator(configManager);
   }
+
+  @EventHandler
+  private void onPlayerRidingMoveEvent(final PlayerMoveEvent event) {
+    if (event.isCancelled()) {
+      return;
+    }
+    Player player = event.getPlayer();
+    if (!player.isInsideVehicle()) {
+      return;
+    }
+    Entity vehicle = player.getVehicle();
+    if (!(vehicle instanceof LivingEntity livingEntity)) {
+      return;
+    }
+    PersistentDataContainer pdc = livingEntity.getPersistentDataContainer();
+    if (!pdc.has(HorsePoop.GENOME_KEY, PersistentDataType.STRING)) {
+      return;
+    }
+    AnimalGenome animalGenome = DataExtractor.extractGenomicData(livingEntity);
+    FawnyRidingMoveEvent fawnyRidingMoveEvent = eventCreator.instanceRidingMoveEvent(animalGenome,
+        livingEntity.getType(), player);
+    if (fawnyRidingMoveEvent != null) {
+      Bukkit.getPluginManager().callEvent(fawnyRidingMoveEvent);
+    }
+  }
+
 
   @EventHandler
   private void onFawnyAnimalDeath(final EntityDeathEvent event) {
@@ -101,7 +128,6 @@ public class AnimalPerkListener implements Listener {
           return;
         }
         ItemStack wool = new ItemStack(Material.valueOf(dyeColor + "_WOOL"));
-        Bukkit.broadcastMessage(rand + "");
         wool.setAmount(rand);
         world.playSound(entityLocation, Sound.ENTITY_SHEEP_SHEAR, 1, 1);
         world.dropItem(entityLocation, wool);
@@ -171,68 +197,32 @@ public class AnimalPerkListener implements Listener {
     }
     Player player = event.getPlayer();
     PlayerInventory inventory = player.getInventory();
-    ItemStack itemStack = new ItemStack(Material.MILK_BUCKET);
     if (player.isSneaking()) {
       event.setCancelled(true);
       return;
     }
 
-    ItemStack item;
-    if (event.getHand() == EquipmentSlot.HAND) {
-      item = inventory.getItemInMainHand();
-    } else {
-      item = inventory.getItemInOffHand();
+    if (animalGenome.getGender() == Gender.MALE && !configManager.getSettingsConfig()
+        .getMaleMilked()) {
+      player.sendMessage(ChatColor.RED + "You can't milk a male!");
+      event.setCancelled(true);
+      return;
     }
+    ItemStack item = event.getHand() == EquipmentSlot.HAND ? inventory.getItemInMainHand()
+        : inventory.getItemInOffHand();
     if (item.getType() != Material.BUCKET) {
       return;
     }
     int i = item.getAmount(); //count of buckets
     if (i < 1) {
-      event.setCancelled(true);
       return;
     }
-    if (player.getGameMode() == GameMode.SURVIVAL) {
-      item.setAmount(--i);
+    event.setCancelled(true);
+    FawnyMilkEvent fawnyMilkEvent = eventCreator.instanceMilkEvent(animalGenome,
+        livingEntity.getType(), player, item);
+    if (fawnyMilkEvent != null) {
+      Bukkit.getPluginManager().callEvent(fawnyMilkEvent);
     }
-    Gene milkTrait = animalGenome.getGeneFromTrait(CowTrait.STRAWBERRY_MILK);
-    SettingsConfig settingsConfig = configManager.getSettingsConfig();
-    if (animalGenome.getGender() == Gender.MALE && !settingsConfig.getMaleMilked()) {
-      player.sendMessage(ChatColor.RED + "You can't milk a male!");
-      event.setCancelled(true);
-      return;
-    }
-    if (milkTrait != null) {
-      MendelianGene mendelian = milkTrait.getMendelian();
-      if (mendelian == null) {
-        return;
-      }
-      if (mendelian.getPhenotype() == MendelianType.MENDELIAN_RECESSIVE) {
-        AnimalItemConfig itemConfig = configManager.getItemConfig();
-
-        double random = Genesis.RANDOM.nextDouble();
-        double strawberryMilkChance = settingsConfig.getDouble(
-            settingsConfig.getMainConfigurationSection(SettingsConfig.Marker.COW_TRAITS),
-            SettingsConfig.Marker.STRAWBERRY_MILK_CHANCE);
-        double goldenMilkChance = settingsConfig.getDouble(
-            settingsConfig.getMainConfigurationSection(SettingsConfig.Marker.COW_TRAITS),
-            SettingsConfig.Marker.GOLDEN_MILK_CHANCE);
-
-        GenesisConfigurationSection itemConfiguration = null;
-
-        if (random < strawberryMilkChance) {
-          itemConfiguration = itemConfig.getMainConfigurationSection("strawberry-milk");
-        } else if (random < goldenMilkChance) {
-          itemConfiguration = itemConfig.getMainConfigurationSection("golden-milk");
-        }
-        if (itemConfiguration != null) {
-          itemStack = new AbstractItem.EmbeddedDataBuilder(
-              HorsePoop.getInstance(), itemConfiguration, false,
-              new AppraisableItemData()).defaultBuild()
-              .getItemStack();
-        }
-      }
-    }
-    inventory.addItem(itemStack);
   }
 
   private int calculateRandomYield(int max, ItemStack shear) {

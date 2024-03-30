@@ -1,8 +1,11 @@
-package mintychochip.mintychochip.horsepoop.config;
+package mintychochip.mintychochip.horsepoop.config.configs;
 
+import java.util.List;
+import java.util.Random;
 import mintychochip.genesis.config.abstraction.GenericConfig;
 import mintychochip.genesis.config.abstraction.GenesisConfigurationSection;
 import mintychochip.genesis.util.Rarity;
+import mintychochip.mintychochip.horsepoop.container.AnimalGenome.Gender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class SettingsConfig extends GenericConfig {
@@ -15,9 +18,9 @@ public class SettingsConfig extends GenericConfig {
 
     //For cow-related traits
     public static final String COW_TRAITS = "cow-traits";
-    public static final String GOLDEN_MILK_CHANCE = "golden-milk-chance";
+    public static final String GOLDEN_WEIGHT = "golden-milk-weight";
 
-    public static final String STRAWBERRY_MILK_CHANCE = "strawberry-milk-chance";
+    public static final String STRAWBERRY_WEIGHT = "strawberry-milk-weight";
     public static final String MALE_MILK = "male-milk";
 
     //For gene-printing format
@@ -38,9 +41,6 @@ public class SettingsConfig extends GenericConfig {
   public String getString(GenesisConfigurationSection section, String string) {
     return section.getString(string);
   }
-  public double getDouble(GenesisConfigurationSection section, String marker) {
-    return section.getDouble(marker);
-  }
   public double getRecombinanceChance() {
     return 0.5;
   }
@@ -52,7 +52,7 @@ public class SettingsConfig extends GenericConfig {
   // Cow-related functions
 
   public boolean getMaleMilked() {
-    return this.getMainConfigurationSection(Marker.COW_TRAITS).getBoolean(Marker.MALE_MILK);
+    return this.getBoolean(Marker.MALE_MILK);
   }
 
   // Gene-format related functions
@@ -73,6 +73,23 @@ public class SettingsConfig extends GenericConfig {
   }
 
   public int getMutationsByRarity(Rarity rarity) {
-    return this.getMainConfigurationSection("rarity.mutations").getInt(rarity.toPlainString());
+    return this.getMainConfigurationSection("mutations").getInt(rarity.toPlainString());
+  }
+  public double getMultiplierByRarity(Rarity rarity) {
+    return this.getMainConfigurationSection("multipliers").getDouble(rarity.toPlainString());
+  }
+  public String getRandomHorseName(Gender gender, Random random) {
+    String defaultName = "pls";
+    GenesisConfigurationSection names = this.getMainConfigurationSection("random-names");
+
+    if (names.isNull()) return defaultName;
+
+    String genderKey = (gender == Gender.FEMALE) ? "female" : "male";
+    List<String> stringList = names.getStringList(genderKey);
+    if(stringList == null) {
+      return defaultName;
+    }
+    String name = stringList.isEmpty() ? defaultName : stringList.get(random.nextInt(stringList.size()));
+    return (name == null) ? defaultName : name;
   }
 }

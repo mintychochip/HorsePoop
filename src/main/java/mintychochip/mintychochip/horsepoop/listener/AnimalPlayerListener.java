@@ -1,19 +1,16 @@
 package mintychochip.mintychochip.horsepoop.listener;
 
 import com.google.gson.Gson;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-import mintychochip.genesis.util.StringUtil;
+import java.util.ArrayList;
+import java.util.Collection;
 import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.HorsePoop;
-import mintychochip.mintychochip.horsepoop.config.SettingsConfig;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
-import mintychochip.mintychochip.horsepoop.container.Gene;
-import mintychochip.mintychochip.horsepoop.container.Gene.GeneType;
-import mintychochip.mintychochip.horsepoop.container.Trait;
-import mintychochip.mintychochip.horsepoop.container.enums.attributes.GenericTrait;
-import org.bukkit.ChatColor;
+import mintychochip.mintychochip.horsepoop.listener.display.AnimalDisplayInfo;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.inventory.Book;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,6 +19,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class AnimalPlayerListener implements Listener {
 
@@ -32,8 +30,11 @@ public class AnimalPlayerListener implements Listener {
   private static final String DEFAULT_CHARACTER = "-";
   private final ConfigManager configManager;
 
-  public AnimalPlayerListener(ConfigManager configManager) {
+  private final BukkitAudiences audiences;
+
+  public AnimalPlayerListener(ConfigManager configManager, BukkitAudiences bukkitAudiences) {
     this.configManager = configManager;
+    this.audiences = bukkitAudiences;
   }
 
   @EventHandler
@@ -51,60 +52,31 @@ public class AnimalPlayerListener implements Listener {
       AnimalGenome genome = new Gson().fromJson(
           persistentDataContainer.get(HorsePoop.GENOME_KEY, PersistentDataType.STRING),
           AnimalGenome.class);
-      SettingsConfig settingsConfig = configManager.getSettingsConfig();
-      String bodyFormat = settingsConfig.getBody();
-      if (bodyFormat == null) {
-        bodyFormat = DEFAULT_BODY_FORMAT;
-      }
-      final String finalBodyFormat = bodyFormat;
-      List<String> body = genome.getGenes().stream()
-          .map(gene -> StringUtil.addColorToString(this.processBody(finalBodyFormat, gene)))
-          .collect(Collectors.toList());
-
-      int max = this.getBodyMaxSize(body);
-
-      String header = settingsConfig.getHeader();
-      if (header == null) {
-        header = DEFAULT_HEADER;
-      }
-      String character = settingsConfig.getCharacter();
-      if(character == null) {
-        character = DEFAULT_CHARACTER;
-      }
-      header = this.addAdditionalCharToString(max, header, character);
-      player.sendMessage(ChatColor.GOLD + "Rarity: " + ChatColor.WHITE + genome.getRarity());
-      player.sendMessage(StringUtil.addColorToString(header));
-      Collections.sort(body);
-      body.forEach(player::sendMessage);
-      player.sendMessage(StringUtil.addColorToString(character.repeat(header.length())));
+      AnimalDisplayInfo animalDisplayInfo = new AnimalDisplayInfo(rightClicked.getType(), genome,
+          rightClicked.getName());
+      Audience player1 = audiences.player(player);
+      this.displayBook(player1, animalDisplayInfo);
     }
-  }
-  private String processBody(String bodyFormat, Gene gene) {
-    Trait trait = gene.getTrait();
-    String s = bodyFormat.replaceAll("%key", trait.getKey())
-        .replaceAll("%value", gene.toString())
-        .replaceAll("%namespaced-key", trait.getNamespacedKey())
-        .replaceAll("%upper", trait.toString());
-    return StringUtil.capitalizeFirstLetter(s);
+
   }
 
-  private String addAdditionalCharToString(int max, String headerTitle, String character) {
-    int length = headerTitle.length();
-    String s = headerTitle;
-    if (length < max) {
-      int maxHalf = (max - length) / 4;
-      for (int i = 0; i < maxHalf; i++) {
-        s = character + s + character;
-      }
-    }
-    return s;
+  public void displayBook(@NonNull Audience target, AnimalDisplayInfo animalDisplayInfo) {
+    Component bookTitle = Component.text("Encyclopedia of cats");
+    Component bookAuthor = Component.text("kashike");
+    Collection<Component> bookPages = new ArrayList<>();
+    bookPages.add(animalDisplayInfo.getEntityTypeComponentImage(5)
+        .append(Component.newline())
+        .append(Component.newline())
+        .append(animalDisplayInfo.entityTypeComponent())
+        .append(Component.newline())
+        .append(animalDisplayInfo.genderComponent())
+        .append(Component.newline())
+        .append(animalDisplayInfo.rarityComponent()));
+    bookPages.add(Component.text("Genes: ")
+        .append(animalDisplayInfo.genesComponent()));
+    Book book = Book.book(bookTitle, bookAuthor, bookPages);
+    target.openBook(book);
   }
 
-  private int getBodyMaxSize(List<String> body) {
-    int max = -1;
-    for (String x : body) {
-      max = Math.max(max, x.length());
-    }
-    return max;
-  }
+
 }

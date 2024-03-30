@@ -3,7 +3,8 @@ package mintychochip.mintychochip.horsepoop.commands;
 import mintychochip.genesis.commands.abstraction.GenericCommand;
 import mintychochip.genesis.commands.abstraction.SubCommand;
 import mintychochip.genesis.util.EnumUtil;
-import mintychochip.mintychochip.horsepoop.config.EntityConfig;
+import mintychochip.mintychochip.horsepoop.config.AnimalTraitWrapper;
+import mintychochip.mintychochip.horsepoop.config.configs.EntityConfig;
 import mintychochip.mintychochip.horsepoop.container.Trait;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -27,8 +28,8 @@ public class EntityTraitCommand extends GenericCommand implements SubCommand {
         if (!EnumUtil.isInEnum(EntityType.class, executor)) {
             return false;
         }
-        for (Trait trait : entityConfig.getEntityTypeTraitMap().get(EntityType.valueOf(executor))) {
-            player.sendMessage(trait.getNamespacedKey());
+        for (AnimalTraitWrapper animalTraitWrapper : entityConfig.getEntityTypeTraitMap().get(EntityType.valueOf(executor))) {
+            player.sendMessage(animalTraitWrapper.trait());
         }
         return true;
     }

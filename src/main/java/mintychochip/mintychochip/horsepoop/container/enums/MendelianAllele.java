@@ -8,4 +8,8 @@ public enum MendelianAllele {
     public static MendelianAllele createAllele(double chance) {
         return Genesis.RANDOM.nextDouble() > chance ? MendelianAllele.DOMINANT : MendelianAllele.RECESSIVE;
     }
+    @Override
+    public String toString() {
+        return this == RECESSIVE ? "REC" : "DOM";
+    }
 }

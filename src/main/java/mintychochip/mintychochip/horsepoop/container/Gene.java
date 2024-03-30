@@ -7,12 +7,11 @@ import com.google.gson.annotations.SerializedName;
 import mintychochip.genesis.Genesis;
 import mintychochip.genesis.config.abstraction.GenesisConfigurationSection;
 import mintychochip.genesis.util.MathUtil;
+import mintychochip.genesis.util.Rarity;
+import mintychochip.mintychochip.horsepoop.config.AnimalTraitWrapper;
 import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.HorseMarker;
 import mintychochip.mintychochip.horsepoop.HorsePoop;
-import mintychochip.mintychochip.horsepoop.config.EntityConfig;
-import mintychochip.mintychochip.horsepoop.container.enums.MendelianAllele;
-import mintychochip.mintychochip.horsepoop.container.enums.MendelianType;
 import mintychochip.mintychochip.horsepoop.factories.GeneFactory;
 import org.bukkit.entity.EntityType;
 
@@ -35,28 +34,23 @@ public class Gene {
   private final boolean conserved; //the animal retains this after breeding always
   @SerializedName("crossable")
   private final boolean crossable; //prevents animal crossing from retaining this gene
-  @SerializedName("gene-type")
-  private final GeneType geneType;
-
-  private Gene(String trait, String value, boolean conserved, boolean crossable,
-      GeneType geneType) {
+  private Gene(String trait, String value, boolean conserved, boolean crossable) {
     this.trait = trait;
     this.value = value;
     this.conserved = conserved;
     this.crossable = crossable;
-    this.geneType = geneType;
   }
 
   public static Gene createInstance(@NotNull Trait trait, @NotNull String value, boolean conserved,
-      boolean crossable, @NotNull GeneType geneType, GeneFactory geneFactory) {
-    return new Gene(HorsePoop.GSON.toJson(trait), value, conserved, crossable, geneType);
+      boolean crossable, GeneFactory geneFactory) {
+    return new Gene(HorsePoop.GSON.toJson(trait), value, conserved, crossable);
   }
 
   public static Gene createInstance(@NotNull Trait trait, @NotNull EntityType entityType,
-      @NotNull ConfigManager configManager, @NotNull GeneFactory geneFactory) {
-    GenesisConfigurationSection attribute = configManager.getEntityConfig()
-        .getAttribute(trait, entityType);
-    if (attribute.isNull()) {
+      @NotNull Rarity rarity, @NotNull GeneFactory geneFactory) {
+    ConfigManager configManager = geneFactory.getConfigManager();
+    AnimalTraitWrapper traitWrapper = configManager.getEntityConfig().getTrait(trait, entityType);
+    if (traitWrapper == null) {
       return null;
     }
     if (!configManager.getEntityConfig().isEntityEnabled(entityType)) {
@@ -66,18 +60,13 @@ public class Gene {
       return null;
     }
     String traitString = HorsePoop.GSON.toJson(trait);
-    boolean crossable = attribute.getBoolean(HorseMarker.crossable);
-    boolean conserved = attribute.getBoolean(HorseMarker.conserved);
-    GeneType geneType = attribute.enumFromSection(GeneType.class, HorseMarker.gene_type);
-    GenesisConfigurationSection meta = configManager.getEntityConfig().getMeta(trait, entityType);
-    if (meta.isNull()) {
-      return null;
-    }
-    String value = GeneFactory.generateValue(trait, meta, geneType);
+    boolean crossable = traitWrapper.crossable();
+    boolean conserved = traitWrapper.conserved();
+    String value = GeneFactory.generateValue(traitWrapper, configManager,rarity);
     if (value == null) {
       return null;
     }
-    return new Gene(traitString, value, conserved, crossable, geneType);
+    return new Gene(traitString, value, conserved, crossable);
   }
 
   public boolean isCrossable() {
@@ -95,21 +84,18 @@ public class Gene {
   public boolean isConserved() {
     return conserved;
   }
-
-  public GeneType getGeneType() {
-    return geneType;
-  }
-
   public Gene crossGene(@NotNull Gene mother, EntityType entityType) {
-    Gene.GeneType motherGeneType = mother.getGeneType();
-    if (this.geneType != motherGeneType) {
+    GeneType motherGeneType = mother.getTrait().getGeneType();
+    if (this.getTrait().getGeneType() != motherGeneType) {
       return null;
     }
     Trait trait = this.getTrait();
     if (trait != mother.getTrait()) {
       return null;
     }
-    if (this.isCrossable() && mother.isCrossable()) {
+    if (!(this.isCrossable() && mother.isCrossable())) {
+      return null;
+    }
       Gson gson = new Gson();
       String value = null;
       switch (motherGeneType) {
@@ -128,23 +114,23 @@ public class Gene {
         case INTEGER -> {
           Integer fatherVal = gson.fromJson(this.value, int.class);
           Integer motherVal = gson.fromJson(mother.getValue(), int.class);
-            value = gson.toJson(
-                fatherVal.equals(motherVal) ? fatherVal : rollNumberVal(fatherVal, motherVal));
+          value = gson.toJson(
+              fatherVal.equals(motherVal) ? fatherVal : rollNumberVal(fatherVal, motherVal));
         }
       }
-    }
-    if(value == null) {
+      if(value == null) {
         return null;
-    }
-    return new Gene(HorsePoop.GSON.toJson(trait),value,this.conserved,this.crossable,geneType);
+      }
+      return new Gene(HorsePoop.GSON.toJson(trait),value,this.conserved,this.crossable);
   }
 
   public MendelianGene getMendelian() {
-    if (geneType != GeneType.MENDELIAN) {
+    if (this.getTrait().getGeneType() != GeneType.MENDELIAN) {
       return null;
     }
     return new Gson().fromJson(value, MendelianGene.class);
   }
+
 
   @SuppressWarnings("unchecked")
 
@@ -168,7 +154,7 @@ public class Gene {
   @Override
   public String toString() {
     Gson gson = new Gson();
-    return switch (this.geneType) {
+    return switch (this.getTrait().getGeneType()) {
       case MENDELIAN -> gson.fromJson(this.value, MendelianGene.class).toString();
       case NUMERIC ->
           Double.toString(MathUtil.roundToDecimals(gson.fromJson(this.value, Double.class), 3));
