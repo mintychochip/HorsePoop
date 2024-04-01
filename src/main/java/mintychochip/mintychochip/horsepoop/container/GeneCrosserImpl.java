@@ -1,34 +1,39 @@
 package mintychochip.mintychochip.horsepoop.container;
 
 import com.google.gson.Gson;
+import mintychochip.mintychochip.horsepoop.config.GeneTraitMeta;
+import mintychochip.mintychochip.horsepoop.config.TraitMeta;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class GeneCrosser {
+public class GeneCrosserImpl<T extends TraitMeta> implements TraitCrosser<T> {
   private final Random random;
   private final Gson gson;
-  private final TraitFetcher traitFetcher;
-  public GeneCrosser(Random random, Gson gson, TraitFetcher traitFetcher) {
+  private final TraitFetcher<T> traitFetcher;
+  public GeneCrosserImpl(Random random, Gson gson, TraitFetcher<T> traitFetcher) {
     this.random = random;
     this.gson = gson;
     this.traitFetcher = traitFetcher;
   }
-  public String crossGeneForValue(Gene father, Gene mother) {
-    GeneTrait motherTrait = traitFetcher.getGeneTrait(mother.getTrait());
-    GeneTrait fatherTrait = traitFetcher.getGeneTrait(father.getTrait());
+  @Override
+  public String crossTraitForValue(BaseTrait<T> father, BaseTrait<T> mother) {
+    Trait fatherTrait = traitFetcher.getTrait(father.trait);
+    Trait motherTrait = traitFetcher.getTrait(mother.trait);
 
-    ValueType valueType = motherTrait.getValueType();
-    if (fatherTrait != motherTrait || fatherTrait.getValueType() != motherTrait.getValueType() || (
-        !father.isCrossable() && mother.isCrossable())) {
+    if(fatherTrait != motherTrait || fatherTrait.getValueType() != motherTrait.getValueType()) {
       return null;
     }
-
+    if(father.getMeta() instanceof GeneTraitMeta gtmOne && mother.getMeta() instanceof GeneTraitMeta gtmTwo) {
+      if(!gtmOne.crossable() && gtmTwo.crossable()) {
+        return null;
+      }
+    }
     String fv = father.getValue();
     String mv = mother.getValue();
-
-    return switch (valueType) {
+    return switch (fatherTrait.getValueType()) {
       case NUMERIC -> String.valueOf(numericCrossingCase(Double.parseDouble(fv), Double.parseDouble(mv)));
       case INTEGER -> String.valueOf((int) numericCrossingCase(Double.parseDouble(fv), Double.parseDouble(mv)));
       case MENDELIAN -> gson.toJson(traitFetcher.getMendelian(father).crossGenes(traitFetcher.getMendelian(mother)));

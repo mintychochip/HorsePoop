@@ -5,8 +5,6 @@ import java.util.List;
 import mintychochip.genesis.util.StringUtil;
 import mintychochip.mintychochip.horsepoop.HorsePoop;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
-import mintychochip.mintychochip.horsepoop.container.BaseTrait;
-import mintychochip.mintychochip.horsepoop.container.Gene;
 import mintychochip.mintychochip.horsepoop.container.GeneTrait;
 import mintychochip.mintychochip.horsepoop.container.TraitFetcher;
 import mintychochip.mintychochip.horsepoop.util.ImagePixelColorDecoder;
@@ -16,7 +14,6 @@ import net.kyori.adventure.text.event.HoverEvent.Action;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Horse;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
 

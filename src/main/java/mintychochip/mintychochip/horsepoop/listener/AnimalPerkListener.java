@@ -9,7 +9,6 @@ import mintychochip.mintychochip.horsepoop.api.events.FawnyRidingMoveEvent;
 import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.HorsePoop;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
-import mintychochip.mintychochip.horsepoop.container.Gene;
 import mintychochip.mintychochip.horsepoop.container.TraitFetcher;
 import mintychochip.mintychochip.horsepoop.container.enums.attributes.GenericGeneTrait;
 import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.CowGeneTrait;

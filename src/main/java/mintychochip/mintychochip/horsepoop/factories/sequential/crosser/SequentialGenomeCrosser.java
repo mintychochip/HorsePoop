@@ -3,7 +3,6 @@ package mintychochip.mintychochip.horsepoop.factories.sequential.crosser;
 import java.util.ArrayList;
 import java.util.List;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
-import mintychochip.mintychochip.horsepoop.container.Gene;
 import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.abstraction.GenomeCrosser;
 import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.abstraction.GenomeCrossingStep;
 import org.bukkit.entity.EntityType;

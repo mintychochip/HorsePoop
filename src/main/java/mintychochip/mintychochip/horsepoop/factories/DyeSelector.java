@@ -3,7 +3,6 @@ package mintychochip.mintychochip.horsepoop.factories;
 import com.google.gson.Gson;
 import java.util.List;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
-import mintychochip.mintychochip.horsepoop.container.Gene;
 import mintychochip.mintychochip.horsepoop.container.TraitFetcher;
 import mintychochip.mintychochip.horsepoop.container.enums.MendelianType;
 import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.SheepGeneTrait;

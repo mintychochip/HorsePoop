@@ -6,11 +6,8 @@ import java.util.Random;
 import mintychochip.mintychochip.horsepoop.config.configs.SettingsConfig;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
-import mintychochip.mintychochip.horsepoop.container.Gene;
 import mintychochip.mintychochip.horsepoop.container.GenomeComparer;
 import mintychochip.mintychochip.horsepoop.container.TraitFetcher;
-import mintychochip.mintychochip.horsepoop.factories.GeneFactory;
-import mintychochip.mintychochip.horsepoop.factories.Step;
 import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.abstraction.GenomeCrossingStep;
 import org.bukkit.entity.EntityType;
 

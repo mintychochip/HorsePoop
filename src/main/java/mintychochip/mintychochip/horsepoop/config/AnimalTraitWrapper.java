@@ -2,7 +2,7 @@ package mintychochip.mintychochip.horsepoop.config;
 
 import com.google.gson.annotations.SerializedName;
 
-public record AnimalTraitWrapper(@SerializedName("trait")
-                                 String trait, @SerializedName("meta") TraitMeta meta){
+public record AnimalTraitWrapper<T extends TraitMeta>(@SerializedName("trait")
+                                 String trait, @SerializedName("meta") T meta){
 
 }

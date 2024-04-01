@@ -1,23 +1,18 @@
 package mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.steps;
 
 import java.util.List;
-import java.util.Random;
+
+import mintychochip.mintychochip.horsepoop.config.TraitMeta;
+import mintychochip.mintychochip.horsepoop.config.configs.TraitConfig;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
-import mintychochip.mintychochip.horsepoop.factories.GeneFactory;
-import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.AbstractInstancingStep;
+import mintychochip.mintychochip.horsepoop.container.Trait;
+import mintychochip.mintychochip.horsepoop.container.TraitGenerator;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.InstancingStep;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 
-public class InstanceGeneStep extends AbstractInstancingStep {
-
-  public InstanceGeneStep(GeneFactory geneFactory, Random random) {
-    super(geneFactory, random);
-  }
+public class InstanceGeneStep<T extends TraitMeta> implements InstancingStep<T> {
   @Override
-  public List<BaseTrait> instanceTrait(EntityType entityType, List<BaseTrait> traits) {
-    return geneFactory.getConfigManager().getEntityConfig()
-        .getAllGeneTraits(entityType).stream()
-        .map(trait -> geneFactory.createInstance(trait, entityType)).toList();
+  public <U extends Trait> List<BaseTrait<T>> instanceTrait(EntityType entityType, List<BaseTrait<T>> baseTraits, TraitConfig<U, T> config, TraitGenerator<T> generator) {
+    return config.getAllTraits(entityType).stream().map(trait -> generator.createInstance(trait, entityType, config)).toList();
   }
 }

@@ -11,11 +11,10 @@ import mintychochip.mintychochip.horsepoop.commands.EnabledEntitiesCommand;
 import mintychochip.mintychochip.horsepoop.commands.EnchantCommand;
 import mintychochip.mintychochip.horsepoop.commands.Reload;
 import mintychochip.mintychochip.horsepoop.config.ConfigManager;
+import mintychochip.mintychochip.horsepoop.config.GeneTraitMeta;
+import mintychochip.mintychochip.horsepoop.container.*;
 import mintychochip.mintychochip.horsepoop.container.GenomeComparer;
-import mintychochip.mintychochip.horsepoop.container.Trait;
-import mintychochip.mintychochip.horsepoop.container.TraitFetcher;
 import mintychochip.mintychochip.horsepoop.container.TypeAdapters.TraitTypeAdapter;
-import mintychochip.mintychochip.horsepoop.factories.GeneFactory;
 import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.SequentialGenomeCrosser;
 import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.abstraction.GenomeCrosser;
 import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.abstraction.GenomeCrossingStep;
@@ -24,7 +23,6 @@ import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.steps.Mu
 import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.steps.NonConservedStep;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.SequentialGenomeInstancer;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.SequentialTraitInstancer;
-import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.characteristic.InstanceCharStep;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.GenomeInstancer;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.InstancingStep;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.TraitInstancer;
@@ -67,14 +65,14 @@ public final class HorsePoop extends JavaPlugin {
     Random random = new Random(System.currentTimeMillis());
     INSTANCE = this;
     // Plugin startup logic
-
     GENOME_KEY = Genesis.getKey("genome");
     ConfigManager configManager = ConfigManager.instanceConfigManager(this);
     GeneFactory geneFactory = GeneFactory.createInstance(configManager);
     this.adventure = BukkitAudiences.create(this);
-    List<InstancingStep> geneInstancingSteps = new ArrayList<>();
-    geneInstancingSteps.add(new InstanceGeneStep(geneFactory, random));
-    geneInstancingSteps.add(new MutationInstancingStep(geneFactory, random));
+    List<InstancingStep<GeneTraitMeta>> geneInstancingSteps = new ArrayList<>();
+    geneInstancingSteps.add(new InstanceGeneStep<>());
+    geneInstancingSteps.add(new MutationInstancingStep<>());
+    TraitInstancer<GeneTraitMeta> geneInstancer = new SequentialTraitInstancer<GeneTraitMeta,GeneTrait>();
     List<InstancingStep> charInstancingSteps = new ArrayList<>();
     charInstancingSteps.add(new InstanceCharStep(geneFactory, random));
     List<Listener> listeners = new ArrayList<>();
