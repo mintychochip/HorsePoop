@@ -17,7 +17,6 @@ public class Reload extends GenericCommandObject implements SubCommand {
 
   @Override
   public boolean execute(String[] strings, Player player) {
-    Bukkit.broadcastMessage("All configs reloading:");
     configManager.reload();
     player.getLocation().getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP,1,1);
     Bukkit.broadcastMessage("Finished");

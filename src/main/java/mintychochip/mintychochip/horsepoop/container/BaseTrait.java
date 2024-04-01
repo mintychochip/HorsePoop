@@ -3,10 +3,8 @@ package mintychochip.mintychochip.horsepoop.container;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import mintychochip.genesis.util.MathUtil;
-import mintychochip.mintychochip.horsepoop.config.TraitMeta;
-import mintychochip.mintychochip.horsepoop.factories.GeneFactory;
 
-public class BaseTrait {
+public abstract class BaseTrait {
   @SerializedName("value")
   protected final String value;
 
@@ -17,23 +15,6 @@ public class BaseTrait {
     this.value = value;
     this.trait = trait;
   }
-
-  public static BaseTrait createInstance(Trait trait, TraitMeta traitMeta, GeneFactory geneFactory) {
-    if(traitMeta == null) {
-      return null;
-    }
-    String traitString = geneFactory.getTraitFetcher().toJson(trait);
-    String value = geneFactory.getValueFactory().generateValue(trait,traitMeta);
-
-    if(traitString == null) {
-      throw new RuntimeException("Trait String is null");
-    }
-    if(value == null) {
-      throw new RuntimeException("Value is null");
-    }
-    return new BaseTrait(value,traitString);
-  }
-
   public String getTrait() {
     return trait;
   }

@@ -1,4 +1,4 @@
-package mintychochip.mintychochip.horsepoop.factories.crosser.steps.abstraction;
+package mintychochip.mintychochip.horsepoop.factories.sequential.crosser.abstraction;
 
 import java.util.List;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
@@ -7,6 +7,6 @@ import org.bukkit.entity.EntityType;
 
 public interface GenomeCrossingStep {
 
-  List<Gene> crossGene(AnimalGenome father, AnimalGenome mother, EntityType entityType, List<Gene> previousResult);
+  List<Gene> crossGene(AnimalGenome father, AnimalGenome mother, EntityType entityType, List<Gene> setOfGenes);
 
 }

@@ -1,13 +1,12 @@
 package mintychochip.mintychochip.horsepoop.api.events;
 
 import mintychochip.mintychochip.horsepoop.api.EventCreator;
-import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class FawnyMilkEvent extends FawnyEvent implements Cancellable {

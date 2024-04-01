@@ -64,7 +64,6 @@ public class ValueFactory {
     } else if (trait == GenericGeneTrait.FEATHER_COLOR) {
       return randomEnumVal(FeatherColor.values(), random);
     } else if (trait == GenericCharacteristicTrait.RARITY) {
-      Bukkit.broadcastMessage("here");
       return randomEnumVal(Rarity.values(), random);
     } else if (trait == GenericCharacteristicTrait.GENDER) {
       return randomEnumVal(Gender.values(), random);

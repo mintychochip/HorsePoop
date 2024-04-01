@@ -1,4 +1,4 @@
-package mintychochip.mintychochip.horsepoop.factories.crosser.steps;
+package mintychochip.mintychochip.horsepoop.factories.sequential.crosser.steps;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -6,10 +6,11 @@ import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import mintychochip.mintychochip.horsepoop.container.Gene;
 import mintychochip.mintychochip.horsepoop.container.TraitFetcher;
 import mintychochip.mintychochip.horsepoop.factories.GeneFactory;
-import mintychochip.mintychochip.horsepoop.factories.crosser.steps.abstraction.AbstractGenomeCrossingStep;
+import mintychochip.mintychochip.horsepoop.factories.Step;
+import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.abstraction.GenomeCrossingStep;
 import org.bukkit.entity.EntityType;
 
-public class ConservationStep extends AbstractGenomeCrossingStep {
+public class ConservationStep extends Step implements GenomeCrossingStep {
 
 
   public ConservationStep(GeneFactory geneFactory) {
@@ -17,7 +18,7 @@ public class ConservationStep extends AbstractGenomeCrossingStep {
   }
 
   @Override
-  public List<Gene> crossGene(AnimalGenome father, AnimalGenome mother, EntityType entityType, List<Gene> previousResult) {
+  public List<Gene> crossGene(AnimalGenome father, AnimalGenome mother, EntityType entityType, List<Gene> setOfGenes) {
     List<Gene> fatherGenes = father.getGenes();
     List<Gene> motherGenes = mother.getGenes();
 

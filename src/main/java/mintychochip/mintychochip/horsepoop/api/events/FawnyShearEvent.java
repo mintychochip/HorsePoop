@@ -1,11 +1,8 @@
 package mintychochip.mintychochip.horsepoop.api.events;
 
 import mintychochip.mintychochip.horsepoop.api.EventCreator;
-import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;

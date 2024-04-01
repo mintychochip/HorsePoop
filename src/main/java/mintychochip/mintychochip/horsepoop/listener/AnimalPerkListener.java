@@ -190,7 +190,6 @@ public class AnimalPerkListener implements Listener {
     }
     AnimalGenome animalGenome = DataExtractor.extractGenomicData(livingEntity);
     if (animalGenome == null) {
-      Bukkit.broadcastMessage("here");
       return;
     }
     Player player = event.getPlayer();

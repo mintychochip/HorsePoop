@@ -87,7 +87,6 @@ public class MilkListener implements Listener {
       }
       weightedRandom.addItem(strawberry, settingsConfig.getDouble(Marker.STRAWBERRY_WEIGHT))
           .addItem(golden, settingsConfig.getDouble(Marker.GOLDEN_WEIGHT));
-      Bukkit.broadcastMessage(weightedRandom.getTotalWeight() + "");
       itemStack = new AbstractItem.EmbeddedDataBuilder(
           HorsePoop.getInstance(), weightedRandom.chooseOne(), false,
           new AppraisableItemData()).defaultBuild()
@@ -135,7 +134,6 @@ public class MilkListener implements Listener {
     if(event.isCancelled()) {
       return;
     }
-    Bukkit.broadcastMessage("here");
     ItemStack shears = event.getShears();
     LivingEntity livingEntity = event.getLivingEntity();
     if(livingEntity.getType() != EntityType.CHICKEN) {

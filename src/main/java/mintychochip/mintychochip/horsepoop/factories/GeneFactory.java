@@ -2,16 +2,17 @@ package mintychochip.mintychochip.horsepoop.factories;
 
 import com.google.gson.Gson;
 import java.util.Random;
+import mintychochip.mintychochip.horsepoop.HorsePoop;
 import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.config.TraitMeta;
-import mintychochip.mintychochip.horsepoop.config.configs.EntityConfig;
-import mintychochip.mintychochip.horsepoop.HorsePoop;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
+import mintychochip.mintychochip.horsepoop.container.Characteristic;
+import mintychochip.mintychochip.horsepoop.container.Gene;
 import mintychochip.mintychochip.horsepoop.container.GeneCrosser;
 import mintychochip.mintychochip.horsepoop.container.GeneTrait;
-import mintychochip.mintychochip.horsepoop.container.Gene;
 import mintychochip.mintychochip.horsepoop.container.Trait;
 import mintychochip.mintychochip.horsepoop.container.TraitFetcher;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 
 public class GeneFactory {
@@ -38,7 +39,7 @@ public class GeneFactory {
     if(traitMeta.type().equals("gene") && trait instanceof GeneTrait geneTrait) {
       return Gene.createInstance(geneTrait,entityType,this);
     }
-    return BaseTrait.createInstance(trait,traitMeta,this);
+    return Characteristic.createInstance(trait,traitMeta,this);
   }
   public Gene crossAndCreateGene(Gene father, Gene mother) {
     String value = geneCrosser.crossGeneForValue(father,mother);
@@ -60,14 +61,9 @@ public class GeneFactory {
   public TraitFetcher getTraitFetcher() {
     return traitFetcher;
   }
-
-  public EntityConfig getHorseConfig() {
-    return configManager.getEntityConfig();
-  }
   public ConfigManager getConfigManager() {
     return configManager;
   }
-
   public ValueFactory getValueFactory() {
     return valueFactory;
   }

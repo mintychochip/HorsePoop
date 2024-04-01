@@ -1,4 +1,4 @@
-package mintychochip.mintychochip.horsepoop.factories.crosser.steps;
+package mintychochip.mintychochip.horsepoop.factories.sequential.crosser.steps;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,21 +10,19 @@ import mintychochip.mintychochip.horsepoop.container.Gene;
 import mintychochip.mintychochip.horsepoop.container.GenomeComparer;
 import mintychochip.mintychochip.horsepoop.container.TraitFetcher;
 import mintychochip.mintychochip.horsepoop.factories.GeneFactory;
-import mintychochip.mintychochip.horsepoop.factories.crosser.steps.abstraction.AbstractGenomeCrossingStep;
+import mintychochip.mintychochip.horsepoop.factories.Step;
+import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.abstraction.GenomeCrossingStep;
 import org.bukkit.entity.EntityType;
 
-public class MutationStep extends AbstractGenomeCrossingStep {
-
+public class MutationStep extends Step implements GenomeCrossingStep {
   private final GenomeComparer genomeComparer;
-
   public MutationStep(GeneFactory geneFactory, GenomeComparer genomeComparer) {
     super(geneFactory);
     this.genomeComparer = genomeComparer;
   }
-
   @Override
   public List<Gene> crossGene(AnimalGenome father, AnimalGenome mother, EntityType entityType,
-      List<Gene> previousResult) {
+      List<Gene> setOfGenes) {
     SettingsConfig settingsConfig = geneFactory.getConfigManager().getSettingsConfig();
     double recombinanceChance = Math.max(settingsConfig.getRecombinanceChance(), 0.5);
     int maxCount = Math.max(settingsConfig.getRecombinanceMaxCount(), 1);
