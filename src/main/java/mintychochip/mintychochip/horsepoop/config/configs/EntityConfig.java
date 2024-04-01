@@ -1,18 +1,22 @@
 package mintychochip.mintychochip.horsepoop.config.configs;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import mintychochip.genesis.config.abstraction.GenericConfig;
-import mintychochip.genesis.config.abstraction.GenesisConfigurationSection;
 import mintychochip.genesis.util.EnumUtil;
-import mintychochip.mintychochip.horsepoop.HorseMarker;
-import mintychochip.mintychochip.horsepoop.HorsePoop;
-import mintychochip.mintychochip.horsepoop.config.AnimalTraitMeta;
 import mintychochip.mintychochip.horsepoop.config.AnimalTraitWrapper;
+import mintychochip.mintychochip.horsepoop.config.CharacteristicTraitMeta;
+import mintychochip.mintychochip.horsepoop.config.TraitMeta;
+import mintychochip.mintychochip.horsepoop.container.CharacteristicTrait;
+import mintychochip.mintychochip.horsepoop.container.GeneTrait;
 import mintychochip.mintychochip.horsepoop.container.Trait;
-import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.CowTrait;
-import mintychochip.mintychochip.horsepoop.container.enums.attributes.GenericTrait;
+import mintychochip.mintychochip.horsepoop.container.TypeAdapters.TraitMetaAdapter;
+import mintychochip.mintychochip.horsepoop.container.enums.attributes.TraitType;
+import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.CowGeneTrait;
+import mintychochip.mintychochip.horsepoop.container.enums.attributes.GenericGeneTrait;
 import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.GeneticAttribute;
-import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.SheepTrait;
+import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.SheepGeneTrait;
+import mintychochip.mintychochip.horsepoop.container.enums.characteristics.GenericCharacteristicTrait;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,31 +24,25 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.*;
 
 public class EntityConfig extends GenericConfig {
-
-  public static class Marker {
-
-    public static final String enabledEntities = "enabled-entities";
-  }
-
-  private final List<Trait> allTraits;
-
+  private final List<Trait> allTraitEnums = new ArrayList<>();
   private Set<EntityType> enabledEntityTypes;
   private Map<EntityType, List<AnimalTraitWrapper>> entityTypeTraitMap = new HashMap<>();
 
-  private List<Trait> loadAllTraits() {
-    List<Trait> traits = new ArrayList<>();
-    traits.addAll(Arrays.stream(GeneticAttribute.values()).toList());
-    traits.addAll(Arrays.stream(SheepTrait.values()).toList());
-    traits.addAll(Arrays.stream(GenericTrait.values()).toList());
-    traits.addAll(Arrays.stream(CowTrait.values()).toList());
-    return traits;
+  private void loadAllTraits() {
+    this.allTraitEnums.clear();
+    allTraitEnums.addAll(Arrays.stream(GeneticAttribute.values()).toList());
+    allTraitEnums.addAll(Arrays.stream(SheepGeneTrait.values()).toList());
+    allTraitEnums.addAll(Arrays.stream(GenericGeneTrait.values()).toList());
+    allTraitEnums.addAll(Arrays.stream(CowGeneTrait.values()).toList());
+    allTraitEnums.addAll(Arrays.stream(GenericCharacteristicTrait.values()).toList());
   }
   public EntityConfig(String path, JavaPlugin plugin) {
     super(path, plugin);
-    this.allTraits = loadAllTraits();
-    reload();
+    loadAllTraits();
+    Bukkit.getScheduler().runTaskLater(plugin,x -> {
+      reload();
+    },3L);
   }
-
   public boolean isEntityEnabled(EntityType entityType) {
     return enabledEntityTypes.contains(entityType);
   }
@@ -70,27 +68,33 @@ public class EntityConfig extends GenericConfig {
     }
     return entityTypes;
   }
-  public boolean isTraitEnabled(Trait trait, EntityType entityType) {
-    return this.getEntityTraits(entityType).stream().anyMatch(x -> x == trait);
+  public boolean isTraitEnabledForEntity(Trait trait, EntityType entityType) {
+    return this.entityTypeTraitMap.get(entityType).stream().anyMatch(x -> x.trait().equalsIgnoreCase(trait.getKey()));
   }
-  public List<Trait> getEntityTraits(EntityType entityType) {
-    Gson gson = new Gson();
-    List<Trait> traits = new ArrayList<>();
-    for (String s : this.getStringList(entityType.toString())) {
-      AnimalTraitWrapper animalTraitWrapper = gson.fromJson(s, AnimalTraitWrapper.class);
-      traits.add(isATrait(animalTraitWrapper.trait()));
+  public List<Trait> getAllTraits(EntityType entityType, TraitType traitType) { //filters by trait type, so gene or characteristic
+    if(!entityTypeTraitMap.containsKey(entityType)) {
+      return null;
     }
-    return traits;
+    return entityTypeTraitMap.get(entityType).stream()
+        .filter(x -> x.meta().type().equalsIgnoreCase(traitType.getKey())).map(
+            this::getTraitFromWrapper).toList();
   }
 
+  public List<GeneTrait> getAllGeneTraits(EntityType entityType) {
+    return this.getAllTraits(entityType,TraitType.GENE).stream().filter(x -> x instanceof GeneTrait).map(x -> (GeneTrait) x).toList();
+  }
+  public List<CharacteristicTrait> getAllCharacteristicTraits(EntityType entityType) {
+    return this.getAllTraits(entityType,TraitType.CHARACTERISTIC).stream().map(x -> (CharacteristicTrait) x).toList();
+  }
   private Map<EntityType, List<AnimalTraitWrapper>> resetEntityTypeTraitMap() {
     Map<EntityType, List<AnimalTraitWrapper>> entityTypeListHashMap = new HashMap<>();
-    Gson gson = new Gson();
+    Gson gson = new GsonBuilder().registerTypeHierarchyAdapter(TraitMeta.class,new TraitMetaAdapter()).create();
     for (String key : this.getKeys(false)) {
       String upperCase = key.toUpperCase();
       if (EnumUtil.isInEnum(EntityType.class, upperCase)) {
         EntityType entityType = EntityType.valueOf(upperCase);
         List<AnimalTraitWrapper> traitWrappers = new ArrayList<>();
+
         for (String json : this.getStringList(key)) {
           AnimalTraitWrapper animalTraitWrapper = gson.fromJson(json, AnimalTraitWrapper.class);
           if (animalTraitWrapper != null) {
@@ -106,31 +110,61 @@ public class EntityConfig extends GenericConfig {
   public Map<EntityType, List<AnimalTraitWrapper>> getEntityTypeTraitMap() {
     return entityTypeTraitMap;
   }
-
+  public GeneTrait getGeneTraitFromWrapper(AnimalTraitWrapper animalTraitWrapper) {
+    return this.getTraitFromWrapper(animalTraitWrapper) instanceof GeneTrait gt ? gt : null;
+  }
+  public CharacteristicTrait getCharacteristicTraitFromWrapper(AnimalTraitWrapper animalTraitWrapper) {
+    return this.getTraitFromWrapper(animalTraitWrapper) instanceof CharacteristicTrait ct ? ct : null;
+  }
   public Trait getTraitFromWrapper(AnimalTraitWrapper animalTraitWrapper) {
-    Trait aTrait = this.isATrait(animalTraitWrapper.trait());
-    if(aTrait == null) {
+    Trait traitEnum = this.getTraitEnum(animalTraitWrapper.trait());
+    if (traitEnum == null) {
       return null;
     }
-    return aTrait;
+    return traitEnum;
   }
-  public Trait isATrait(String key) {
-    for (Trait allTrait : allTraits) {
-      if (allTrait.getKey().equalsIgnoreCase(key)) {
-        return allTrait;
-      }
+  public Trait getTraitEnum(String key) {
+    return this.allTraitEnums.stream().filter(x -> x.getKey().equalsIgnoreCase(key)).findFirst().orElse(null);
+  }
+
+  public AnimalTraitWrapper getCharacteristicTraitWrapper(Trait characteristicTrait,
+      EntityType entityType) {
+    List<AnimalTraitWrapper> traitWrappers = this.entityTypeTraitMap.get(entityType);
+    Optional<AnimalTraitWrapper> first = traitWrappers.stream()
+        .filter(x -> x.trait().equals(characteristicTrait.getKey())).findFirst();
+    return first.orElse(null);
+  }
+
+  public AnimalTraitWrapper getTraitWrapper(Trait trait, EntityType entityType) {
+    List<AnimalTraitWrapper> traitWrappers = this.entityTypeTraitMap.get(entityType);
+    Optional<AnimalTraitWrapper> first = traitWrappers.stream()
+        .filter(x -> x.trait().equalsIgnoreCase(trait.getKey())).findFirst();
+    return first.orElse(null);
+  }
+  public TraitMeta getTraitMeta(Trait trait, EntityType entityType) {
+    AnimalTraitWrapper traitWrapper = this.getTraitWrapper(trait, entityType);
+    if(traitWrapper == null) {
+      return null;
+    }
+    return traitWrapper.meta();
+  }
+  public CharacteristicTraitMeta getCharacteristicTraitMeta(CharacteristicTrait characteristicTrait, EntityType entityType) {
+    TraitMeta meta = this.getCharacteristicTraitWrapper(characteristicTrait, entityType).meta();
+    if(meta instanceof CharacteristicTraitMeta characteristicTraitMeta) {
+      return characteristicTraitMeta;
     }
     return null;
   }
-  public AnimalTraitWrapper getTrait(Trait trait, EntityType entityType) {
+  public AnimalTraitWrapper getGeneticTrait(GeneTrait geneTrait, EntityType entityType) {
     List<AnimalTraitWrapper> traitWrappers = this.entityTypeTraitMap.get(entityType);
-    Optional<AnimalTraitWrapper> optionalWrapper = traitWrappers.stream()
-        .filter(x -> x.trait().equals(trait.getKey()))
+    Optional<AnimalTraitWrapper> first = traitWrappers.stream()
+        .filter(x -> x.trait().equals(geneTrait.getKey()))
         .findFirst();
 
-    return optionalWrapper.orElse(null);
+    return first.orElse(null);
   }
-  public List<Trait> getAllTraits() {
-    return allTraits;
+
+  public List<Trait> getAllTraitEnums() {
+    return allTraitEnums;
   }
 }

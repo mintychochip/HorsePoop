@@ -1,13 +1,16 @@
 package mintychochip.mintychochip.horsepoop.listener;
 
+import java.util.ArrayList;
+import java.util.List;
 import mintychochip.mintychochip.horsepoop.api.AnimalSetGenomeFields;
 import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
+import mintychochip.mintychochip.horsepoop.container.Gene;
 import mintychochip.mintychochip.horsepoop.factories.GeneFactory;
 import mintychochip.mintychochip.horsepoop.factories.GenomeFactory;
+import mintychochip.mintychochip.horsepoop.factories.crosser.GenomeCrosser;
 import mintychochip.mintychochip.horsepoop.util.DataExtractor;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Breedable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
@@ -16,20 +19,19 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class HorseCreationListener implements Listener { //monitor listeners only
 
   private List<LivingEntity> bredHorses = new ArrayList<>();
   private final GeneFactory geneFactory;
   private final GenomeFactory genomeFactory;
+  private final GenomeCrosser genomeCrosser;
 
-  private final ConfigManager configManager;
-  public HorseCreationListener(ConfigManager configManager,GeneFactory geneFactory, GenomeFactory genomeFactory) {
+
+  public HorseCreationListener(ConfigManager configManager, GeneFactory geneFactory,
+      GenomeFactory genomeFactory, GenomeCrosser genomeCrosser) {
     this.geneFactory = geneFactory;
     this.genomeFactory = genomeFactory;
-    this.configManager = configManager;
+    this.genomeCrosser = genomeCrosser;
   }
 
   @EventHandler(priority = EventPriority.LOWEST)
@@ -42,40 +44,42 @@ public class HorseCreationListener implements Listener { //monitor listeners onl
       return;
     }
     bredHorses.add(event.getEntity());
-    AnimalGenome animalGenome = fatherGenes.crossGenome(motherGenes,event.getEntityType(),geneFactory);
-    if (animalGenome == null) {
+    List<Gene> genes = genomeCrosser.crossGenomes(fatherGenes,motherGenes, event.getEntityType());
+    if (genes == null) {
       event.setCancelled(true);
     }
-      Bukkit.getPluginManager()
-          .callEvent(new AnimalSetGenomeFields(event.getEntity(), animalGenome));
-  }
-
-
-  @EventHandler(priority = EventPriority.LOW)
-  private void cancelSameSexBreeding(final EntityBreedEvent event) {
-    LivingEntity father = event.getFather();
-    LivingEntity mother = event.getMother();
-    if (father instanceof Breedable f && mother instanceof Breedable m) {
-      AnimalGenome fatherGene = DataExtractor.extractGenomicData(father);
-      AnimalGenome motherGene = DataExtractor.extractGenomicData(mother);
-      if (fatherGene == null || motherGene == null) {
-        return;
-      }
-      if (fatherGene.getGender() == motherGene.getGender()) { //if they are homo, then cancel
-        event.setCancelled(true);
-        f.setBreed(false);
-        m.setBreed(false);
-      }
-      //add homosexual experience
+    AnimalGenome instance = AnimalGenome.createInstance(null, genes, genomeCrosser);
+    if(instance == null) {
+      event.setCancelled(true);
     }
+    Bukkit.getPluginManager()
+        .callEvent(new AnimalSetGenomeFields(event.getEntity(), instance));
   }
 
-  private boolean checkForSameSex(AnimalGenome f, AnimalGenome m) {
-    return f.getGender() == m.getGender(); // returns true if they are homo
-  }
 
+//  @EventHandler(priority = EventPriority.LOW)
+//  private void cancelSameSexBreeding(final EntityBreedEvent event) {
+//    LivingEntity father = event.getFather();
+//    LivingEntity mother = event.getMother();
+//    if (father instanceof Breedable f && mother instanceof Breedable m) {
+//      AnimalGenome fatherGene = DataExtractor.extractGenomicData(father);
+//      AnimalGenome motherGene = DataExtractor.extractGenomicData(mother);
+//      if (fatherGene == null || motherGene == null) {
+//        return;
+//      }
+//      if (fatherGene.getCharacteristic(Characteristic) == motherGene.getGender()) { //if they are homo, then cancel
+//        event.setCancelled(true);
+//        f.setBreed(false);
+//        m.setBreed(false);
+//      }
+//      //add homosexual experience
+//    }
+//  }
   @EventHandler(priority = EventPriority.MONITOR)
   private void onHorseSpawn(final EntitySpawnEvent event) {
+    if (event.isCancelled()) {
+      return;
+    }
     Entity entity = event.getEntity();
     if (!(entity instanceof LivingEntity livingEntity)) {
       return;
@@ -87,9 +91,13 @@ public class HorseCreationListener implements Listener { //monitor listeners onl
       bredHorses.remove(entity);
       return;
     }
-    if (event.isCancelled()) {
+    AnimalGenome animalGenome = DataExtractor.extractGenomicData(entity);
+    if(animalGenome != null) {
+      Bukkit.broadcastMessage(animalGenome.getGenes().toString());
+      Bukkit.getPluginManager().callEvent(new AnimalSetGenomeFields(livingEntity,animalGenome));
       return;
     }
-    Bukkit.getPluginManager().callEvent(new AnimalSetGenomeFields(livingEntity, genomeFactory.createInstance(entity.getType(),geneFactory,genomeFactory)));
+    Bukkit.getPluginManager().callEvent(new AnimalSetGenomeFields(livingEntity,
+        genomeFactory.createInstance(entity.getType(), geneFactory, genomeFactory)));
   }
 }

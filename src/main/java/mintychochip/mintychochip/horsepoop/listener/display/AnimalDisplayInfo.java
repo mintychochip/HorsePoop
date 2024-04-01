@@ -2,12 +2,13 @@ package mintychochip.mintychochip.horsepoop.listener.display;
 
 import java.util.ArrayList;
 import java.util.List;
-import mintychochip.genesis.config.abstraction.GenesisConfigurationSection;
 import mintychochip.genesis.util.StringUtil;
-import mintychochip.mintychochip.horsepoop.config.ConfigManager;
+import mintychochip.mintychochip.horsepoop.HorsePoop;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
+import mintychochip.mintychochip.horsepoop.container.BaseTrait;
 import mintychochip.mintychochip.horsepoop.container.Gene;
-import mintychochip.mintychochip.horsepoop.container.Gene.GeneType;
+import mintychochip.mintychochip.horsepoop.container.GeneTrait;
+import mintychochip.mintychochip.horsepoop.container.TraitFetcher;
 import mintychochip.mintychochip.horsepoop.util.ImagePixelColorDecoder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -15,11 +16,12 @@ import net.kyori.adventure.text.event.HoverEvent.Action;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Horse;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
 
 public class AnimalDisplayInfo {
-
+  private final TraitFetcher traitFetcher = new TraitFetcher(HorsePoop.GSON); //will fix later
   @NonNull
   private final EntityType entityType;
   @NonNull
@@ -34,12 +36,13 @@ public class AnimalDisplayInfo {
     this.name = name;
   }
 
-  public Component rarityComponent() {
-    return Component.text("Rarity: ")
-        .append(Component.text(animalGenome.getRarity().toString())
-            .hoverEvent(HoverEvent.hoverEvent(Action.SHOW_TEXT, Component.text(
-                "Rarity determines how many possible mutations your animal can have."))));
-  }
+//  public Component rarityComponent() {
+//    Rarity rarity = animalGenome.getRarity();
+//    return Component.text("Rarity: ")
+//        .append(Component.text(rarity.getLegacyColor() + StringUtil.capitalizeFirstLetter(rarity.toPlainString().toLowerCase()))
+//            .hoverEvent(HoverEvent.hoverEvent(Action.SHOW_TEXT, Component.text(
+//                "Rarity determines how many possible mutations your animal can have."))));
+//  }
 
   public Component genesComponent() {
     Component component = Component.text("")
@@ -50,23 +53,23 @@ public class AnimalDisplayInfo {
     }
     return component;
   }
-
   private Component individualGeneComponent(Gene gene) {
+    GeneTrait geneTrait = traitFetcher.getGeneTrait(gene.getTrait());
     return Component.text("")
-        .append(Component.text(StringUtil.capitalizeFirstLetter(gene.getTrait().getKey()) + ": ")
+        .append(Component.text(StringUtil.capitalizeFirstLetter(geneTrait.getKey()) + ": ")
             .color(NamedTextColor.GOLD)
             .hoverEvent(HoverEvent.hoverEvent(Action.SHOW_TEXT,
-                Component.text(gene.getTrait().getShortDescription()))))
-        .append(Component.text(gene.toString()));
+                Component.text(geneTrait.getShortDescription()))))
+        .append(Component.text(gene.toString(traitFetcher)));
   }
 
-  public Component genderComponent() {
-    return Component.text("Gender: ")
-        .append(animalGenome.getGender().getUnicode())
-        .hoverEvent(HoverEvent.hoverEvent(Action.SHOW_TEXT, Component.text(
-            StringUtil.capitalizeFirstLetter(
-                animalGenome.getGender().toString().toLowerCase()))));
-  }
+//  public Component genderComponent() {
+//    Gender gender = animalGenome.getGender();
+//    TextComponent text = Component.text(
+//        StringUtil.capitalizeFirstLetter(gender.toString().toLowerCase()));
+//    return Component.text("Gender: ").append(text.color(gender
+//        .getTextColor()).hoverEvent(HoverEvent.hoverEvent(Action.SHOW_TEXT, text)));
+//  }
 
   public Component entityTypeComponent() {
     return Component.text("Specimen: ").append(Component.text(

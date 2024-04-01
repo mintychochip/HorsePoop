@@ -8,9 +8,6 @@ import mintychochip.mintychochip.horsepoop.HorsePoop;
 import mintychochip.mintychochip.horsepoop.config.configs.AnimalItemConfig;
 import mintychochip.mintychochip.horsepoop.config.configs.EntityConfig;
 import mintychochip.mintychochip.horsepoop.config.configs.SettingsConfig;
-import mintychochip.mintychochip.horsepoop.container.Trait;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ConfigManager extends GenericConfigManager {
@@ -20,7 +17,6 @@ public class ConfigManager extends GenericConfigManager {
   private final EntityConfig entityConfig;
   private final SettingsConfig settingsConfig;
   private final AnimalItemConfig itemConfig;
-
   private ConfigManager(JavaPlugin plugin) {
     super(plugin);
     entityConfig = new EntityConfig("entities.yml", plugin);
@@ -40,7 +36,6 @@ public class ConfigManager extends GenericConfigManager {
     settingsConfig.reload();
     itemConfig.reload();
   }
-
   public static ConfigManager instanceConfigManager(JavaPlugin plugin) {
     if (!plugin.getName().equalsIgnoreCase("horsepoop")) {
       return null;

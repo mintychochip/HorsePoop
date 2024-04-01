@@ -2,19 +2,20 @@ package mintychochip.mintychochip.horsepoop.container.enums.attributes;
 
 public enum TraitType {
 
-    SHEEP("sheep"),
-    HORSE("horse"),
-    GENERIC("generic"),
+  SHEEP("sheep"),
+  HORSE("horse"),
+  GENERIC("generic"),
+  COW("cow"),
+  CHARACTERISTIC("char"),
+  GENE("gene");
 
-    COW("cow");
+  private final String key;
 
-    private final String key;
+  TraitType(String key) {
+    this.key = key;
+  }
 
-    TraitType(String key) {
-        this.key = key;
-    }
-
-    public String getKey() {
-        return key;
-    }
+  public String getKey() {
+    return key;
+  }
 }

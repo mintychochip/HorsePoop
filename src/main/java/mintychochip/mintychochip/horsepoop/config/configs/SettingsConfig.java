@@ -1,11 +1,15 @@
 package mintychochip.mintychochip.horsepoop.config.configs;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import mintychochip.genesis.config.abstraction.GenericConfig;
 import mintychochip.genesis.config.abstraction.GenesisConfigurationSection;
 import mintychochip.genesis.util.Rarity;
-import mintychochip.mintychochip.horsepoop.container.AnimalGenome.Gender;
+import mintychochip.mintychochip.horsepoop.container.enums.Gender;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class SettingsConfig extends GenericConfig {
@@ -34,6 +38,7 @@ public class SettingsConfig extends GenericConfig {
     public static final String CENTER = "centered";
   }
 
+  private int minLetters = 3;
   public SettingsConfig(String path, JavaPlugin plugin) {
     super(path, plugin);
   }
@@ -41,6 +46,7 @@ public class SettingsConfig extends GenericConfig {
   public String getString(GenesisConfigurationSection section, String string) {
     return section.getString(string);
   }
+
   public double getRecombinanceChance() {
     return 0.5;
   }
@@ -75,21 +81,62 @@ public class SettingsConfig extends GenericConfig {
   public int getMutationsByRarity(Rarity rarity) {
     return this.getMainConfigurationSection("mutations").getInt(rarity.toPlainString());
   }
+
   public double getMultiplierByRarity(Rarity rarity) {
     return this.getMainConfigurationSection("multipliers").getDouble(rarity.toPlainString());
   }
+
+  public String getRandomName(Gender gender, int count, boolean exact) {
+    String defaultName = "asdasd";
+    GenesisConfigurationSection randomNames = this.getMainConfigurationSection(
+        "random-names");
+    if (randomNames.isNull()) {
+      throw new RuntimeException("The random-names section is null, check config.");
+    }
+
+    String genderKey = (gender == Gender.FEMALE) ? "female" : "male";
+
+    GenesisConfigurationSection genderSection = randomNames.getConfigurationSection(
+        genderKey);
+    if (genderSection.isNull()) {
+      throw new RuntimeException(
+          "The random-names." + genderKey + " section is null, check config.");
+    }
+    Random random = new Random(System.currentTimeMillis());
+
+    if (exact) {
+      List<String> stringList = genderSection.getStringList(count + "-letter");
+      if(stringList == null) {
+        return defaultName;
+      }
+      return stringList.get(random.nextInt(stringList.size()));
+    }
+    List<String> stringList = new ArrayList<>();
+    for (int i = minLetters; i <= count; i++) {
+      List<String> tempList = genderSection.getStringList(i + "-letter");
+      if(tempList == null) {
+        return defaultName;
+      }
+      stringList.addAll(tempList);
+    }
+    return stringList.get(random.nextInt(stringList.size()));
+  }
+
   public String getRandomHorseName(Gender gender, Random random) {
     String defaultName = "pls";
     GenesisConfigurationSection names = this.getMainConfigurationSection("random-names");
 
-    if (names.isNull()) return defaultName;
+    if (names.isNull()) {
+      return defaultName;
+    }
 
     String genderKey = (gender == Gender.FEMALE) ? "female" : "male";
     List<String> stringList = names.getStringList(genderKey);
-    if(stringList == null) {
+    if (stringList == null) {
       return defaultName;
     }
-    String name = stringList.isEmpty() ? defaultName : stringList.get(random.nextInt(stringList.size()));
+    String name =
+        stringList.isEmpty() ? defaultName : stringList.get(random.nextInt(stringList.size()));
     return (name == null) ? defaultName : name;
   }
 }

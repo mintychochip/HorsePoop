@@ -1,34 +1,34 @@
 package mintychochip.mintychochip.horsepoop.container.enums.attributes.specific;
 
-import mintychochip.mintychochip.horsepoop.container.Gene.GeneType;
-import mintychochip.mintychochip.horsepoop.container.Trait;
+import mintychochip.mintychochip.horsepoop.container.GeneTrait;
+import mintychochip.mintychochip.horsepoop.container.ValueType;
 import mintychochip.mintychochip.horsepoop.container.enums.attributes.TraitType;
 
-public enum GeneticAttribute implements Trait {
-  CONSTITUTION("constitution", GeneType.NUMERIC, "asd"),
-  SPEED("speed", GeneType.NUMERIC, "asd"),
-  PARTICLE("particle", GeneType.ENUM, "asd"),
-  STRENGTH("strength", GeneType.NUMERIC, "asd"),
-  JUMP_STRENGTH("jumping-strength", GeneType.NUMERIC, "asd"),
-  FIRE_RESISTANT("fire", GeneType.MENDELIAN, "asd"), //lava and fire walking
-  GLOW("glow", GeneType.MENDELIAN, "asd"), //enum
-  REGEN("regeneration", GeneType.MENDELIAN, "asd"),
-  ICE_WALKER("ice-walker", GeneType.MENDELIAN,
-      "When riding your horse on ice, generate a blanket of frosted ice beneath you."),
-  SLOWFALL("slowfall", GeneType.MENDELIAN, "asd"),
-  INVISIBLE("unseen", GeneType.MENDELIAN, "asd"),
-  ATTRACTIVE("attractive", GeneType.MENDELIAN, "asd"),
-  EGG_LAYER("egg", GeneType.MENDELIAN, "asd"),
-  DESERTWALKING("desert-haste", GeneType.MENDELIAN, "asd"),
-  SILENT("silence", GeneType.MENDELIAN, "asd"),
-  ARMOR("base-armor", GeneType.MENDELIAN, "asd");
+public enum GeneticAttribute implements GeneTrait {
+  CONSTITUTION("constitution", ValueType.NUMERIC, "asd"),
+  SPEED("speed", ValueType.NUMERIC, "asd"),
+  PARTICLE("particle", ValueType.ENUM, "asd"),
+  STRENGTH("strength", ValueType.NUMERIC, "asd"),
+  JUMP_STRENGTH("jumping-strength", ValueType.NUMERIC, "asd"),
+  FIRE_RESISTANT("fire", ValueType.MENDELIAN, "asd"), //lava and fire walking
+  GLOW("glow", ValueType.MENDELIAN, "asd"), //enum
+  REGEN("regeneration", ValueType.MENDELIAN, "asd"),
+  ICE_WALKER("ice-walker", ValueType.MENDELIAN,
+      "Riding your horse on water generates frosted ice under you."),
+  SLOWFALL("slowfall", ValueType.MENDELIAN, "asd"),
+  INVISIBLE("unseen", ValueType.MENDELIAN, "asd"),
+  ATTRACTIVE("attractive", ValueType.MENDELIAN, "asd"),
+  EGG_LAYER("egg", ValueType.MENDELIAN, "asd"),
+  DESERTWALKING("desert-haste", ValueType.MENDELIAN, "asd"),
+  SILENT("silence", ValueType.MENDELIAN, "asd"),
+  ARMOR("base-armor", ValueType.MENDELIAN, "asd");
 
   private final String key;
-  private final GeneType geneType;
+  private final ValueType valueType;
   private final String description;
-  GeneticAttribute(String key, GeneType geneType, String description) {
+  GeneticAttribute(String key, ValueType valueType, String description) {
     this.key = key;
-    this.geneType = geneType;
+    this.valueType = valueType;
     this.description = description;
   }
 
@@ -48,8 +48,7 @@ public enum GeneticAttribute implements Trait {
   }
 
   @Override
-  public GeneType getGeneType() {
-    return geneType;
+  public ValueType getValueType() {
+    return valueType;
   }
-
 }

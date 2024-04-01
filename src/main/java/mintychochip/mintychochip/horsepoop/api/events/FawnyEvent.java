@@ -7,24 +7,15 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-abstract class FawnyEvent extends AbstractEvent {
+public abstract class FawnyEvent extends AbstractEvent {
 
   @NotNull
   protected final AnimalGenome animalGenome;
   @NotNull
   protected final EntityType entityType;
-  @NotNull
-  protected final ConfigManager configManager;
-
-  protected FawnyEvent(@NotNull AnimalGenome animalGenome, @NotNull EntityType entityType,
-      @NotNull ConfigManager configManager) {
+  protected FawnyEvent(@NotNull AnimalGenome animalGenome, @NotNull EntityType entityType) {
     this.animalGenome = animalGenome;
     this.entityType = entityType;
-    this.configManager = configManager;
-  }
-
-  public @NotNull ConfigManager getConfigManager() {
-    return configManager;
   }
   public @NotNull EntityType getEntityType() {
     return entityType;

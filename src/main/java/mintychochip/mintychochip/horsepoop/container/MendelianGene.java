@@ -1,8 +1,6 @@
 package mintychochip.mintychochip.horsepoop.container;
 
 import mintychochip.genesis.Genesis;
-import mintychochip.mintychochip.horsepoop.HorsePoop;
-import mintychochip.mintychochip.horsepoop.container.Gene.GeneType;
 import mintychochip.mintychochip.horsepoop.container.enums.MendelianAllele;
 
 import java.util.Random;

@@ -5,7 +5,6 @@ import mintychochip.genesis.commands.abstraction.SubCommand;
 import mintychochip.genesis.util.EnumUtil;
 import mintychochip.mintychochip.horsepoop.config.AnimalTraitWrapper;
 import mintychochip.mintychochip.horsepoop.config.configs.EntityConfig;
-import mintychochip.mintychochip.horsepoop.container.Trait;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 

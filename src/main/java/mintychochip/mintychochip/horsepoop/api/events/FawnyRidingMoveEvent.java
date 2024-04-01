@@ -1,5 +1,6 @@
 package mintychochip.mintychochip.horsepoop.api.events;
 
+import mintychochip.mintychochip.horsepoop.api.EventCreator;
 import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import org.bukkit.entity.EntityType;
@@ -13,9 +14,8 @@ public class FawnyRidingMoveEvent extends FawnyEvent implements Cancellable {
 
   private final Player player;
   private FawnyRidingMoveEvent(@NotNull AnimalGenome animalGenome,
-      @NotNull EntityType entityType,
-      @NotNull ConfigManager configManager, @NotNull Player player) {
-    super(animalGenome, entityType, configManager);
+      @NotNull EntityType entityType, @NotNull Player player) {
+    super(animalGenome, entityType);
     this.player = player;
   }
 
@@ -24,9 +24,9 @@ public class FawnyRidingMoveEvent extends FawnyEvent implements Cancellable {
   }
 
   public static FawnyRidingMoveEvent createInstance(AnimalGenome animalGenome,
-      EntityType entityType, Player player, ConfigManager configManager,
+      EntityType entityType, Player player,
       EventCreator eventCreator) {
-    return new FawnyRidingMoveEvent(animalGenome, entityType, configManager, player);
+    return new FawnyRidingMoveEvent(animalGenome, entityType, player);
   }
 
   @Override
