@@ -5,57 +5,58 @@ import java.util.List;
 import mintychochip.mintychochip.horsepoop.api.AnimalSetGenomeFields;
 import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
+import mintychochip.mintychochip.horsepoop.container.grabber.GenomeGrasper;
 import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.abstraction.GenomeCrosser;
-import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.GenomeInstancer;
-import mintychochip.mintychochip.horsepoop.util.DataExtractor;
+import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.GenomeGenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 
 public class HorseCreationListener implements Listener { //monitor listeners only
 
   private List<LivingEntity> bredHorses = new ArrayList<>();
-  private final GeneFactory geneFactory;
   private final GenomeCrosser genomeCrosser;
 
-  private final GenomeInstancer genomeInstancer;
+  private final ConfigManager configManager;
 
+  private final GenomeGenerator genomeGenerator;
 
-  public HorseCreationListener(ConfigManager configManager, GeneFactory geneFactory, GenomeCrosser genomeCrosser, GenomeInstancer genomeInstancer) {
-    this.geneFactory = geneFactory;
+  private final GenomeGrasper genomeGrasper;
+  public HorseCreationListener(ConfigManager configManager, GenomeCrosser genomeCrosser, GenomeGenerator genomeGenerator, GenomeGrasper genomeGrasper) {
+    this.configManager = configManager;
     this.genomeCrosser = genomeCrosser;
-    this.genomeInstancer = genomeInstancer;
+    this.genomeGenerator = genomeGenerator;
+    this.genomeGrasper = genomeGrasper;
   }
 
-  @EventHandler(priority = EventPriority.LOWEST)
-  private void conservativeCrossBreeding(final EntityBreedEvent event) {
-    LivingEntity father = event.getFather();
-    LivingEntity mother = event.getMother();
-    AnimalGenome fatherGenes = DataExtractor.extractGenomicData(father);
-    AnimalGenome motherGenes = DataExtractor.extractGenomicData(mother);
-    if (fatherGenes == null || motherGenes == null) {
-      return;
-    }
-    bredHorses.add(event.getEntity());
-    List<Gene> genes = genomeCrosser.crossGenomes(fatherGenes,motherGenes, event.getEntityType());
-    if (genes == null) {
-      event.setCancelled(true);
-    }
-    List<Characteristic> list = genomeInstancer.getCharInstancer()
-        .instanceTraits(event.getEntityType()).stream().filter(x -> x instanceof Characteristic)
-        .map(x -> (Characteristic) x).toList();
-    AnimalGenome instance = AnimalGenome.createInstance(list, genes, genomeInstancer);
-    if(instance == null) {
-      event.setCancelled(true);
-    }
-    Bukkit.getPluginManager()
-        .callEvent(new AnimalSetGenomeFields(event.getEntity(), instance));
-  }
+//  @EventHandler(priority = EventPriority.LOWEST)
+//  private void conservativeCrossBreeding(final EntityBreedEvent event) {
+//    LivingEntity father = event.getFather();
+//    LivingEntity mother = event.getMother();
+//    AnimalGenome fatherGenes = genomeGrabber.grab(father);
+//    AnimalGenome motherGenes = genomeGrabber.grab(mother);
+//    if (fatherGenes == null || motherGenes == null) {
+//      return;
+//    }
+//    bredHorses.add(event.getEntity());
+//    List<Gene> genes = genomeCrosser.crossGenomes(fatherGenes, motherGenes, event.getEntityType());
+//    if (genes == null) {
+//      event.setCancelled(true);
+//    }
+//    List<Characteristic> list = genomeGenerator.getCharInstancer()
+//        .instanceTraits(event.getEntityType()).stream().filter(x -> x instanceof Characteristic)
+//        .map(x -> (Characteristic) x).toList();
+//    AnimalGenome instance = AnimalGenome.createInstance(list, genes, genomeGenerator);
+//    if (instance == null) {
+//      event.setCancelled(true);
+//    }
+//    Bukkit.getPluginManager()
+//        .callEvent(new AnimalSetGenomeFields(event.getEntity(), instance));
+//  }
 
 
 //  @EventHandler(priority = EventPriority.LOW)
@@ -77,7 +78,7 @@ public class HorseCreationListener implements Listener { //monitor listeners onl
 //    }
 //  }
   @EventHandler(priority = EventPriority.MONITOR)
-  private void onHorseSpawn(final EntitySpawnEvent event) {
+  private void onEntitySpawn(final EntitySpawnEvent event) {
     if (event.isCancelled()) {
       return;
     }
@@ -85,24 +86,24 @@ public class HorseCreationListener implements Listener { //monitor listeners onl
     if (!(entity instanceof LivingEntity livingEntity)) {
       return;
     }
-    if (!geneFactory.getConfigManager().getEntityConfig().getEnabledEntityTypes().contains(livingEntity.getType())) {
+    if (!configManager.getEntityConfig().getEnabledEntityTypes().contains(livingEntity.getType())) {
       return;
     }
     if (bredHorses.contains(entity)) {
       bredHorses.remove(entity);
       return;
     }
-//    AnimalGenome animalGenome = DataExtractor.extractGenomicData(entity);
-//    if(animalGenome != null) {
-//      Bukkit.broadcastMessage(animalGenome.getGenes().toString());
-//      Bukkit.getPluginManager().callEvent(new AnimalSetGenomeFields(livingEntity,animalGenome));
-//      return;
-//    }
+    AnimalGenome animalGenome = genomeGrasper.grab(livingEntity);
+    if(animalGenome != null) {
+      Bukkit.getPluginManager().callEvent(new AnimalSetGenomeFields(livingEntity,animalGenome));
+      return;
+    }
 
-    AnimalGenome animalGenome = genomeInstancer.instanceGenome(livingEntity.getType());
+    animalGenome = genomeGenerator.instanceGenome(livingEntity.getType());
     if(animalGenome == null) {
       return;
     }
+    Bukkit.broadcastMessage("here");
     Bukkit.getPluginManager().callEvent(new AnimalSetGenomeFields(livingEntity,
         animalGenome));
   }

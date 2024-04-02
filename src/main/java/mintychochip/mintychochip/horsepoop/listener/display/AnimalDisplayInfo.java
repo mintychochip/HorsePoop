@@ -3,22 +3,16 @@ package mintychochip.mintychochip.horsepoop.listener.display;
 import java.util.ArrayList;
 import java.util.List;
 import mintychochip.genesis.util.StringUtil;
-import mintychochip.mintychochip.horsepoop.HorsePoop;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
-import mintychochip.mintychochip.horsepoop.container.GeneTrait;
-import mintychochip.mintychochip.horsepoop.container.TraitFetcher;
 import mintychochip.mintychochip.horsepoop.util.ImagePixelColorDecoder;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.event.HoverEvent.Action;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.entity.EntityType;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
 
 public class AnimalDisplayInfo {
-  private final TraitFetcher traitFetcher = new TraitFetcher(HorsePoop.GSON); //will fix later
+
   @NonNull
   private final EntityType entityType;
   @NonNull
@@ -41,32 +35,52 @@ public class AnimalDisplayInfo {
 //                "Rarity determines how many possible mutations your animal can have."))));
 //  }
 
-  public Component genesComponent() {
-    Component component = Component.text("")
-        .append(Component.newline().append(Component.newline()));
-    for (Gene gene : animalGenome.getGenes()) {
-      component = component.append(this.individualGeneComponent(gene))
-          .append(Component.newline());
-    }
-    return component;
-  }
-  private Component individualGeneComponent(Gene gene) {
-    GeneTrait geneTrait = traitFetcher.getGeneTrait(gene.getTrait());
-    return Component.text("")
-        .append(Component.text(StringUtil.capitalizeFirstLetter(geneTrait.getKey()) + ": ")
-            .color(NamedTextColor.GOLD)
-            .hoverEvent(HoverEvent.hoverEvent(Action.SHOW_TEXT,
-                Component.text(geneTrait.getShortDescription()))))
-        .append(Component.text(gene.toString(traitFetcher)));
-  }
-
-//  public Component genderComponent() {
-//    Gender gender = animalGenome.getGender();
-//    TextComponent text = Component.text(
-//        StringUtil.capitalizeFirstLetter(gender.toString().toLowerCase()));
-//    return Component.text("Gender: ").append(text.color(gender
-//        .getTextColor()).hoverEvent(HoverEvent.hoverEvent(Action.SHOW_TEXT, text)));
+//  public Component genesComponent() {
+//    Component component = Component.text("").append(Component.newline());
+//    for (Gene gene : animalGenome.getGenes()) {
+//      component = component.append(this.individualGeneComponent(gene))
+//          .append(Component.newline());
+//    }
+//    return component;
 //  }
+//  public Component characteristicComponent() {
+//    Component component = Component.text("").append(Component.newline());
+//    for (Characteristic characteristic : animalGenome.getCharacteristics()) {
+//      component = component.append(this.individualCharacteristicComponent(characteristic))
+//          .append(Component.newline());
+//    }
+//    return component;
+//  }
+//
+//  private Component individualGeneComponent(Gene gene) {
+//    GeneTrait geneTrait = traitFetcher.getGeneTrait(gene.getTrait());
+//    return this.pieceComponent(StringUtil.capitalizeFirstLetter(geneTrait.getKey()) + ": ",
+//        geneTrait.getShortDescription(),
+//        traitFetcher.geneComponent(gene));
+//  }
+//
+//  private Component pieceComponent(String traitKey, String description, Component value) {
+//    return Component.text("")
+//        .append(Component.text(traitKey)
+//            .color(NamedTextColor.GOLD)
+//            .hoverEvent(HoverEvent.hoverEvent(Action.SHOW_TEXT,
+//                Component.text(description))))
+//        .append(value);
+//  }
+//  private Component individualCharacteristicComponent(Characteristic characteristic) {
+//    CharacteristicTrait characteristicTrait = traitFetcher.getCharacteristicTrait(
+//        characteristic.getTrait());
+//    return this.pieceComponent(StringUtil.capitalizeFirstLetter(characteristicTrait.getKey()) + ": ",
+//        characteristicTrait.getShortDescription(),
+//        traitFetcher.characteristicComponent(characteristic));
+//  }
+////  public Component genderComponent() {
+////    Gender gender = animalGenome.getGender();
+////    TextComponent text = Component.text(
+////        StringUtil.capitalizeFirstLetter(gender.toString().toLowerCase()));
+////    return Component.text("Gender: ").append(text.color(gender
+////        .getTextColor()).hoverEvent(HoverEvent.hoverEvent(Action.SHOW_TEXT, text)));
+////  }
 
   public Component entityTypeComponent() {
     return Component.text("Specimen: ").append(Component.text(

@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 public class FawnyShearEvent extends FawnyEvent implements Cancellable {
 
   private boolean cancelled = false;
+  @Nullable
   private final Player player;
   private final ItemStack shears;
   private final LivingEntity livingEntity;

@@ -5,7 +5,9 @@ import mintychochip.mintychochip.horsepoop.container.ValueType;
 
 public enum GenericCharacteristicTrait implements CharacteristicTrait {
   GENDER("gender", ValueType.ENUM, "gender of the animal"),
-  RARITY("rarity",ValueType.ENUM,"rarity of the animal");
+  RARITY("rarity",ValueType.ENUM,"rarity of the animal"),
+  HEIGHT("height",ValueType.NUMERIC,"Height of the animal"),
+  COCK_SIZE("penis",ValueType.NUMERIC,"biggus");
   private final String key;
   private final String description;
   private final ValueType valueType;

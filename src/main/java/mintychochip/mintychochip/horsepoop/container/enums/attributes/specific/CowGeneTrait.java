@@ -10,7 +10,6 @@ public enum CowGeneTrait implements GeneTrait {
   STRAWBERRY_MILK("strawberry-milk", ValueType.MENDELIAN,
       "asd"); //gives a different item if it has the gene
   private final String key;
-
   private final ValueType valueType;
   private final String description;
 

@@ -5,7 +5,6 @@ import java.util.Collection;
 import mintychochip.mintychochip.horsepoop.api.events.FawnyInteractEntityEvent;
 import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
-import mintychochip.mintychochip.horsepoop.container.enums.characteristics.GenericCharacteristicTrait;
 import mintychochip.mintychochip.horsepoop.listener.display.AnimalDisplayInfo;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.inventory.Book;
@@ -36,8 +35,9 @@ public class AnimalPlayerListener implements Listener {
 
   @EventHandler
   private void onPlayerRightClick(final FawnyInteractEntityEvent event) {
-    Player player = event.getPlayer();
-    if(player.isSneaking()) {
+    Player player = event.getPlayer();    Bukkit.broadcastMessage("here");
+
+    if (player.isSneaking()) {
       LivingEntity livingEntity = event.getLivingEntity();
       AnimalGenome genome = event.getAnimalGenome();
       AnimalDisplayInfo animalDisplayInfo = new AnimalDisplayInfo(event.getEntityType(), genome,
@@ -55,11 +55,11 @@ public class AnimalPlayerListener implements Listener {
     bookPages.add(animalDisplayInfo.getEntityTypeComponentImage(3)
         .append(Component.newline())
         .append(Component.newline())
-       // .append(animalDisplayInfo.genderComponent())
         .append(Component.newline()));
-        //.append(animalDisplayInfo.rarityComponent()));
-    bookPages.add(Component.text("Genes: ")
-        .append(animalDisplayInfo.genesComponent()));
+//    bookPages.add(Component.text("Characteristics: ")
+//        .append(animalDisplayInfo.characteristicComponent()));
+//    bookPages.add(Component.text("Genes: ")
+//        .append(animalDisplayInfo.genesComponent()));
     Book book = Book.book(bookTitle, bookAuthor, bookPages);
     target.openBook(book);
   }

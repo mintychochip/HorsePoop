@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import java.util.Random;
 
+import mintychochip.genesis.util.Rarity;
 import mintychochip.mintychochip.horsepoop.config.AnimalTraitWrapper;
 import mintychochip.mintychochip.horsepoop.config.GeneTraitMeta;
 import mintychochip.mintychochip.horsepoop.config.TraitMeta;

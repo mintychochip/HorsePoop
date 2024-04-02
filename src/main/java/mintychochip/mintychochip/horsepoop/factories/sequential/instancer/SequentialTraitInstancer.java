@@ -12,7 +12,7 @@ import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.a
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.TraitInstancer;
 import org.bukkit.entity.EntityType;
 
-public class SequentialTraitInstancer<T extends TraitMeta, U extends Trait> implements TraitInstancer<T> {
+public class SequentialTraitInstancer<U extends Trait,T extends TraitMeta> implements TraitInstancer<T> {
 
     private final List<InstancingStep<T>> steps;
 

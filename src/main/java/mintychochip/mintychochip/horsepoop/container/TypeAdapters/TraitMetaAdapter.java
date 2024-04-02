@@ -4,24 +4,34 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import mintychochip.mintychochip.horsepoop.config.AnimalTraitWrapper;
 import mintychochip.mintychochip.horsepoop.config.CharacteristicTraitMeta;
 import mintychochip.mintychochip.horsepoop.config.GeneTraitMeta;
 import mintychochip.mintychochip.horsepoop.config.TraitMeta;
+import org.bukkit.Bukkit;
 
-public class TraitMetaAdapter extends TypeAdapter<TraitMeta> {
+public class TraitMetaAdapter<T extends TraitMeta> extends TypeAdapter<AnimalTraitWrapper<T>> {
 
-  private Map<String, Class<? extends TraitMeta>> traitMap = new HashMap<>();
+  private final Class<T> aClass;
+
+  @SuppressWarnings("unchecked")
+  public TraitMetaAdapter(Class<T> aClass) {
+    this.aClass = aClass;
+  }
 
   @Override
-  public void write(JsonWriter jsonWriter, TraitMeta traitMeta) throws IOException {
+  public void write(JsonWriter jsonWriter, AnimalTraitWrapper<T> tAnimalTraitWrapper)
+      throws IOException {
 
   }
 
   @Override
-  public TraitMeta read(JsonReader jsonReader) throws IOException {
+  public AnimalTraitWrapper<T> read(JsonReader jsonReader) throws IOException {
     jsonReader.beginObject();
 
     String type = null;
@@ -33,6 +43,17 @@ public class TraitMetaAdapter extends TypeAdapter<TraitMeta> {
     double max = 0;
     double min = 0;
 
+    String trait = null;
+    while (jsonReader.hasNext()) {
+      String name = jsonReader.nextName();
+      if (name.equals("trait")) {
+        trait = jsonReader.nextString();
+      }
+      if (name.equals("meta")) {
+        jsonReader.beginObject();
+        break;
+      }
+    }
     while (jsonReader.hasNext()) {
       String name = jsonReader.nextName();
       switch (name) {
@@ -57,14 +78,21 @@ public class TraitMetaAdapter extends TypeAdapter<TraitMeta> {
       }
     }
     jsonReader.endObject();
+    jsonReader.endObject();
 
+    T meta;
     if (type == null) {
       return null;
     }
-
     if (type.equalsIgnoreCase("gene")) {
-      return new GeneTraitMeta(conserved, crossable, chance, max, min, type);
+      meta = (T) new GeneTraitMeta(conserved, crossable, chance, max, min, type);
+    } else {
+      meta = (T) new CharacteristicTraitMeta(max, min, type);
     }
-    return new CharacteristicTraitMeta(max, min, type);
+    if (aClass.isInstance(meta)) {
+      return new AnimalTraitWrapper<>(trait, meta);
+    } else {
+      return null;
+    }
   }
 }

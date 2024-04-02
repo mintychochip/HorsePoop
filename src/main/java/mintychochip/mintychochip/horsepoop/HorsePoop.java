@@ -7,33 +7,30 @@ import java.util.List;
 import java.util.Random;
 import mintychochip.genesis.Genesis;
 import mintychochip.genesis.commands.abstraction.GenericMainCommandManager;
+import mintychochip.mintychochip.horsepoop.api.EventCreator;
 import mintychochip.mintychochip.horsepoop.commands.EnabledEntitiesCommand;
 import mintychochip.mintychochip.horsepoop.commands.EnchantCommand;
 import mintychochip.mintychochip.horsepoop.commands.Reload;
+import mintychochip.mintychochip.horsepoop.config.CharacteristicTraitMeta;
 import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.config.GeneTraitMeta;
-import mintychochip.mintychochip.horsepoop.container.*;
-import mintychochip.mintychochip.horsepoop.container.GenomeComparer;
+import mintychochip.mintychochip.horsepoop.config.configs.EntityConfig;
+import mintychochip.mintychochip.horsepoop.container.Trait;
 import mintychochip.mintychochip.horsepoop.container.TypeAdapters.TraitTypeAdapter;
-import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.SequentialGenomeCrosser;
+import mintychochip.mintychochip.horsepoop.container.grabber.GenomeGrasper;
+import mintychochip.mintychochip.horsepoop.container.grabber.GenomeGrasperImpl;
+import mintychochip.mintychochip.horsepoop.factories.TraitGeneratorImpl;
 import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.abstraction.GenomeCrosser;
-import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.abstraction.GenomeCrossingStep;
-import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.steps.ConservationStep;
-import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.steps.MutationStep;
-import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.steps.NonConservedStep;
-import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.SequentialGenomeInstancer;
+import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.SequentialGenomeGenerator;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.SequentialTraitInstancer;
-import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.GenomeInstancer;
+import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.GenomeGenerator;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.InstancingStep;
-import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.TraitInstancer;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.steps.InstanceGeneStep;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.steps.MutationInstancingStep;
 import mintychochip.mintychochip.horsepoop.listener.AnimalCreationListener;
-import mintychochip.mintychochip.horsepoop.listener.AnimalPerkListener;
 import mintychochip.mintychochip.horsepoop.listener.AnimalPlayerListener;
 import mintychochip.mintychochip.horsepoop.listener.HorseCreationListener;
-import mintychochip.mintychochip.horsepoop.listener.HorsePerkListener;
-import mintychochip.mintychochip.horsepoop.listener.MilkListener;
+import mintychochip.mintychochip.horsepoop.listener.NativeMethodListener;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -55,43 +52,34 @@ public final class HorsePoop extends JavaPlugin {
 
   private GenomeCrosser genomeCrosser;
 
-  private GenomeInstancer genomeInstancer;
+  private GenomeGenerator genomeGenerator;
+
+  private GenomeGrasper genomeGrasper;
+
+  private ConfigManager configManager;
 
   @Override
   public void onEnable() {
-    TraitFetcher traitFetcher = new TraitFetcher(
-        new GsonBuilder().registerTypeHierarchyAdapter(Trait.class,
-            new TraitTypeAdapter()).create());
+    //  TraitFetcher<> traitFetcher = new TraitFetcher(
+    //    new GsonBuilder().registerTypeHierarchyAdapter(Trait.class,
+    //        new TraitTypeAdapter()).create());
     Random random = new Random(System.currentTimeMillis());
+    EventCreator eventCreator = new EventCreator();
     INSTANCE = this;
     // Plugin startup logic
     GENOME_KEY = Genesis.getKey("genome");
-    ConfigManager configManager = ConfigManager.instanceConfigManager(this);
-    GeneFactory geneFactory = GeneFactory.createInstance(configManager);
+    this.configManager = ConfigManager.instanceConfigManager(this);
+    // GeneFactory geneFactory = GeneFactory.createInstance(configManager);
     this.adventure = BukkitAudiences.create(this);
-    List<InstancingStep<GeneTraitMeta>> geneInstancingSteps = new ArrayList<>();
-    geneInstancingSteps.add(new InstanceGeneStep<>());
-    geneInstancingSteps.add(new MutationInstancingStep<>());
-    TraitInstancer<GeneTraitMeta> geneInstancer = new SequentialTraitInstancer<GeneTraitMeta,GeneTrait>();
-    List<InstancingStep> charInstancingSteps = new ArrayList<>();
-    charInstancingSteps.add(new InstanceCharStep(geneFactory, random));
     List<Listener> listeners = new ArrayList<>();
-    List<GenomeCrossingStep> steps = new ArrayList<>();
-    steps.add(new ConservationStep(geneFactory));
-    steps.add(new NonConservedStep(geneFactory));
-    steps.add(new MutationStep(geneFactory, new GenomeComparer(traitFetcher)));
-    TraitInstancer geneInstancer = new SequentialTraitInstancer(geneInstancingSteps);
-    TraitInstancer charInstancer = new SequentialTraitInstancer(charInstancingSteps);
-    this.genomeInstancer = new SequentialGenomeInstancer(geneInstancer,charInstancer);
-    this.genomeCrosser = new SequentialGenomeCrosser(steps);
+    this.genomeGrasper = new GenomeGrasperImpl(GSON, GENOME_KEY);
+    this.genomeGenerator = createInstancer();
     listeners.add(
-        new HorseCreationListener(configManager, geneFactory, genomeCrosser, genomeInstancer));
+        new HorseCreationListener(configManager, genomeCrosser, genomeGenerator, genomeGrasper));
+    listeners.add(new AnimalCreationListener(configManager, genomeGrasper));
+    listeners.add(new NativeMethodListener(configManager,genomeGrasper));
+    listeners.add(new AnimalPlayerListener(configManager,adventure));
 //    listeners.add(new AnimalPlayerListener(configManager, adventure));
-    listeners.add(new AnimalCreationListener(adventure, configManager, traitFetcher));
-    listeners.add(new HorsePerkListener(traitFetcher));
-    listeners.add(new AnimalPlayerListener(configManager, adventure));
-    listeners.add(new AnimalPerkListener(configManager, traitFetcher));
-    listeners.add(new MilkListener(configManager, traitFetcher));
     listeners.forEach(x -> {
       Bukkit.getPluginManager().registerEvents(x, this);
     });
@@ -104,6 +92,20 @@ public final class HorsePoop extends JavaPlugin {
             new EnabledEntitiesCommand("enabled", "aasdasd", configManager.getEntityConfig()))
         .addSubCommand(new EnchantCommand("enchant", "enchant"));
     getCommand("entity").setExecutor(genericMainCommandManager);
+  }
+
+  private SequentialGenomeGenerator createInstancer() {
+    List<InstancingStep<GeneTraitMeta>> steps = new ArrayList<>();
+    steps.add(new InstanceGeneStep<>());
+    steps.add(new MutationInstancingStep<>());
+    List<InstancingStep<CharacteristicTraitMeta>> charSteps = new ArrayList<>();
+    charSteps.add(new InstanceGeneStep<>());
+    EntityConfig entityConfig = configManager.getEntityConfig();
+    return new SequentialGenomeGenerator(
+        new SequentialTraitInstancer<>(steps, entityConfig.geneConfig(),
+            new TraitGeneratorImpl<>()),
+        new SequentialTraitInstancer<>(charSteps, entityConfig.characteristicConfig(),
+            new TraitGeneratorImpl<>()));
   }
 
   public static HorsePoop getInstance() {
