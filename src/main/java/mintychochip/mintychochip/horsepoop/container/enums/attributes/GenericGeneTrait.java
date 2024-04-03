@@ -1,20 +1,20 @@
 package mintychochip.mintychochip.horsepoop.container.enums.attributes;
 
 import mintychochip.mintychochip.horsepoop.container.GeneTrait;
-import mintychochip.mintychochip.horsepoop.container.ValueType;
+import mintychochip.mintychochip.horsepoop.metas.MetaType;
 
 public enum GenericGeneTrait implements GeneTrait {
-  YIELD("yield", ValueType.INTEGER, "Determines the yield, based on the mob type for mob drops or farmable items."),
-  TEMPERANCE("temperance", ValueType.ENUM, "asd"),
-  FEATHER_COLOR("feather-color", ValueType.ENUM,"asasd");
+  YIELD("yield", MetaType.CROSSABLE_INTEGER, "Determines the yield, based on the mob type for mob drops or farmable items."),
+  TEMPERANCE("temperance", MetaType.ENUM, "asd"),
+  FEATHER_COLOR("feather-color", MetaType.ENUM,"asasd");
   private final String key;
   private final String description;
-  private final ValueType valueType;
+  private final MetaType metaType;
 
-  GenericGeneTrait(String key, ValueType valueType, String description) {
+  GenericGeneTrait(String key, MetaType metaType, String description) {
     this.key = key;
     this.description = description;
-    this.valueType = valueType;
+    this.metaType = metaType;
   }
   @Override
   public String getNamespacedKey() {
@@ -32,7 +32,7 @@ public enum GenericGeneTrait implements GeneTrait {
   }
 
   @Override
-  public ValueType getValueType() {
-    return valueType;
+  public MetaType getMetaType() {
+    return metaType;
   }
 }

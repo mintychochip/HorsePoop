@@ -11,7 +11,7 @@ import mintychochip.mintychochip.horsepoop.container.Comparer;
 import mintychochip.mintychochip.horsepoop.container.Fetcher;
 import mintychochip.mintychochip.horsepoop.container.Trait;
 import mintychochip.mintychochip.horsepoop.container.Crosser;
-import mintychochip.mintychochip.horsepoop.container.TraitGenerator;
+import mintychochip.mintychochip.horsepoop.container.Generator;
 import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.abstraction.GenomeCrossingStep;
 import org.bukkit.entity.EntityType;
 
@@ -23,10 +23,10 @@ public class MutationStep<T extends Characteristic> implements GenomeCrossingSte
 
   private final Comparer<T> comparer;
 
-  private final TraitGenerator<T> generator;
+  private final Generator<T> generator;
   Predicate<BaseTrait<T>> CROSSABLE = baseTrait -> baseTrait.getMeta() instanceof GeneTraitMeta gtm && gtm.crossable();
 
-  public MutationStep(double recombinanceChance, int maxCount, Comparer<T> comparer, TraitGenerator<T> generator) {
+  public MutationStep(double recombinanceChance, int maxCount, Comparer<T> comparer, Generator<T> generator) {
     this.recombinanceChance = recombinanceChance;
     this.maxCount = maxCount;
     this.comparer = comparer;

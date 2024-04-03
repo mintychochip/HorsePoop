@@ -5,20 +5,14 @@ import mintychochip.mintychochip.horsepoop.metas.Meta;
 import java.util.List;
 import java.util.Map;
 
-public interface Fetcher<U extends Trait,T extends Meta> {
-  <Y extends Enum<Y>> Y getEnumValue(List<BaseTrait<T>> traits, U trait, Class<Y> enumClass);
+public interface Fetcher<U extends Trait> {
+  <Y extends Enum<Y>> Y getEnumValue(List<BaseTrait<U>> traits, U trait, Class<Y> enumClass);
+  MendelianGene getMendelian(BaseTrait<U> trait);
 
-  U getTrait(String trait);
+   Map<U, BaseTrait<U>> getAttributes(List<BaseTrait<U>> baseTraits);
 
-  MendelianGene getMendelian(BaseTrait<T> trait);
-
-   Map<U, BaseTrait<T>> getAttributes(List<BaseTrait<T>> baseTraits);
-
-   BaseTrait<T> getTraitFromList(List<BaseTrait<T>> traits, U trait);
-
-   BaseTrait<T> getTraitFromList(List<BaseTrait<T>> traits, String traitString);
-
-   boolean isTraitInList(List<BaseTrait<T>> traits, U trait);
+   BaseTrait<U> getTraitFromList(List<BaseTrait<U>> traits, U trait);
+   boolean isTraitInList(List<BaseTrait<U>> traits, U trait);
 
   String toJson(Trait trait);
 }

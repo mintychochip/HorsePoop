@@ -17,20 +17,12 @@ import mintychochip.mintychochip.horsepoop.container.TypeAdapters.TraitMetaAdapt
 import mintychochip.mintychochip.horsepoop.metas.Meta;
 import org.bukkit.entity.EntityType;
 
-public class TraitConfig<U extends Trait, T extends Meta> {
+public class TraitConfig<U extends Trait> {
 
   private final List<U> traitEnums = new ArrayList<>();
   private Class<U> tClass;
-  private Class<T> aClass;
-
-  public TraitConfig(Class<U> tClass, Class<T> aClass) {
+  public TraitConfig(Class<U> tClass) {
     this.tClass = tClass;
-    this.aClass = aClass;
-  }
-
-  public U getTrait(String trait) {
-      Optional<U> first = traitEnums.stream().filter(x -> x.getKey().equals(trait)).findFirst();
-      return first.orElse(null);
   }
   public <Y extends U> void loadEnums(Class<Y> enumClass, Y[] values) {
     if (tClass.isAssignableFrom(enumClass) && enumClass.isEnum()) {
@@ -38,7 +30,7 @@ public class TraitConfig<U extends Trait, T extends Meta> {
     }
   }
 
-  private final Map<EntityType, List<AnimalTraitWrapper<T>>> entityTypeTraitMap = new HashMap<>();
+  private final Map<EntityType, List<AnimalTraitWrapper<U>>> entityTypeTraitMap = new HashMap<>();
 
   public void loadTraitConfigs(GenericConfig config) {
     Type type = new TypeToken<AnimalTraitWrapper<T>>() {
@@ -59,7 +51,7 @@ public class TraitConfig<U extends Trait, T extends Meta> {
   }
 
 
-  public U getTraitFromWrapper(AnimalTraitWrapper<T> animalTraitWrapper) {
+  public U getTraitFromWrapper(AnimalTraitWrapper<U> animalTraitWrapper) {
     U traitEnum = traitEnums.stream()
         .filter(x -> x.getKey().equalsIgnoreCase(animalTraitWrapper.trait())).findFirst()
         .orElse(null);
@@ -82,8 +74,8 @@ public class TraitConfig<U extends Trait, T extends Meta> {
         this::getTraitFromWrapper).toList();
   }
 
-  public T getMeta(U trait, EntityType entityType) {
-    AnimalTraitWrapper<T> traitWrapper = this.getTraitWrapper(trait, entityType);
+  public Meta<U> getMeta(U trait, EntityType entityType) {
+    AnimalTraitWrapper<U> traitWrapper = this.getTraitWrapper(trait, entityType);
     if (traitWrapper == null) {
       return null;
     }
@@ -91,8 +83,8 @@ public class TraitConfig<U extends Trait, T extends Meta> {
   }
 
 
-  public AnimalTraitWrapper<T> getTraitWrapper(U trait, EntityType entityType) {
-    List<AnimalTraitWrapper<T>> animalTraitWrappers = entityTypeTraitMap.get(entityType);
+  public AnimalTraitWrapper<U> getTraitWrapper(U trait, EntityType entityType) {
+    List<AnimalTraitWrapper<U>> animalTraitWrappers = entityTypeTraitMap.get(entityType);
     return animalTraitWrappers.stream().filter(x -> x.trait().equals(trait.getKey())).findFirst()
         .orElse(null);
   }

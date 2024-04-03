@@ -1,19 +1,18 @@
 package mintychochip.mintychochip.horsepoop.container.enums.characteristics;
 
 import mintychochip.mintychochip.horsepoop.container.CharacteristicTrait;
-import mintychochip.mintychochip.horsepoop.container.ValueType;
 
 public enum GenericCharacteristicTrait implements CharacteristicTrait {
-  GENDER("gender", ValueType.ENUM, "gender of the animal"),
-  RARITY("rarity",ValueType.ENUM,"rarity of the animal"),
-  HEIGHT("height",ValueType.NUMERIC,"Height of the animal"),
-  COCK_SIZE("penis",ValueType.NUMERIC,"biggus");
+  GENDER("gender", MetaType.ENUM, "gender of the animal"),
+  RARITY("rarity", MetaType.ENUM,"rarity of the animal"),
+  HEIGHT("height", MetaType.NUMERIC,"Height of the animal"),
+  COCK_SIZE("penis", MetaType.NUMERIC,"biggus");
   private final String key;
   private final String description;
-  private final ValueType valueType;
-  GenericCharacteristicTrait(String key, ValueType valueType, String description) {
+  private final MetaType metaType;
+  GenericCharacteristicTrait(String key, MetaType metaType, String description) {
     this.key = key;
-    this.valueType = valueType;
+    this.metaType = metaType;
     this.description = description;
   }
   @Override
@@ -29,7 +28,7 @@ public enum GenericCharacteristicTrait implements CharacteristicTrait {
     return description;
   }
   @Override
-  public ValueType getValueType() {
-    return valueType;
+  public MetaType getMetaType() {
+    return metaType;
   }
 }

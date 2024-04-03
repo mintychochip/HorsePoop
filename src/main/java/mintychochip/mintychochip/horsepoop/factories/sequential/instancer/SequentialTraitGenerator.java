@@ -6,27 +6,27 @@ import java.util.List;
 import mintychochip.mintychochip.horsepoop.config.configs.TraitConfig;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
 import mintychochip.mintychochip.horsepoop.container.Trait;
-import mintychochip.mintychochip.horsepoop.container.TraitGenerator;
+import mintychochip.mintychochip.horsepoop.container.Generator;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.InstancingStep;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.GeneratorHolder;
 import org.bukkit.entity.EntityType;
 
-public class SequentialTraitGenerator<U extends Trait,T extends Characteristic> implements
+public class SequentialTraitGenerator<U extends Trait> implements
     GeneratorHolder<T> {
 
     private final List<InstancingStep<T>> steps;
 
     private final TraitConfig<U, T> config;
 
-    private final TraitGenerator<T> generator;
+    private final Generator<T> generator;
 
-    public SequentialTraitGenerator(List<InstancingStep<T>> steps, TraitConfig<U, T> config, TraitGenerator<T> generator) {
+    public SequentialTraitGenerator(List<InstancingStep<T>> steps, TraitConfig<U, T> config, Generator<T> generator) {
         this.steps = steps;
         this.config = config;
         this.generator = generator;
     }
 
-    public SequentialTraitGenerator(TraitConfig<U, T> config, TraitGenerator<T> generator) {
+    public SequentialTraitGenerator(TraitConfig<U, T> config, Generator<T> generator) {
         this(new ArrayList<>(), config, generator);
     }
 

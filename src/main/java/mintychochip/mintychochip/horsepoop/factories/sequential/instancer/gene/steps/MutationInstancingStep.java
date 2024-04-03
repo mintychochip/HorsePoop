@@ -7,7 +7,7 @@ import mintychochip.mintychochip.horsepoop.config.configs.TraitConfig;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
 import mintychochip.mintychochip.horsepoop.container.Trait;
 import mintychochip.mintychochip.horsepoop.container.TraitFetcher;
-import mintychochip.mintychochip.horsepoop.container.TraitGenerator;
+import mintychochip.mintychochip.horsepoop.container.Generator;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.InstancingStep;
 import org.bukkit.entity.EntityType;
 
@@ -16,7 +16,7 @@ public class MutationInstancingStep<T extends Characteristic> implements Instanc
   private final Random random = new Random(System.currentTimeMillis());
 
   public <U extends Trait> List<BaseTrait<T>> instanceTrait(EntityType entityType,
-      List<BaseTrait<T>> baseTraits, TraitConfig<U, T> config, TraitGenerator<T> generator) {
+      List<BaseTrait<T>> baseTraits, TraitConfig<U, T> config, Generator<T> generator) {
     int mutations = 1;
     List<BaseTrait<T>> traits = new ArrayList<>();
 

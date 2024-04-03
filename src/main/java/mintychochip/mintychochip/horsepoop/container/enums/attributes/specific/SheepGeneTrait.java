@@ -1,35 +1,28 @@
 package mintychochip.mintychochip.horsepoop.container.enums.attributes.specific;
 
-import com.google.gson.Gson;
-import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import mintychochip.mintychochip.horsepoop.container.GeneTrait;
-import mintychochip.mintychochip.horsepoop.container.ValueType;
-import mintychochip.mintychochip.horsepoop.container.enums.MendelianType;
 import mintychochip.mintychochip.horsepoop.container.enums.attributes.TraitType;
-import org.bukkit.DyeColor;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 
 public enum SheepGeneTrait implements GeneTrait { //traits designed for sheep
-  RED("red", ValueType.MENDELIAN,
+  RED("red", MetaType.MENDELIAN,
       "Encodes for sheep phenotypic color, reference the wiki for the different color combinations."),
-  BLUE("blue", ValueType.MENDELIAN,
+  BLUE("blue", MetaType.MENDELIAN,
       "Encodes for sheep phenotypic color, reference the wiki for the different color combinations."),
-  GREEN("green", ValueType.MENDELIAN,
+  GREEN("green", MetaType.MENDELIAN,
       "Encodes for sheep phenotypic color, reference the wiki for the different color combinations."),
-  WHITE_OVERRIDE("override", ValueType.MENDELIAN,
+  WHITE_OVERRIDE("override", MetaType.MENDELIAN,
       "Epistatic "), //dominant phenotypes always exhibit white, allows for masking of colors
-  BRIGHTNESS("brightness", ValueType.INTEGER, "Provided 'override' is recessive, if there are no color genes, then the color will be selected on the brightness.");
+  BRIGHTNESS("brightness", MetaType.INTEGER, "Provided 'override' is recessive, if there are no color genes, then the color will be selected on the brightness.");
 
   // numeric
   private final String key;
 
-  private final ValueType valueType;
+  private final MetaType metaType;
   private final String description;
 
-  SheepGeneTrait(String key, ValueType valueType, String description) {
+  SheepGeneTrait(String key, MetaType metaType, String description) {
     this.key = key;
-    this.valueType = valueType;
+    this.metaType = metaType;
     this.description = description;
   }
   @Override
@@ -48,7 +41,7 @@ public enum SheepGeneTrait implements GeneTrait { //traits designed for sheep
   }
 
   @Override
-  public ValueType getValueType() {
-    return valueType;
+  public MetaType getMetaType() {
+    return metaType;
   }
 }
