@@ -4,18 +4,11 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 import mintychochip.mintychochip.horsepoop.config.AnimalTraitWrapper;
 import mintychochip.mintychochip.horsepoop.config.CharacteristicTraitMeta;
 import mintychochip.mintychochip.horsepoop.config.GeneTraitMeta;
-import mintychochip.mintychochip.horsepoop.config.TraitMeta;
-import org.bukkit.Bukkit;
 
-public class TraitMetaAdapter<T extends TraitMeta> extends TypeAdapter<AnimalTraitWrapper<T>> {
+public class TraitMetaAdapter<T extends Characteristic> extends TypeAdapter<AnimalTraitWrapper<T>> {
 
   private final Class<T> aClass;
 

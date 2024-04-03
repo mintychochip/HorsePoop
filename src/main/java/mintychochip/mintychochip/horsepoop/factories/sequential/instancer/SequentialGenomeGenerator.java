@@ -6,29 +6,30 @@ import mintychochip.mintychochip.horsepoop.config.GeneTraitMeta;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.GenomeGenerator;
-import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.TraitInstancer;
+import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.GeneratorHolder;
 import org.bukkit.entity.EntityType;
 public class SequentialGenomeGenerator implements
     GenomeGenerator {
-  private final TraitInstancer<GeneTraitMeta> geneInstancer;
-  private final TraitInstancer<CharacteristicTraitMeta> characteristicInstancer;
-  public SequentialGenomeGenerator(TraitInstancer<GeneTraitMeta> geneInstancer, TraitInstancer<CharacteristicTraitMeta> characteristicInstancer) {
-    this.geneInstancer = geneInstancer;
-    this.characteristicInstancer = characteristicInstancer;
+  private final GeneratorHolder<GeneTraitMeta> geneGenerator;
+  private final GeneratorHolder<CharacteristicTraitMeta> charGenerator;
+  public SequentialGenomeGenerator(
+      GeneratorHolder<GeneTraitMeta> geneGenerator, GeneratorHolder<CharacteristicTraitMeta> charGenerator) {
+    this.geneGenerator = geneGenerator;
+    this.charGenerator = charGenerator;
   }
   @Override
   public AnimalGenome instanceGenome(EntityType entityType) {
-    List<BaseTrait<CharacteristicTraitMeta>> characteristics = characteristicInstancer.instanceTraits(entityType);
-    List<BaseTrait<GeneTraitMeta>> gene = geneInstancer.instanceTraits(entityType);
+    List<BaseTrait<CharacteristicTraitMeta>> characteristics = charGenerator.instanceTraits(entityType);
+    List<BaseTrait<GeneTraitMeta>> gene = geneGenerator.instanceTraits(entityType);
     return AnimalGenome.createInstance(gene,characteristics, this);
   }
 
   @Override
-  public TraitInstancer<CharacteristicTraitMeta> getCharInstancer() {
-    return characteristicInstancer;
+  public GeneratorHolder<CharacteristicTraitMeta> getCharInstancer() {
+    return charGenerator;
   }
   @Override
-  public TraitInstancer<GeneTraitMeta> getGeneInstancer() {
-    return geneInstancer;
+  public GeneratorHolder<GeneTraitMeta> getGeneGenerator() {
+    return geneGenerator;
   }
 }

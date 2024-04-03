@@ -1,8 +1,5 @@
 package mintychochip.mintychochip.horsepoop.config.configs;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import mintychochip.genesis.config.abstraction.GenericConfig;

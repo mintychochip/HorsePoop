@@ -7,6 +7,6 @@ import org.bukkit.entity.EntityType;
 
 public interface GenomeGenerator {
   AnimalGenome instanceGenome(EntityType entityType);
-  TraitInstancer<CharacteristicTraitMeta> getCharInstancer();
-  TraitInstancer<GeneTraitMeta> getGeneInstancer();
+  GeneratorHolder<CharacteristicTraitMeta> getCharInstancer();
+  GeneratorHolder<GeneTraitMeta> getGeneGenerator();
 }

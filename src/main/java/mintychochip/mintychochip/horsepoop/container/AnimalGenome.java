@@ -6,7 +6,9 @@ import javax.annotation.Nullable;
 import mintychochip.mintychochip.horsepoop.config.CharacteristicTraitMeta;
 import mintychochip.mintychochip.horsepoop.config.GeneTraitMeta;
 import mintychochip.mintychochip.horsepoop.container.TypeAdapters.Genome;
+import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.abstraction.GenomeCrosser;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.GenomeGenerator;
+import org.bukkit.entity.Panda.Gene;
 
 public class AnimalGenome implements Genome {
 
@@ -33,6 +35,10 @@ public class AnimalGenome implements Genome {
     if(chars == null || chars.isEmpty()) {
       return null;
     }
+    return new AnimalGenome(genes,chars,System.currentTimeMillis());
+  }
+
+  public static AnimalGenome createCrossedInstance(List<BaseTrait<GeneTraitMeta>> genes, List<BaseTrait<CharacteristicTraitMeta>> chars, GenomeCrosser crosser) {
     return new AnimalGenome(genes,chars,System.currentTimeMillis());
   }
   public void setName(@Nullable String name) {

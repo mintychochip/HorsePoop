@@ -1,14 +1,12 @@
 package mintychochip.mintychochip.horsepoop.container;
 
-import mintychochip.mintychochip.horsepoop.config.TraitMeta;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class GenomeComparer<T extends TraitMeta> implements Comparer<T> {
+public class GenomeComparer<T extends Characteristic> implements Comparer<T> {
     @Override
     public <U extends Trait> Set<BaseTrait<T>> uniqueTraits(List<BaseTrait<T>> father, List<BaseTrait<T>> mother) {
         Fetcher<U, T> fetcher = new ValueFetcher<>();

@@ -3,9 +3,7 @@ package mintychochip.mintychochip.horsepoop.container;
 import java.util.List;
 import java.util.Map;
 
-import mintychochip.mintychochip.horsepoop.config.TraitMeta;
-
-public class ValueFetcher<U extends Trait, T extends TraitMeta> implements Fetcher<U, T> {
+public class ValueFetcher<U extends Trait, T extends Characteristic> implements Fetcher<U, T> {
 
     private final TraitFetcher<U, T> fetcher = new TraitFetcher<>();
 
@@ -37,6 +35,11 @@ public class ValueFetcher<U extends Trait, T extends TraitMeta> implements Fetch
     @Override
     public BaseTrait<T> getTraitFromList(List<BaseTrait<T>> baseTraits, U trait) {
         return fetcher.getTraitFromList(baseTraits, trait);
+    }
+
+    @Override
+    public BaseTrait<T> getTraitFromList(List<BaseTrait<T>> baseTraits, String traitString) {
+        return fetcher.getTraitFromList(baseTraits,fetcher.getTrait(traitString));
     }
 
     @Override

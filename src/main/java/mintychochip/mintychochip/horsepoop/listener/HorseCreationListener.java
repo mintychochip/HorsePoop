@@ -6,7 +6,7 @@ import mintychochip.mintychochip.horsepoop.api.AnimalSetGenomeFields;
 import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import mintychochip.mintychochip.horsepoop.container.grabber.GenomeGrasper;
-import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.abstraction.GenomeCrosser;
+import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.abstraction.TraitCrosserHolder;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.GenomeGenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
@@ -19,16 +19,16 @@ import org.bukkit.event.entity.EntitySpawnEvent;
 public class HorseCreationListener implements Listener { //monitor listeners only
 
   private List<LivingEntity> bredHorses = new ArrayList<>();
-  private final GenomeCrosser genomeCrosser;
+  private final TraitCrosserHolder traitCrosserHolder;
 
   private final ConfigManager configManager;
 
   private final GenomeGenerator genomeGenerator;
 
   private final GenomeGrasper genomeGrasper;
-  public HorseCreationListener(ConfigManager configManager, GenomeCrosser genomeCrosser, GenomeGenerator genomeGenerator, GenomeGrasper genomeGrasper) {
+  public HorseCreationListener(ConfigManager configManager, TraitCrosserHolder traitCrosserHolder, GenomeGenerator genomeGenerator, GenomeGrasper genomeGrasper) {
     this.configManager = configManager;
-    this.genomeCrosser = genomeCrosser;
+    this.traitCrosserHolder = traitCrosserHolder;
     this.genomeGenerator = genomeGenerator;
     this.genomeGrasper = genomeGrasper;
   }
@@ -43,7 +43,7 @@ public class HorseCreationListener implements Listener { //monitor listeners onl
 //      return;
 //    }
 //    bredHorses.add(event.getEntity());
-//    List<Gene> genes = genomeCrosser.crossGenomes(fatherGenes, motherGenes, event.getEntityType());
+//    List<Gene> genes = traitCrosserHolder.crossGenomes(fatherGenes, motherGenes, event.getEntityType());
 //    if (genes == null) {
 //      event.setCancelled(true);
 //    }

@@ -5,58 +5,50 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import mintychochip.genesis.config.abstraction.GenericConfig;
-import mintychochip.genesis.util.ConfigReader;
 import mintychochip.mintychochip.horsepoop.config.AnimalTraitWrapper;
-import mintychochip.mintychochip.horsepoop.config.GeneTraitMeta;
-import mintychochip.mintychochip.horsepoop.config.TraitMeta;
-import mintychochip.mintychochip.horsepoop.container.GeneTrait;
 import mintychochip.mintychochip.horsepoop.container.Trait;
 import mintychochip.mintychochip.horsepoop.container.TypeAdapters.TraitMetaAdapter;
-import mintychochip.mintychochip.horsepoop.container.TypeAdapters.TraitTypeAdapter;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 
-public class TraitConfig<T extends Trait, U extends TraitMeta> {
+public class TraitConfig<U extends Trait, T extends Characteristic> {
 
-  private final List<T> traitEnums = new ArrayList<>();
-  private Class<T> tClass;
-  private Class<U> aClass;
+  private final List<U> traitEnums = new ArrayList<>();
+  private Class<U> tClass;
+  private Class<T> aClass;
 
-  public TraitConfig(Class<T> tClass, Class<U> aClass) {
+  public TraitConfig(Class<U> tClass, Class<T> aClass) {
     this.tClass = tClass;
     this.aClass = aClass;
   }
 
-  public T getTrait(String trait) {
-      Optional<T> first = traitEnums.stream().filter(x -> x.getKey().equals(trait)).findFirst();
+  public U getTrait(String trait) {
+      Optional<U> first = traitEnums.stream().filter(x -> x.getKey().equals(trait)).findFirst();
       return first.orElse(null);
   }
-  public <Y extends T> void loadEnums(Class<Y> enumClass, Y[] values) {
+  public <Y extends U> void loadEnums(Class<Y> enumClass, Y[] values) {
     if (tClass.isAssignableFrom(enumClass) && enumClass.isEnum()) {
       Collections.addAll(this.traitEnums, values);
     }
   }
 
-  private final Map<EntityType, List<AnimalTraitWrapper<U>>> entityTypeTraitMap = new HashMap<>();
+  private final Map<EntityType, List<AnimalTraitWrapper<T>>> entityTypeTraitMap = new HashMap<>();
 
   public void loadTraitConfigs(GenericConfig config) {
-    Type type = new TypeToken<AnimalTraitWrapper<U>>() {
+    Type type = new TypeToken<AnimalTraitWrapper<T>>() {
     }.getType();
-    Gson gson = new GsonBuilder().registerTypeAdapter(new TypeToken<AnimalTraitWrapper<U>>() {
+    Gson gson = new GsonBuilder().registerTypeAdapter(new TypeToken<AnimalTraitWrapper<T>>() {
         }.getType(),
         new TraitMetaAdapter<>(aClass)).create();
     for (String key : config.getKeys(false)) { //entityType keys
-      List<AnimalTraitWrapper<U>> wrappers = new ArrayList<>();
+      List<AnimalTraitWrapper<T>> wrappers = new ArrayList<>();
       for (String s : config.getStringList(key)) {
-        AnimalTraitWrapper<U> animalTraitWrapper = gson.fromJson(s, type);
+        AnimalTraitWrapper<T> animalTraitWrapper = gson.fromJson(s, type);
         if (animalTraitWrapper != null) {
           wrappers.add(animalTraitWrapper);
         }
@@ -66,8 +58,8 @@ public class TraitConfig<T extends Trait, U extends TraitMeta> {
   }
 
 
-  public T getTraitFromWrapper(AnimalTraitWrapper<U> animalTraitWrapper) {
-    T traitEnum = traitEnums.stream()
+  public U getTraitFromWrapper(AnimalTraitWrapper<T> animalTraitWrapper) {
+    U traitEnum = traitEnums.stream()
         .filter(x -> x.getKey().equalsIgnoreCase(animalTraitWrapper.trait())).findFirst()
         .orElse(null);
     if (traitEnum == null) {
@@ -76,11 +68,11 @@ public class TraitConfig<T extends Trait, U extends TraitMeta> {
     return traitEnum;
   }
 
-  public List<T> getTraitEnums() {
+  public List<U> getTraitEnums() {
     return traitEnums;
   }
 
-  public List<T> getAllTraits(
+  public List<U> getAllTraits(
       EntityType entityType) { //filters by trait type, so gene or characteristic
     if (!entityTypeTraitMap.containsKey(entityType)) {
       return null;
@@ -89,8 +81,8 @@ public class TraitConfig<T extends Trait, U extends TraitMeta> {
         this::getTraitFromWrapper).toList();
   }
 
-  public U getMeta(T trait, EntityType entityType) {
-    AnimalTraitWrapper<U> traitWrapper = this.getTraitWrapper(trait, entityType);
+  public T getMeta(U trait, EntityType entityType) {
+    AnimalTraitWrapper<T> traitWrapper = this.getTraitWrapper(trait, entityType);
     if (traitWrapper == null) {
       return null;
     }
@@ -98,13 +90,13 @@ public class TraitConfig<T extends Trait, U extends TraitMeta> {
   }
 
 
-  public AnimalTraitWrapper<U> getTraitWrapper(T trait, EntityType entityType) {
-    List<AnimalTraitWrapper<U>> animalTraitWrappers = entityTypeTraitMap.get(entityType);
+  public AnimalTraitWrapper<T> getTraitWrapper(U trait, EntityType entityType) {
+    List<AnimalTraitWrapper<T>> animalTraitWrappers = entityTypeTraitMap.get(entityType);
     return animalTraitWrappers.stream().filter(x -> x.trait().equals(trait.getKey())).findFirst()
         .orElse(null);
   }
 
-  public Map<EntityType, List<AnimalTraitWrapper<U>>> getEntityTypeTraitMap() {
+  public Map<EntityType, List<AnimalTraitWrapper<T>>> getEntityTypeTraitMap() {
     return entityTypeTraitMap;
   }
 }
