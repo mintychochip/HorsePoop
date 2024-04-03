@@ -1,9 +1,11 @@
 package mintychochip.mintychochip.horsepoop.container;
 
+import mintychochip.mintychochip.horsepoop.metas.Meta;
+
 import java.util.List;
 import java.util.Map;
 
-public class ValueFetcher<U extends Trait, T extends Characteristic> implements Fetcher<U, T> {
+public class ValueFetcher<U extends Trait, T extends Meta> implements Fetcher<U, T> {
 
     private final TraitFetcher<U, T> fetcher = new TraitFetcher<>();
 

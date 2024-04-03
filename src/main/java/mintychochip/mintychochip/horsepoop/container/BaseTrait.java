@@ -1,17 +1,15 @@
 package mintychochip.mintychochip.horsepoop.container;
 
 import com.google.gson.annotations.SerializedName;
+import mintychochip.mintychochip.horsepoop.metas.Meta;
 
-public class BaseTrait<T extends Characteristic> {
+public class BaseTrait<U extends Trait,T extends Meta<U>> {
   @SerializedName("value")
-  protected final String value;
-
-  @SerializedName("trait")
-  protected final String trait;
+  protected final String value; //value in json
   private final T meta;
-  protected BaseTrait(String value, String trait, T meta) {
+
+  protected BaseTrait(String value, T meta) {
     this.value = value;
-    this.trait = trait;
     this.meta = meta;
   }
 
@@ -19,18 +17,7 @@ public class BaseTrait<T extends Characteristic> {
     return meta;
   }
 
-  public static <T extends Characteristic> BaseTrait<T> createCrossedInstance(String value, String trait, T meta, Crosser<T> crosser) {
-    return new BaseTrait<>(value,trait,meta);
-  }
-  public static <T extends Characteristic> BaseTrait<T> createInstance(String value, String trait, T meta, TraitGenerator<T> generator) {
-    return new BaseTrait<>(value,trait,meta);
-  }
-  public String getTrait() {
-    return trait;
-  }
-
   public String getValue() {
     return value;
   }
-
 }

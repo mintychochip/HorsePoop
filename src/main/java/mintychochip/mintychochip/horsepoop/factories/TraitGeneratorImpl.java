@@ -6,7 +6,6 @@ import java.util.Random;
 
 import mintychochip.genesis.util.Rarity;
 import mintychochip.mintychochip.horsepoop.config.AnimalTraitWrapper;
-import mintychochip.mintychochip.horsepoop.config.GeneTraitMeta;
 import mintychochip.mintychochip.horsepoop.config.configs.TraitConfig;
 import mintychochip.mintychochip.horsepoop.container.*;
 import mintychochip.mintychochip.horsepoop.container.enums.FeatherColor;

@@ -9,8 +9,9 @@ import java.util.Map;
 
 import com.google.gson.reflect.TypeToken;
 import mintychochip.mintychochip.horsepoop.container.TypeAdapters.TraitTypeAdapter;
+import mintychochip.mintychochip.horsepoop.metas.Meta;
 
-public class TraitFetcher<U extends Trait, T extends Characteristic> {
+public class TraitFetcher<U extends Trait, T extends Meta> {
 
   public Map<U, BaseTrait<T>> getAttributes(List<BaseTrait<T>> baseTraits) {
     Map<U, BaseTrait<T>> attributes = new HashMap<>();

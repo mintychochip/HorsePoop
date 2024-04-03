@@ -5,8 +5,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import mintychochip.mintychochip.horsepoop.config.AnimalTraitWrapper;
-import mintychochip.mintychochip.horsepoop.config.CharacteristicTraitMeta;
-import mintychochip.mintychochip.horsepoop.config.GeneTraitMeta;
 
 public class TraitMetaAdapter<T extends Characteristic> extends TypeAdapter<AnimalTraitWrapper<T>> {
 

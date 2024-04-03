@@ -1,14 +1,14 @@
 package mintychochip.mintychochip.horsepoop.container;
 
 import com.google.gson.Gson;
-import mintychochip.mintychochip.horsepoop.config.GeneTraitMeta;
+import mintychochip.mintychochip.horsepoop.metas.Meta;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class GeneCrosserImpl<U extends Trait, T extends Characteristic> implements Crosser<T> {
+public class GeneCrosserImpl<U extends Trait, T extends Meta<U>> implements Crosser<T> {
 
   private final Random random = new Random(System.currentTimeMillis());
   private final Fetcher<U, T> fetcher = new ValueFetcher<>();
@@ -27,9 +27,9 @@ public class GeneCrosserImpl<U extends Trait, T extends Characteristic> implemen
     return BaseTrait.createCrossedInstance(value, father.getTrait(), father.getMeta(), this);
   }
 
-  private String crossTraitForValue(BaseTrait<T> father, BaseTrait<T> mother) {
-    U fatherTrait = fetcher.getTrait(father.trait);
-    U motherTrait = fetcher.getTrait(mother.trait);
+  private String crossTraitForValue(BaseTrait<U,T> father, BaseTrait<U,T> mother) {
+    U fatherTrait = father.getMeta().getTrait();
+    U motherTrait = mother.getMeta().getTrait();
 
     if (fatherTrait != motherTrait || fatherTrait.getValueType() != motherTrait.getValueType()) {
       return null;

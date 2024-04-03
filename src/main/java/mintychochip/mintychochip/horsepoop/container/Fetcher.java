@@ -1,9 +1,11 @@
 package mintychochip.mintychochip.horsepoop.container;
 
+import mintychochip.mintychochip.horsepoop.metas.Meta;
+
 import java.util.List;
 import java.util.Map;
 
-public interface Fetcher<U extends Trait,T extends Characteristic> {
+public interface Fetcher<U extends Trait,T extends Meta> {
   <Y extends Enum<Y>> Y getEnumValue(List<BaseTrait<T>> traits, U trait, Class<Y> enumClass);
 
   U getTrait(String trait);

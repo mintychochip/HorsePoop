@@ -3,7 +3,6 @@ package mintychochip.mintychochip.horsepoop.factories.sequential.crosser.steps.g
 import java.util.List;
 import java.util.function.Predicate;
 
-import mintychochip.mintychochip.horsepoop.config.GeneTraitMeta;
 import mintychochip.mintychochip.horsepoop.config.configs.TraitConfig;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
 import mintychochip.mintychochip.horsepoop.container.Fetcher;

@@ -4,8 +4,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import mintychochip.genesis.config.abstraction.GenericConfig;
 import mintychochip.genesis.util.EnumUtil;
-import mintychochip.mintychochip.horsepoop.config.CharacteristicTraitMeta;
-import mintychochip.mintychochip.horsepoop.config.GeneTraitMeta;
 import mintychochip.mintychochip.horsepoop.container.CharacteristicTrait;
 import mintychochip.mintychochip.horsepoop.container.GeneTrait;
 import mintychochip.mintychochip.horsepoop.container.Trait;

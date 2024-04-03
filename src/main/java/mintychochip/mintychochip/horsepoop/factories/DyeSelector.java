@@ -2,7 +2,7 @@ package mintychochip.mintychochip.horsepoop.factories;
 
 import com.google.gson.Gson;
 import java.util.List;
-import mintychochip.mintychochip.horsepoop.config.GeneTraitMeta;
+
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
 import mintychochip.mintychochip.horsepoop.container.GeneTrait;

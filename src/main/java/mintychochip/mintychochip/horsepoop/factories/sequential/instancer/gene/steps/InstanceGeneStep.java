@@ -2,15 +2,16 @@ package mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.
 
 import java.util.List;
 import java.util.stream.Collectors;
-import mintychochip.mintychochip.horsepoop.config.GeneTraitMeta;
+
 import mintychochip.mintychochip.horsepoop.config.configs.TraitConfig;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
 import mintychochip.mintychochip.horsepoop.container.Trait;
 import mintychochip.mintychochip.horsepoop.container.TraitGenerator;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.InstancingStep;
+import mintychochip.mintychochip.horsepoop.metas.Meta;
 import org.bukkit.entity.EntityType;
 
-public class InstanceGeneStep<T extends Characteristic> implements InstancingStep<T> {
+public class InstanceGeneStep<T extends Meta> implements InstancingStep<T> {
 
   @Override
   public <U extends Trait> List<BaseTrait<T>> instanceTrait(EntityType entityType,

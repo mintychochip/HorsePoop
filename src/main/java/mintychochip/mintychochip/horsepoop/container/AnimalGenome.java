@@ -3,12 +3,10 @@ package mintychochip.mintychochip.horsepoop.container;
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
 import javax.annotation.Nullable;
-import mintychochip.mintychochip.horsepoop.config.CharacteristicTraitMeta;
-import mintychochip.mintychochip.horsepoop.config.GeneTraitMeta;
+
 import mintychochip.mintychochip.horsepoop.container.TypeAdapters.Genome;
 import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.abstraction.GenomeCrosser;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.GenomeGenerator;
-import org.bukkit.entity.Panda.Gene;
 
 public class AnimalGenome implements Genome {
 

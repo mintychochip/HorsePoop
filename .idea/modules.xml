@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/HorsePoop.iml" filepath="$PROJECT_DIR$/HorsePoop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/main/java/mintychochip/mintychochip/horsepoop/metas/container/container.iml" filepath="$PROJECT_DIR$/src/main/java/mintychochip/mintychochip/horsepoop/metas/container/container.iml" />
     </modules>
   </component>
 </project>

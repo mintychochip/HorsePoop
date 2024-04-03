@@ -1,5 +1,7 @@
 package mintychochip.mintychochip.horsepoop.container;
 
-public interface Crosser<T extends Characteristic> {
+import mintychochip.mintychochip.horsepoop.metas.Meta;
+
+public interface Crosser<T extends Meta> {
     BaseTrait<T> crossTraits(BaseTrait<T> father, BaseTrait<T> mother);
 }

@@ -14,9 +14,10 @@ import mintychochip.genesis.config.abstraction.GenericConfig;
 import mintychochip.mintychochip.horsepoop.config.AnimalTraitWrapper;
 import mintychochip.mintychochip.horsepoop.container.Trait;
 import mintychochip.mintychochip.horsepoop.container.TypeAdapters.TraitMetaAdapter;
+import mintychochip.mintychochip.horsepoop.metas.Meta;
 import org.bukkit.entity.EntityType;
 
-public class TraitConfig<U extends Trait, T extends Characteristic> {
+public class TraitConfig<U extends Trait, T extends Meta> {
 
   private final List<U> traitEnums = new ArrayList<>();
   private Class<U> tClass;
