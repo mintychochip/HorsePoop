@@ -21,8 +21,7 @@ import mintychochip.mintychochip.horsepoop.container.enums.characteristics.Gener
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Sheep;
 
-public class TraitTypeAdapter extends TypeAdapter<Trait> {
-
+public class TraitTypeAdapter<U extends Trait> extends TypeAdapter<U> {
   private final String value = "value";
   private final String traitType = "trait-type"; //gene or characteristic for now, dependent on the class
   @Override
@@ -46,7 +45,7 @@ public class TraitTypeAdapter extends TypeAdapter<Trait> {
     jsonWriter.endObject();
   }
   @Override
-  public Trait read(JsonReader jsonReader) throws IOException {
+  public U read(JsonReader jsonReader) throws IOException { //fix this later
     jsonReader.beginObject();
     String traitType = null;
     String value = null;

@@ -15,7 +15,7 @@ import org.bukkit.entity.LivingEntity;
 
 public class DyeSelector {
 
-  private final TraitFetcher<GeneTraitMeta> traitFetcher = new TraitFetcher<>();
+  private final TraitFetcher<GeneTrait,GeneTraitMeta> traitFetcher = new TraitFetcher<>();
   public DyeColor calculateDyeColor(AnimalGenome genome, LivingEntity livingEntity) {
     if (livingEntity.getType() != EntityType.SHEEP) {
       return null;
