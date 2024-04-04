@@ -16,6 +16,9 @@ public final class BaseTrait<U extends Trait> {
   public static <U extends Trait> BaseTrait<U> create(String value, Meta<U> meta, Crosser<U> crosser){
     return new BaseTrait<>(value,meta);
   }
+  public static <U extends Trait> BaseTrait<U> create(String value, Meta<U> meta, Generator<U> generator) {
+    return new BaseTrait<>(value,meta);
+  }
   public Meta<U> getMeta() {
     return meta;
   }
