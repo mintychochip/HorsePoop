@@ -1,24 +1,29 @@
 package mintychochip.mintychochip.horsepoop.container;
 
+import mintychochip.mintychochip.horsepoop.api.Comparer;
+import mintychochip.mintychochip.horsepoop.api.Fetcher;
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class GenomeComparer<T extends Characteristic> implements Comparer<T> {
+public class GenomeComparer<U extends TraitEnum> implements Comparer<U> {
     @Override
-    public <U extends Trait> Set<BaseTrait<T>> uniqueTraits(List<BaseTrait<T>> father, List<BaseTrait<T>> mother) {
-        Fetcher<U, T> fetcher = new ValueFetcher<>();
+    public Set<BaseTrait<U>> uniqueTraits(List<BaseTrait<U>> father, List<BaseTrait<U>> mother) {
+        Fetcher<U> fetcher = new ValueFetcher<>();
 
-        Map<U, BaseTrait<T>> combinedAttributes = new HashMap<>();
+        Map<U, BaseTrait<U>> combinedAttributes = new HashMap<>();
         combinedAttributes.putAll(fetcher.getAttributes(father));
         combinedAttributes.putAll(fetcher.getAttributes(mother));
 
         return combinedAttributes.entrySet().stream().filter(entry -> {
                     U trait = entry.getKey();
-                    BaseTrait<T> fatherTrait = fetcher.getTraitFromList(father, trait);
-                    BaseTrait<T> motherTrait = fetcher.getTraitFromList(mother, trait);
+
+                    BaseTrait<U> fatherTrait = fetcher.getTraitFromList(father, trait);
+                    BaseTrait<U> motherTrait = fetcher.getTraitFromList(mother, trait);
                     return (fatherTrait == null && motherTrait != null) || (fatherTrait != null && motherTrait == null);
                 })
                 .map(Map.Entry::getValue)

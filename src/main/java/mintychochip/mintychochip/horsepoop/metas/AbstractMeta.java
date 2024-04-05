@@ -1,8 +1,8 @@
 package mintychochip.mintychochip.horsepoop.metas;
 
-import mintychochip.mintychochip.horsepoop.container.Trait;
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 
-abstract class AbstractMeta<U extends Trait> implements Meta<U>, Conserved {
+abstract class AbstractMeta<U extends TraitEnum> implements Meta<U> {
 
   protected boolean conserved = false;
   protected U trait;

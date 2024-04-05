@@ -7,8 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import mintychochip.mintychochip.horsepoop.config.configs.TraitConfig;
-import mintychochip.mintychochip.horsepoop.container.Trait;
-import mintychochip.mintychochip.horsepoop.metas.Conserved;
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.metas.Crossable;
 import mintychochip.mintychochip.horsepoop.metas.CrossableDoubleMeta;
 import mintychochip.mintychochip.horsepoop.metas.CrossableIntegerMeta;
@@ -22,7 +21,7 @@ import mintychochip.mintychochip.horsepoop.metas.MetaType;
 import mintychochip.mintychochip.horsepoop.metas.PolygenicMendelianMeta;
 import mintychochip.mintychochip.horsepoop.metas.WeightedEnumMeta;
 
-public class TraitMetaAdapter<U extends Trait> extends TypeAdapter<Meta<U>> {
+public class TraitMetaAdapter<U extends TraitEnum> extends TypeAdapter<Meta<U>> {
 
 
   private final TraitConfig<U> config;

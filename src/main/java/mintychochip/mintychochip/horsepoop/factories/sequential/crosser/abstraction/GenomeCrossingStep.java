@@ -4,15 +4,15 @@ import java.util.List;
 
 import mintychochip.mintychochip.horsepoop.config.configs.TraitConfig;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
-import mintychochip.mintychochip.horsepoop.container.Fetcher;
-import mintychochip.mintychochip.horsepoop.container.Trait;
-import mintychochip.mintychochip.horsepoop.container.Crosser;
+import mintychochip.mintychochip.horsepoop.api.Fetcher;
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
+import mintychochip.mintychochip.horsepoop.api.TraitCrosser;
 import org.bukkit.entity.EntityType;
 
-public interface GenomeCrossingStep<T extends Characteristic> {
+public interface GenomeCrossingStep<U extends TraitEnum> {
 
-  <U extends Trait> List<BaseTrait<T>> crossTraits(List<BaseTrait<T>> father,
-      List<BaseTrait<T>> mother, EntityType entityType, List<BaseTrait<T>> baseTraits,
-      TraitConfig<U, T> config, Fetcher<U, T> fetcher, Crosser<T> crosser);
+  List<BaseTrait<U>> crossTraits(List<BaseTrait<U>> father,
+                                                   List<BaseTrait<U>> mother, EntityType entityType, List<BaseTrait<U>> baseTraits,
+                                                   TraitConfig<U> config, Fetcher<U> fetcher, TraitCrosser<U> traitCrosser);
 
 }

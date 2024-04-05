@@ -1,7 +1,7 @@
 package mintychochip.mintychochip.horsepoop.metas;
 
-import mintychochip.mintychochip.horsepoop.container.Trait;
-public class EnumMeta<U extends Trait> extends AbstractMeta<U> {
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
+public class EnumMeta<U extends TraitEnum> extends AbstractMeta<U> {
 
     protected String enumClass; //stores the string of the enum class
 

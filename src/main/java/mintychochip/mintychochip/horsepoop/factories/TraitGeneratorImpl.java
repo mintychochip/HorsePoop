@@ -2,16 +2,19 @@ package mintychochip.mintychochip.horsepoop.factories;
 
 import java.util.*;
 
+import mintychochip.mintychochip.horsepoop.api.Generator;
+import mintychochip.mintychochip.horsepoop.api.MetaValueGeneration;
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.config.configs.TraitConfig;
 import mintychochip.mintychochip.horsepoop.container.*;
 import mintychochip.mintychochip.horsepoop.metas.Meta;
 import mintychochip.mintychochip.horsepoop.metas.MetaType;
 import org.bukkit.entity.EntityType;
 
-public class TraitGeneratorImpl<U extends Trait> implements
+public class TraitGeneratorImpl<U extends TraitEnum> implements
         Generator<U> { //rename this class
 
-    private Map<MetaType, MetaValueGeneration<U>> typeGenerationMap = new HashMap<>();
+    private final Map<MetaType, MetaValueGeneration<U>> typeGenerationMap = new HashMap<>();
     @Override
     public BaseTrait<U> createInstance(U trait, EntityType entityType, TraitConfig<U> traitConfig) {
         Meta<U> meta = traitConfig.getMeta(trait, entityType);

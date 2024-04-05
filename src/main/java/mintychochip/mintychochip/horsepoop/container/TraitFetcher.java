@@ -7,12 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gson.reflect.TypeToken;
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.container.TypeAdapters.TraitTypeAdapter;
-import mintychochip.mintychochip.horsepoop.metas.Meta;
 import mintychochip.mintychochip.horsepoop.metas.MetaType;
 
-public class TraitFetcher<U extends Trait> {
+public class TraitFetcher<U extends TraitEnum> {
 
   public Map<U, BaseTrait<U>> getAttributes(List<BaseTrait<U>> baseTraits) {
     Map<U, BaseTrait<U>> attributes = new HashMap<>();
@@ -21,7 +20,7 @@ public class TraitFetcher<U extends Trait> {
     }
     return attributes;
   }
-  private final Gson gson = new GsonBuilder().registerTypeAdapter(Trait.class,
+  private final Gson gson = new GsonBuilder().registerTypeAdapter(TraitEnum.class,
       new TraitTypeAdapter<U>()).create();
   public MendelianGene getMendelian(BaseTrait<U> trait) {
     MetaType metaType = trait.getMeta().getTrait().getMetaType();
@@ -33,8 +32,8 @@ public class TraitFetcher<U extends Trait> {
   public boolean isTraitInList(List<BaseTrait<U>> traits, U trait) {
     return traits.stream().anyMatch(x -> x.getMeta().getTrait() == trait);
   }
-  public String toJson(Trait trait) {
-    return gson.toJson(trait);
+  public String toJson(TraitEnum traitEnum) {
+    return gson.toJson(traitEnum);
   }
 
 }

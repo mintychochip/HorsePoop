@@ -1,9 +1,9 @@
 package mintychochip.mintychochip.horsepoop.container.enums.attributes.specific;
 
-import mintychochip.mintychochip.horsepoop.container.GeneTrait;
+import mintychochip.mintychochip.horsepoop.api.Gene;
 import mintychochip.mintychochip.horsepoop.container.enums.attributes.TraitType;
 
-public enum GeneticAttribute implements GeneTrait {
+public enum GeneticAttribute implements Gene {
   CONSTITUTION("constitution", MetaType.NUMERIC, "asd"),
   SPEED("speed", MetaType.NUMERIC, "asd"),
   PARTICLE("particle", MetaType.ENUM, "asd"),

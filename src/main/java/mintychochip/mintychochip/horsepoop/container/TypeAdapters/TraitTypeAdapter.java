@@ -3,45 +3,38 @@ package mintychochip.mintychochip.horsepoop.container.TypeAdapters;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import mintychochip.mintychochip.horsepoop.container.CharacteristicTrait;
-import mintychochip.mintychochip.horsepoop.container.GeneTrait;
-import mintychochip.mintychochip.horsepoop.container.Trait;
+import mintychochip.mintychochip.horsepoop.api.Phenotypic;
+import mintychochip.mintychochip.horsepoop.api.Gene;
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.container.enums.attributes.*;
-import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.CowGeneTrait;
+import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.CowGene;
 import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.GeneticAttribute;
-import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.SheepGeneTrait;
+import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.SheepGene;
 
 import java.io.IOException;
-import mintychochip.mintychochip.horsepoop.container.enums.characteristics.GenericCharacteristicTrait;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Sheep;
+import mintychochip.mintychochip.horsepoop.container.enums.characteristics.GenericCharacteristicTraitEnum;
 
-public class TraitTypeAdapter<U extends Trait> extends TypeAdapter<U> {
+public class TraitTypeAdapter<U extends TraitEnum> extends TypeAdapter<U> {
   private final String value = "value";
   private final String traitType = "trait-type"; //gene or characteristic for now, dependent on the class
   @Override
-  public void write(JsonWriter jsonWriter, Trait trait) throws IOException {
+  public void write(JsonWriter jsonWriter, TraitEnum traitEnum) throws IOException {
     jsonWriter.beginObject();
     String type = null;
-    if(trait instanceof GeneTrait geneTrait) {
-      if(geneTrait instanceof SheepGeneTrait) {
+    if(traitEnum instanceof Gene gene) {
+      if(gene instanceof SheepGene) {
         type = "sheep";
-      } else if(geneTrait instanceof CowGeneTrait) {
+      } else if(gene instanceof CowGene) {
         type = "cow";
-      } else if(geneTrait instanceof GeneticAttribute geneticAttribute) {
+      } else if(gene instanceof GeneticAttribute geneticAttribute) {
         type = "horse";
-      } else if(geneTrait instanceof GenericGeneTrait genericGeneTrait) {
+      } else if(gene instanceof GenericGene genericGeneTrait) {
         type = "generic";
       }
-    } else if(trait instanceof CharacteristicTrait characteristicTrait) {
+    } else if(traitEnum instanceof Phenotypic characteristicTrait) {
       type = "char";
     }
-    jsonWriter.name(this.traitType).value(type).name(value).value(trait.toString());
+    jsonWriter.name(this.traitType).value(type).name(value).value(traitEnum.toString());
     jsonWriter.endObject();
   }
   @Override
@@ -66,15 +59,15 @@ public class TraitTypeAdapter<U extends Trait> extends TypeAdapter<U> {
       try {
         switch (traitType) {
           case "sheep":
-            return SheepGeneTrait.valueOf(value);
+            return SheepGene.valueOf(value);
           case "horse":
             return GeneticAttribute.valueOf(value);
           case "generic":
-            return GenericGeneTrait.valueOf(value);
+            return GenericGene.valueOf(value);
           case "cow":
-            return CowGeneTrait.valueOf(value);
+            return CowGene.valueOf(value);
           case "char":
-            return GenericCharacteristicTrait.valueOf(value);
+            return GenericCharacteristicTraitEnum.valueOf(value);
           default:
             // Handle unknown trait types
             throw new IllegalArgumentException("Unknown trait type: " + traitType);

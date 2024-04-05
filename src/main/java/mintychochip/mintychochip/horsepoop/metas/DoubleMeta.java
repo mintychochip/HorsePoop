@@ -1,7 +1,7 @@
 package mintychochip.mintychochip.horsepoop.metas;
 
-import mintychochip.mintychochip.horsepoop.container.Trait;
-public class DoubleMeta<U extends Trait> extends AbstractMeta<U> { //by default does not cross
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
+public class DoubleMeta<U extends TraitEnum> extends AbstractMeta<U> { //by default does not cross
     protected double max;
 
     protected double min;

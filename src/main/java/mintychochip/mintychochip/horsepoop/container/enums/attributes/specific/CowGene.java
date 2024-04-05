@@ -1,9 +1,9 @@
 package mintychochip.mintychochip.horsepoop.container.enums.attributes.specific;
 
-import mintychochip.mintychochip.horsepoop.container.GeneTrait;
+import mintychochip.mintychochip.horsepoop.api.Gene;
 import mintychochip.mintychochip.horsepoop.container.enums.attributes.TraitType;
 
-public enum CowGeneTrait implements GeneTrait {
+public enum CowGene implements Gene {
 
   MOOSHROOM_GENE("mooshroom", MetaType.MENDELIAN, "asd"),
   STRAWBERRY_MILK("strawberry-milk", MetaType.MENDELIAN,
@@ -12,7 +12,7 @@ public enum CowGeneTrait implements GeneTrait {
   private final MetaType metaType;
   private final String description;
 
-  CowGeneTrait(String key, MetaType metaType, String description) {
+  CowGene(String key, MetaType metaType, String description) {
     this.key = key;
     this.metaType = metaType;
     this.description = description;

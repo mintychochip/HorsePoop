@@ -1,14 +1,16 @@
 package mintychochip.mintychochip.horsepoop.listener;
 
 import mintychochip.mintychochip.horsepoop.api.AnimalSetGenomeFields;
+import mintychochip.mintychochip.horsepoop.api.Gene;
+import mintychochip.mintychochip.horsepoop.api.Phenotypic;
 import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
-import mintychochip.mintychochip.horsepoop.container.Fetcher;
+import mintychochip.mintychochip.horsepoop.api.Fetcher;
 import mintychochip.mintychochip.horsepoop.container.ValueFetcher;
 import mintychochip.mintychochip.horsepoop.container.enums.Gender;
 import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.GeneticAttribute;
-import mintychochip.mintychochip.horsepoop.container.enums.characteristics.GenericCharacteristicTrait;
+import mintychochip.mintychochip.horsepoop.container.enums.characteristics.GenericCharacteristicTraitEnum;
 import mintychochip.mintychochip.horsepoop.container.grabber.GenomeGrasper;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.LivingEntity;
@@ -19,8 +21,8 @@ import org.bukkit.event.Listener;
 public class AnimalCreationListener implements Listener {
 
   private final ConfigManager configManager;
-  private final Fetcher<GeneTraitMeta> fetcher = new ValueFetcher<>();
-  private final Fetcher<CharacteristicTraitMeta> charFetcher = new ValueFetcher<>();
+  private final Fetcher<Gene> fetcher = new ValueFetcher<>();
+  private final Fetcher<Phenotypic> charFetcher = new ValueFetcher<>();
   private final GenomeGrasper genomeGrasper;
 
   public AnimalCreationListener(ConfigManager configManager,
@@ -54,7 +56,7 @@ public class AnimalCreationListener implements Listener {
       return;
     }
     Gender enumValue = charFetcher.getEnumValue(genome.getChars(),
-        GenericCharacteristicTrait.GENDER,
+        GenericCharacteristicTraitEnum.GENDER,
         Gender.class);
     String unicode = LegacyComponentSerializer.legacySection().serialize(enumValue.getUnicode());
     String name = genome.getName();

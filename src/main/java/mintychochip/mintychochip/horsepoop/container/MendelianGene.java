@@ -27,6 +27,13 @@ public class MendelianGene { //could just do diploids
     public String toString() {
         return this.colorCodeAlleles(alleleA) + ChatColor.BLACK + "|" + this.colorCodeAlleles(alleleB);
     }
+
+    public MendelianGene cross(MendelianGene gene) {
+        Random random = new Random(System.currentTimeMillis());
+        MendelianAllele a = random.nextBoolean() ? this.alleleA : gene.alleleA;
+        MendelianAllele b = random.nextBoolean() ? this.alleleB : gene.alleleB;
+        return new MendelianGene(a,b);
+    }
     private String colorCodeAlleles(MendelianAllele allele) {
         ChatColor color = allele == MendelianAllele.RECESSIVE ? ChatColor.GREEN: ChatColor.RED;
         return color + allele.toString();

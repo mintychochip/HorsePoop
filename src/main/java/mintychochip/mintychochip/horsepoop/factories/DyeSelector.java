@@ -5,31 +5,30 @@ import java.util.List;
 
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
-import mintychochip.mintychochip.horsepoop.container.Fetcher;
-import mintychochip.mintychochip.horsepoop.container.GeneTrait;
-import mintychochip.mintychochip.horsepoop.container.TraitFetcher;
+import mintychochip.mintychochip.horsepoop.api.Fetcher;
+import mintychochip.mintychochip.horsepoop.api.Gene;
 import mintychochip.mintychochip.horsepoop.container.ValueFetcher;
 import mintychochip.mintychochip.horsepoop.container.enums.MendelianType;
-import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.SheepGeneTrait;
+import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.SheepGene;
 import org.bukkit.DyeColor;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 
 public class DyeSelector {
 
-  private final Fetcher<GeneTrait> fetcher = new ValueFetcher<>();
+  private final Fetcher<Gene> fetcher = new ValueFetcher<>();
   public DyeColor calculateDyeColor(AnimalGenome genome, LivingEntity livingEntity) {
     if (livingEntity.getType() != EntityType.SHEEP) {
       return null;
     }
-    List<BaseTrait<GeneTrait>> genes = genome.getGenes();
+    List<BaseTrait<Gene>> genes = genome.getGenes();
     Gson gson = new Gson();
 
-    BaseTrait<GeneTrait> red = fetcher.getTraitFromList(genes, SheepGeneTrait.RED);
-    BaseTrait<GeneTrait> blue = fetcher.getTraitFromList(genes,SheepGeneTrait.BLUE);
-    BaseTrait<GeneTrait> green = fetcher.getTraitFromList(genes,SheepGeneTrait.GREEN);
-    BaseTrait<GeneTrait> brightness = fetcher.getTraitFromList(genes,SheepGeneTrait.BRIGHTNESS);
-    BaseTrait<GeneTrait> override = fetcher.getTraitFromList(genes,SheepGeneTrait.WHITE_OVERRIDE);
+    BaseTrait<Gene> red = fetcher.getTraitFromList(genes, SheepGene.RED);
+    BaseTrait<Gene> blue = fetcher.getTraitFromList(genes, SheepGene.BLUE);
+    BaseTrait<Gene> green = fetcher.getTraitFromList(genes, SheepGene.GREEN);
+    BaseTrait<Gene> brightness = fetcher.getTraitFromList(genes, SheepGene.BRIGHTNESS);
+    BaseTrait<Gene> override = fetcher.getTraitFromList(genes, SheepGene.WHITE_OVERRIDE);
 
     if (override == null) {
       return DyeColor.WHITE;
@@ -57,7 +56,7 @@ public class DyeSelector {
     return DyeColor.BROWN;
   }
 
-  private String formKey(BaseTrait<GeneTrait> red, BaseTrait<GeneTrait> blue, BaseTrait<GeneTrait> green) {
+  private String formKey(BaseTrait<Gene> red, BaseTrait<Gene> blue, BaseTrait<Gene> green) {
     StringBuilder stringBuilder = new StringBuilder();
     if (red != null) {
       stringBuilder.append("red").append(fetcher.getMendelian(red).getPhenotype().getCode());

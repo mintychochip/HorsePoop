@@ -11,12 +11,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import mintychochip.genesis.config.abstraction.GenericConfig;
-import mintychochip.mintychochip.horsepoop.container.Trait;
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.container.TypeAdapters.TraitMetaAdapter;
 import mintychochip.mintychochip.horsepoop.metas.Meta;
 import org.bukkit.entity.EntityType;
 
-public class TraitConfig<U extends Trait> {
+public class TraitConfig<U extends TraitEnum> {
 
   private final List<U> traitEnums = new ArrayList<>();
 

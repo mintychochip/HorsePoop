@@ -3,15 +3,15 @@ package mintychochip.mintychochip.horsepoop.container.TypeAdapters;
 import java.util.List;
 
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
-import mintychochip.mintychochip.horsepoop.container.CharacteristicTrait;
-import mintychochip.mintychochip.horsepoop.container.GeneTrait;
+import mintychochip.mintychochip.horsepoop.api.Phenotypic;
+import mintychochip.mintychochip.horsepoop.api.Gene;
 
 public interface Genome {
 
   long getBirthTime();
 
-  List<BaseTrait<GeneTrait>> getGenes();
+  List<BaseTrait<Gene>> getGenes();
 
-  List<BaseTrait<CharacteristicTrait>> getChars();
+  List<BaseTrait<Phenotypic>> getChars();
 
 }

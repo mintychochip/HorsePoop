@@ -1,10 +1,10 @@
 package mintychochip.mintychochip.horsepoop.metas;
 
-import mintychochip.mintychochip.horsepoop.container.Trait;
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 
 import java.util.List;
 
-public class WeightedEnumMeta<U extends Trait> extends EnumMeta<U> { //still has enum class, but calcs differently
+public class WeightedEnumMeta<U extends TraitEnum> extends EnumMeta<U> { //still has enum class, but calcs differently
 
     protected final List<Double> weights;
 

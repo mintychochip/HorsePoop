@@ -4,10 +4,10 @@ import java.util.List;
 
 import mintychochip.mintychochip.horsepoop.config.configs.TraitConfig;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
-import mintychochip.mintychochip.horsepoop.container.Trait;
-import mintychochip.mintychochip.horsepoop.container.Generator;
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
+import mintychochip.mintychochip.horsepoop.api.Generator;
 import org.bukkit.entity.EntityType;
 
-public interface InstancingStep<U extends Trait> {
+public interface InstancingStep<U extends TraitEnum> {
   List<BaseTrait<U>> instanceTrait(EntityType entityType, List<BaseTrait<U>> baseTraits, TraitConfig<U> config, Generator<U> generator);
 }

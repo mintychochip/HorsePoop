@@ -1,10 +1,10 @@
 package mintychochip.mintychochip.horsepoop.metas;
 
-import mintychochip.mintychochip.horsepoop.container.Trait;
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 
 import java.util.List;
 
-public class CrossableMendelianMeta<U extends Trait> extends MendelianMeta<U> implements Crossable {
+public class CrossableMendelianMeta<U extends TraitEnum> extends MendelianMeta<U> implements Crossable {
 
   protected boolean crossable = false;
 

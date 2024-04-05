@@ -1,8 +1,8 @@
 package mintychochip.mintychochip.horsepoop.metas;
 
-import mintychochip.mintychochip.horsepoop.container.Trait;
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 
-public class CrossableDoubleMeta<U extends Trait> extends DoubleMeta<U> implements Crossable {
+public class CrossableDoubleMeta<U extends TraitEnum> extends DoubleMeta<U> implements Crossable {
 
     protected boolean crossable = false;
     public CrossableDoubleMeta(U trait, double max, double min) {

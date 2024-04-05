@@ -1,6 +1,9 @@
 package mintychochip.mintychochip.horsepoop.container;
 
 import com.google.gson.Gson;
+import mintychochip.mintychochip.horsepoop.api.Fetcher;
+import mintychochip.mintychochip.horsepoop.api.TraitCrosser;
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.metas.*;
 
 import java.util.ArrayList;
@@ -8,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class GeneCrosserImpl<U extends Trait> implements Crosser<U> {
+public class GeneTraitCrosserImpl<U extends TraitEnum> implements TraitCrosser<U> {
 
   private final Random random = new Random(System.currentTimeMillis());
   private final Fetcher<U> fetcher = new ValueFetcher<>();
@@ -27,7 +30,7 @@ public class GeneCrosserImpl<U extends Trait> implements Crosser<U> {
         return null;
       }
       if(meta instanceof MendelianMeta<U>) {
-        MendelianGene mendelianGene = fetcher.getMendelian(father).crossGenes(fetcher.getMendelian(mother));
+        MendelianGene mendelianGene = fetcher.getMendelian(father).cross(fetcher.getMendelian(mother));
         return new Gson().toJson(mendelianGene);
       }
       if(meta instanceof DoubleMeta<U>) {

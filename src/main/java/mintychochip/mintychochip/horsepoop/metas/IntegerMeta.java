@@ -1,7 +1,7 @@
 package mintychochip.mintychochip.horsepoop.metas;
 
-import mintychochip.mintychochip.horsepoop.container.Trait;
-public class IntegerMeta<U extends Trait> extends AbstractMeta<U> {
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
+public class IntegerMeta<U extends TraitEnum> extends AbstractMeta<U> {
     protected int max;
     protected int min;
 

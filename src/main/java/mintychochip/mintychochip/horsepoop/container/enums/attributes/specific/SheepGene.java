@@ -1,9 +1,9 @@
 package mintychochip.mintychochip.horsepoop.container.enums.attributes.specific;
 
-import mintychochip.mintychochip.horsepoop.container.GeneTrait;
+import mintychochip.mintychochip.horsepoop.api.Gene;
 import mintychochip.mintychochip.horsepoop.container.enums.attributes.TraitType;
 
-public enum SheepGeneTrait implements GeneTrait { //traits designed for sheep
+public enum SheepGene implements Gene { //traits designed for sheep
   RED("red", MetaType.MENDELIAN,
       "Encodes for sheep phenotypic color, reference the wiki for the different color combinations."),
   BLUE("blue", MetaType.MENDELIAN,
@@ -20,7 +20,7 @@ public enum SheepGeneTrait implements GeneTrait { //traits designed for sheep
   private final MetaType metaType;
   private final String description;
 
-  SheepGeneTrait(String key, MetaType metaType, String description) {
+  SheepGene(String key, MetaType metaType, String description) {
     this.key = key;
     this.metaType = metaType;
     this.description = description;

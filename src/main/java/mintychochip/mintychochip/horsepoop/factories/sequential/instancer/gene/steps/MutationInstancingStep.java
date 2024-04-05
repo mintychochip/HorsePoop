@@ -5,14 +5,14 @@ import java.util.List;
 import java.util.Random;
 import mintychochip.mintychochip.horsepoop.config.configs.TraitConfig;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
-import mintychochip.mintychochip.horsepoop.container.Fetcher;
-import mintychochip.mintychochip.horsepoop.container.Trait;
-import mintychochip.mintychochip.horsepoop.container.Generator;
+import mintychochip.mintychochip.horsepoop.api.Fetcher;
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
+import mintychochip.mintychochip.horsepoop.api.Generator;
 import mintychochip.mintychochip.horsepoop.container.ValueFetcher;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.InstancingStep;
 import org.bukkit.entity.EntityType;
 
-public class MutationInstancingStep<U extends Trait> implements InstancingStep<U> {
+public class MutationInstancingStep<U extends TraitEnum> implements InstancingStep<U> {
 
   private final Random random = new Random(System.currentTimeMillis());
   private U getRandomTrait(List<U> allTraits) {
@@ -33,8 +33,8 @@ public class MutationInstancingStep<U extends Trait> implements InstancingStep<U
     List<BaseTrait<U>> traits = new ArrayList<>();
 
     for(int i = 0; i < mutations; i++) {
-      List<U> allTraits = config.getAllTraits(entityType);
-      U randomTrait = getRandomTrait(allTraits);
+      List<U> allTraits = config.getAllEntityTraits(entityType);
+      U randomTrait = this.getRandomTrait(allTraits);
 
       if(randomTrait != null && !this.traitIsInList(randomTrait,baseTraits,traits)) {
         BaseTrait<U> instance = generator.createInstance(randomTrait, entityType, config);

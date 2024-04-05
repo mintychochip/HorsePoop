@@ -1,13 +1,13 @@
 package mintychochip.mintychochip.horsepoop.factories;
 
-import mintychochip.mintychochip.horsepoop.container.MetaValueGeneration;
-import mintychochip.mintychochip.horsepoop.container.Trait;
+import mintychochip.mintychochip.horsepoop.api.MetaValueGeneration;
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.metas.IntegerMeta;
 import mintychochip.mintychochip.horsepoop.metas.Meta;
 
 import java.util.Random;
 
-public class IntegerGeneration<U extends Trait> implements MetaValueGeneration<U> {
+public class IntegerGeneration<U extends TraitEnum> implements MetaValueGeneration<U> {
     @Override
     public String generateValue(Meta<U> meta) {
         String value = null;

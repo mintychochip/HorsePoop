@@ -1,10 +1,10 @@
 package mintychochip.mintychochip.horsepoop.metas;
 
-import mintychochip.mintychochip.horsepoop.container.Trait;
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 
 import java.util.List;
 
-public class MendelianMeta<U extends Trait> extends AbstractMeta<U>  { //uses 'mendelian'
+public class MendelianMeta<U extends TraitEnum> extends AbstractMeta<U>  { //uses 'mendelian'
 
     protected final double chance;
     protected final List<String> blacklist;

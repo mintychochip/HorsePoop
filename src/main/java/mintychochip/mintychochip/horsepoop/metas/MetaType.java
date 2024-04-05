@@ -1,6 +1,6 @@
 package mintychochip.mintychochip.horsepoop.metas;
 
-public enum MetaType {
+public enum MetaType { //add support for adding metatypes
     CROSSABLE_DOUBLE,
     CROSSABLE_INTEGER,
     CROSSABLE_MENDELIAN,
