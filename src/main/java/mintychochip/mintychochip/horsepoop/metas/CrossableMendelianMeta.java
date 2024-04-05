@@ -6,18 +6,19 @@ import java.util.List;
 
 public class CrossableMendelianMeta<U extends Trait> extends MendelianMeta<U> implements Crossable {
 
-    protected boolean crossable = false;
-    public CrossableMendelianMeta(U trait, boolean conserved, List<Trait> blacklist) {
-        super(trait, conserved, blacklist);
-    }
+  protected boolean crossable = false;
 
-    @Override
-    public void setCrossable(boolean crossable) {
-        this.crossable = crossable;
-    }
+  public CrossableMendelianMeta(U trait, double chance, List<String> blacklist) {
+    super(trait, chance, blacklist);
+  }
 
-    @Override
-    public boolean isCrossable() {
-        return false;
-    }
+  @Override
+  public void setCrossable(boolean crossable) {
+    this.crossable = crossable;
+  }
+
+  @Override
+  public boolean isCrossable() {
+    return false;
+  }
 }

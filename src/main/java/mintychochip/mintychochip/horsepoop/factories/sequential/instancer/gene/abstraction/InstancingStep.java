@@ -8,6 +8,6 @@ import mintychochip.mintychochip.horsepoop.container.Trait;
 import mintychochip.mintychochip.horsepoop.container.Generator;
 import org.bukkit.entity.EntityType;
 
-public interface InstancingStep<T extends Characteristic> {
-  <U extends Trait> List<BaseTrait<T>> instanceTrait(EntityType entityType, List<BaseTrait<T>> baseTraits, TraitConfig<U, T> config, Generator<T> generator);
+public interface InstancingStep<U extends Trait> {
+  List<BaseTrait<U>> instanceTrait(EntityType entityType, List<BaseTrait<U>> baseTraits, TraitConfig<U> config, Generator<U> generator);
 }

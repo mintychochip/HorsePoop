@@ -4,28 +4,44 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
-import mintychochip.mintychochip.horsepoop.config.AnimalTraitWrapper;
+import java.util.ArrayList;
+import java.util.List;
+import mintychochip.mintychochip.horsepoop.config.configs.TraitConfig;
+import mintychochip.mintychochip.horsepoop.container.Trait;
+import mintychochip.mintychochip.horsepoop.metas.Conserved;
+import mintychochip.mintychochip.horsepoop.metas.Crossable;
+import mintychochip.mintychochip.horsepoop.metas.CrossableDoubleMeta;
+import mintychochip.mintychochip.horsepoop.metas.CrossableIntegerMeta;
+import mintychochip.mintychochip.horsepoop.metas.CrossableMendelianMeta;
+import mintychochip.mintychochip.horsepoop.metas.DoubleMeta;
+import mintychochip.mintychochip.horsepoop.metas.EnumMeta;
+import mintychochip.mintychochip.horsepoop.metas.IntegerMeta;
+import mintychochip.mintychochip.horsepoop.metas.MendelianMeta;
+import mintychochip.mintychochip.horsepoop.metas.Meta;
+import mintychochip.mintychochip.horsepoop.metas.MetaType;
+import mintychochip.mintychochip.horsepoop.metas.PolygenicMendelianMeta;
+import mintychochip.mintychochip.horsepoop.metas.WeightedEnumMeta;
 
-public class TraitMetaAdapter<T extends Characteristic> extends TypeAdapter<AnimalTraitWrapper<T>> {
+public class TraitMetaAdapter<U extends Trait> extends TypeAdapter<Meta<U>> {
 
-  private final Class<T> aClass;
+
+  private final TraitConfig<U> config;
 
   @SuppressWarnings("unchecked")
-  public TraitMetaAdapter(Class<T> aClass) {
-    this.aClass = aClass;
+  public TraitMetaAdapter(TraitConfig<U> config) {
+    this.config = config;
+  }
+  @Override
+  public void write(JsonWriter jsonWriter, Meta<U> uMeta) throws IOException {
+
   }
 
   @Override
-  public void write(JsonWriter jsonWriter, AnimalTraitWrapper<T> tAnimalTraitWrapper)
-      throws IOException {
-
-  }
-
-  @Override
-  public AnimalTraitWrapper<T> read(JsonReader jsonReader) throws IOException {
+  public Meta<U> read(JsonReader jsonReader) throws IOException {
     jsonReader.beginObject();
 
     String type = null;
+    String enumClass = null;
 
     boolean conserved = false;
     Boolean crossable = false;
@@ -33,12 +49,13 @@ public class TraitMetaAdapter<T extends Characteristic> extends TypeAdapter<Anim
     double chance = 0;
     double max = 0;
     double min = 0;
-
-    String trait = null;
+    List<String> blacklist = new ArrayList<>();
+    List<Double> weights = new ArrayList<>();
+    U trait = null;
     while (jsonReader.hasNext()) {
       String name = jsonReader.nextName();
       if (name.equals("trait")) {
-        trait = jsonReader.nextString();
+        trait = config.getTraitFromString(jsonReader.nextString());
       }
       if (name.equals("meta")) {
         jsonReader.beginObject();
@@ -63,27 +80,52 @@ public class TraitMetaAdapter<T extends Characteristic> extends TypeAdapter<Anim
         case "min" -> {
           min = jsonReader.nextDouble();
         }
-        case "type" -> {
-          type = jsonReader.nextString();
+        case "enum-class" -> {
+          enumClass = jsonReader.nextString();
+        }
+        case "black-list" -> {
+          jsonReader.beginArray(); // Begin reading the array
+          while (jsonReader.hasNext()) {
+            String value = jsonReader.nextString(); // Read each string value
+            blacklist.add(value); // Add the string to the list
+          }
+          jsonReader.endArray(); // End reading the array
+        }
+        case "weights" -> {
+          jsonReader.beginArray();
+          while (jsonReader.hasNext()) {
+            double value = jsonReader.nextDouble();
+            weights.add(value);
+          }
+          jsonReader.endArray();
         }
       }
     }
     jsonReader.endObject();
     jsonReader.endObject();
 
-    T meta;
-    if (type == null) {
+    Meta<U> meta;
+    if(trait == null) {
       return null;
     }
-    if (type.equalsIgnoreCase("gene")) {
-      meta = (T) new GeneTraitMeta(conserved, crossable, chance, max, min, type);
-    } else {
-      meta = (T) new CharacteristicTraitMeta(max, min, type);
+    MetaType metaType = trait.getMetaType();
+    meta = switch (metaType) {
+      case MENDELIAN -> new MendelianMeta<>(trait, chance, blacklist);
+      case INTEGER -> new IntegerMeta<>(trait, (int) max, (int) min);
+      case WEIGHTED_ENUM ->  new WeightedEnumMeta<>(trait, enumClass, weights);
+      case DOUBLE -> new DoubleMeta<>(trait,max,min);
+      case ENUM -> new EnumMeta<>(trait,enumClass);
+      case CROSSABLE_DOUBLE -> new CrossableDoubleMeta<>(trait,max,min);
+      case CROSSABLE_INTEGER -> new CrossableIntegerMeta<>(trait,(int) max, (int) min);
+      case CROSSABLE_MENDELIAN -> new CrossableMendelianMeta<>(trait,chance,blacklist);
+      case POLYGENIC_MENDELIAN -> new PolygenicMendelianMeta<>(trait,chance,blacklist);
+    };
+    Conserved meta1 = (Conserved) meta;
+    meta1.setConserved(conserved);
+
+    if(meta instanceof Crossable c) {
+      c.setCrossable(crossable);
     }
-    if (aClass.isInstance(meta)) {
-      return new AnimalTraitWrapper<>(trait, meta);
-    } else {
-      return null;
-    }
+    return meta;
   }
 }

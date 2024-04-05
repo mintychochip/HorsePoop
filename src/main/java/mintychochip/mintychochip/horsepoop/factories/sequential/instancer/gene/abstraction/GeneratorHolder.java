@@ -9,5 +9,5 @@ import org.bukkit.entity.EntityType;
 public interface GeneratorHolder<U extends Trait> {
   List<BaseTrait<U>> instanceTraits(EntityType entityType);
 
-  boolean addStep(InstancingStep<T> step);
+  boolean addStep(InstancingStep<U> step);
 }

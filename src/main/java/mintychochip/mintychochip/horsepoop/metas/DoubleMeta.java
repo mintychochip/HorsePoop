@@ -6,7 +6,7 @@ public class DoubleMeta<U extends Trait> extends AbstractMeta<U> { //by default 
 
     protected double min;
 
-    protected DoubleMeta(U trait, double max, double min) {
+    public DoubleMeta(U trait, double max, double min) {
         super(trait);
         this.max = max;
         this.min = min;

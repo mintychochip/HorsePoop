@@ -5,24 +5,20 @@ import mintychochip.mintychochip.horsepoop.container.Trait;
 import java.util.List;
 
 public class MendelianMeta<U extends Trait> extends AbstractMeta<U>  { //uses 'mendelian'
-    protected final boolean conserved;
 
     protected final double chance;
-    protected final List<Trait> blacklist;
-    public MendelianMeta(U trait, boolean conserved, double chance, List<Trait> blacklist) {
+    protected final List<String> blacklist;
+    public MendelianMeta(U trait, double chance, List<String> blacklist) {
         super(trait);
-        this.conserved = conserved;
         this.blacklist = blacklist;
+        this.chance = chance;
     }
 
     public double getChance() {
         return chance;
     }
 
-    public List<Trait> getBlacklist() {
+    public List<String> getBlacklist() {
         return blacklist;
-    }
-    public boolean isConserved() {
-        return conserved;
     }
 }

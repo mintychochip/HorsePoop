@@ -5,7 +5,7 @@ public class IntegerMeta<U extends Trait> extends AbstractMeta<U> {
     protected int max;
     protected int min;
 
-    protected IntegerMeta(U trait, int max, int min) {
+    public IntegerMeta(U trait, int max, int min) {
         super(trait);
         this.max = max;
         this.min = min;

@@ -8,7 +8,7 @@ public class WeightedEnumMeta<U extends Trait> extends EnumMeta<U> { //still has
 
     protected final List<Double> weights;
 
-    protected WeightedEnumMeta(U trait, String enumClass, List<Double> weights) {
+    public WeightedEnumMeta(U trait, String enumClass, List<Double> weights) {
         super(trait, enumClass);
         this.weights = weights;
     }

@@ -5,7 +5,7 @@ public class EnumMeta<U extends Trait> extends AbstractMeta<U> {
 
     protected String enumClass; //stores the string of the enum class
 
-    protected EnumMeta(U trait, String enumClass) {
+    public EnumMeta(U trait, String enumClass) {
         super(trait);
         this.enumClass = enumClass;
     }

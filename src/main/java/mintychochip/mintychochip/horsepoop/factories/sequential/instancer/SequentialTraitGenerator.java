@@ -12,31 +12,31 @@ import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.a
 import org.bukkit.entity.EntityType;
 
 public class SequentialTraitGenerator<U extends Trait> implements
-    GeneratorHolder<T> {
+    GeneratorHolder<U> {
 
-    private final List<InstancingStep<T>> steps;
+    private final List<InstancingStep<U>> steps;
 
-    private final TraitConfig<U, T> config;
+    private final TraitConfig<U> config;
 
-    private final Generator<T> generator;
+    private final Generator<U> generator;
 
-    public SequentialTraitGenerator(List<InstancingStep<T>> steps, TraitConfig<U, T> config, Generator<T> generator) {
+    public SequentialTraitGenerator(List<InstancingStep<U>> steps, TraitConfig<U> config, Generator<U> generator) {
         this.steps = steps;
         this.config = config;
         this.generator = generator;
     }
 
-    public SequentialTraitGenerator(TraitConfig<U, T> config, Generator<T> generator) {
+    public SequentialTraitGenerator(TraitConfig<U> config, Generator<U> generator) {
         this(new ArrayList<>(), config, generator);
     }
 
-    public List<BaseTrait<T>> instanceTraits(EntityType entityType) {
+    public List<BaseTrait<U>> instanceTraits(EntityType entityType) {
         if (steps.isEmpty()) {
             return null;
         }
-        List<BaseTrait<T>> traits = new ArrayList<>();
-        for (InstancingStep<T> step : steps) {
-            List<BaseTrait<T>> newTraits = step.instanceTrait(entityType, traits, config, generator);
+        List<BaseTrait<U>> traits = new ArrayList<>();
+        for (InstancingStep<U> step : steps) {
+            List<BaseTrait<U>> newTraits = step.instanceTrait(entityType, traits, config, generator);
             if (newTraits != null && !newTraits.isEmpty()) {
                 traits.addAll(newTraits);
             }
@@ -45,7 +45,7 @@ public class SequentialTraitGenerator<U extends Trait> implements
     }
 
     @Override
-    public boolean addStep(InstancingStep<T> step) {
+    public boolean addStep(InstancingStep<U> step) {
         return steps.add(step);
     }
 }

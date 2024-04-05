@@ -12,19 +12,13 @@ import mintychochip.mintychochip.horsepoop.commands.EnabledEntitiesCommand;
 import mintychochip.mintychochip.horsepoop.commands.EnchantCommand;
 import mintychochip.mintychochip.horsepoop.commands.Reload;
 import mintychochip.mintychochip.horsepoop.config.ConfigManager;
-import mintychochip.mintychochip.horsepoop.config.configs.EntityConfig;
 import mintychochip.mintychochip.horsepoop.container.Trait;
 import mintychochip.mintychochip.horsepoop.container.TypeAdapters.TraitTypeAdapter;
 import mintychochip.mintychochip.horsepoop.container.grabber.GenomeGrasper;
 import mintychochip.mintychochip.horsepoop.container.grabber.GenomeGrasperImpl;
-import mintychochip.mintychochip.horsepoop.factories.TraitGeneratorImpl;
 import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.abstraction.TraitCrosserHolder;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.SequentialGenomeGenerator;
-import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.SequentialTraitGenerator;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.GenomeGenerator;
-import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.InstancingStep;
-import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.steps.InstanceGeneStep;
-import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.steps.MutationInstancingStep;
 import mintychochip.mintychochip.horsepoop.listener.AnimalCreationListener;
 import mintychochip.mintychochip.horsepoop.listener.AnimalPlayerListener;
 import mintychochip.mintychochip.horsepoop.listener.HorseCreationListener;
@@ -47,9 +41,6 @@ public final class HorsePoop extends JavaPlugin {
       new TraitTypeAdapter()).create();
 
   private static HorsePoop INSTANCE;
-
-  private TraitCrosserHolder traitCrosserHolder;
-
   private GenomeGenerator genomeGenerator;
 
   private GenomeGrasper genomeGrasper;
@@ -71,7 +62,7 @@ public final class HorsePoop extends JavaPlugin {
     this.adventure = BukkitAudiences.create(this);
     List<Listener> listeners = new ArrayList<>();
     this.genomeGrasper = new GenomeGrasperImpl(GSON, GENOME_KEY);
-    this.genomeGenerator = createInstancer();
+    //this.genomeGenerator = createInstancer();
     listeners.add(
         new HorseCreationListener(configManager, traitCrosserHolder, genomeGenerator, genomeGrasper));
     listeners.add(new AnimalCreationListener(configManager, genomeGrasper));
@@ -91,20 +82,6 @@ public final class HorsePoop extends JavaPlugin {
         .addSubCommand(new EnchantCommand("enchant", "enchant"));
     getCommand("entity").setExecutor(genericMainCommandManager);
   }
-
-  private SequentialGenomeGenerator createInstancer() {
-    List<InstancingStep<GeneTraitMeta>> steps = new ArrayList<>();
-    steps.add(new InstanceGeneStep<>());
-    steps.add(new MutationInstancingStep<>());
-    List<InstancingStep<CharacteristicTraitMeta>> charSteps = new ArrayList<>();
-    charSteps.add(new InstanceGeneStep<>());
-    EntityConfig entityConfig = configManager.getEntityConfig();
-    return new SequentialGenomeGenerator(
-        new SequentialTraitGenerator<>(steps, entityConfig.geneConfig(),
-            new TraitGeneratorImpl<>()),
-        new SequentialTraitGenerator<>(charSteps, entityConfig.characteristicConfig(),
-            new TraitGeneratorImpl<>()));
-  }
   public static HorsePoop getInstance() {
     return INSTANCE;
   }
@@ -115,11 +92,6 @@ public final class HorsePoop extends JavaPlugin {
     }
     return this.adventure;
   }
-
-  public TraitCrosserHolder getGenomeCrosser() {
-    return traitCrosserHolder;
-  }
-
   @Override
   public void onDisable() {
     if (this.adventure != null) {

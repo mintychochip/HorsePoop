@@ -5,13 +5,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import mintychochip.genesis.config.abstraction.GenericConfig;
-import mintychochip.mintychochip.horsepoop.config.AnimalTraitWrapper;
 import mintychochip.mintychochip.horsepoop.container.Trait;
 import mintychochip.mintychochip.horsepoop.container.TypeAdapters.TraitMetaAdapter;
 import mintychochip.mintychochip.horsepoop.metas.Meta;
@@ -20,76 +19,59 @@ import org.bukkit.entity.EntityType;
 public class TraitConfig<U extends Trait> {
 
   private final List<U> traitEnums = new ArrayList<>();
+
+  private final Map<String, U> mapKeyTraitEnum = new HashMap<>();
   private Class<U> tClass;
+
+  private final Map<EntityType, List<Meta<U>>> entityTypeMetaMap = new HashMap<>();
   public TraitConfig(Class<U> tClass) {
     this.tClass = tClass;
   }
+
   public <Y extends U> void loadEnums(Class<Y> enumClass, Y[] values) {
     if (tClass.isAssignableFrom(enumClass) && enumClass.isEnum()) {
-      Collections.addAll(this.traitEnums, values);
+      Arrays.stream(values).forEach(x -> mapKeyTraitEnum.put(x.getKey(), x));
+      Collections.addAll(traitEnums, values);
     }
   }
 
-  private final Map<EntityType, List<AnimalTraitWrapper<U>>> entityTypeTraitMap = new HashMap<>();
-
+  public U getTraitFromString(String key) {
+    return mapKeyTraitEnum.get(key);
+  }
   public void loadTraitConfigs(GenericConfig config) {
-    Type type = new TypeToken<AnimalTraitWrapper<T>>() {
+    Type type = new TypeToken<Meta<U>>() {
     }.getType();
-    Gson gson = new GsonBuilder().registerTypeAdapter(new TypeToken<AnimalTraitWrapper<T>>() {
+    Gson gson = new GsonBuilder().registerTypeAdapter(new TypeToken<Meta<U>>() {
         }.getType(),
-        new TraitMetaAdapter<>(aClass)).create();
+        new TraitMetaAdapter<>(this)).create();
     for (String key : config.getKeys(false)) { //entityType keys
-      List<AnimalTraitWrapper<T>> wrappers = new ArrayList<>();
+      List<Meta<U>> metas = new ArrayList<>();
       for (String s : config.getStringList(key)) {
-        AnimalTraitWrapper<T> animalTraitWrapper = gson.fromJson(s, type);
-        if (animalTraitWrapper != null) {
-          wrappers.add(animalTraitWrapper);
+        Meta<U> meta = gson.fromJson(s, type);
+        if (meta != null) {
+          metas.add(meta);
         }
       }
-      entityTypeTraitMap.put(Enum.valueOf(EntityType.class, key.toUpperCase()), wrappers);
+      entityTypeMetaMap.put(Enum.valueOf(EntityType.class, key.toUpperCase()), metas);
     }
-  }
-
-
-  public U getTraitFromWrapper(AnimalTraitWrapper<U> animalTraitWrapper) {
-    U traitEnum = traitEnums.stream()
-        .filter(x -> x.getKey().equalsIgnoreCase(animalTraitWrapper.trait())).findFirst()
-        .orElse(null);
-    if (traitEnum == null) {
-      return null;
-    }
-    return traitEnum;
   }
 
   public List<U> getTraitEnums() {
     return traitEnums;
   }
 
-  public List<U> getAllTraits(
-      EntityType entityType) { //filters by trait type, so gene or characteristic
-    if (!entityTypeTraitMap.containsKey(entityType)) {
+  public List<U> getAllEntityTraits(EntityType entityType) {
+    if(!entityTypeMetaMap.containsKey(entityType)) {
       return null;
     }
-    return entityTypeTraitMap.get(entityType).stream().map(
-        this::getTraitFromWrapper).toList();
+    return entityTypeMetaMap.get(entityType).stream().map(Meta::getTrait).toList();
   }
-
   public Meta<U> getMeta(U trait, EntityType entityType) {
-    AnimalTraitWrapper<U> traitWrapper = this.getTraitWrapper(trait, entityType);
-    if (traitWrapper == null) {
-      return null;
-    }
-    return traitWrapper.meta();
+    List<Meta<U>> metas = entityTypeMetaMap.get(entityType);
+    return metas.stream().filter(x -> x.getTrait() == trait).findFirst().orElse(null);
   }
 
-
-  public AnimalTraitWrapper<U> getTraitWrapper(U trait, EntityType entityType) {
-    List<AnimalTraitWrapper<U>> animalTraitWrappers = entityTypeTraitMap.get(entityType);
-    return animalTraitWrappers.stream().filter(x -> x.trait().equals(trait.getKey())).findFirst()
-        .orElse(null);
-  }
-
-  public Map<EntityType, List<AnimalTraitWrapper<T>>> getEntityTypeTraitMap() {
-    return entityTypeTraitMap;
+  public Map<EntityType, List<Meta<U>>> getEntityTypeMetaMap() {
+    return entityTypeMetaMap;
   }
 }

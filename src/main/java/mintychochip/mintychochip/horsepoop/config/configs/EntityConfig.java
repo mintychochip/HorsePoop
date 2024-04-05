@@ -19,11 +19,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class EntityConfig extends GenericConfig {
 
   private Set<EntityType> enabledEntityTypes;
-  private TraitConfig<GeneTrait, GeneTraitMeta> geneConfig = new TraitConfig<>(GeneTrait.class,
-      GeneTraitMeta.class);
-  private TraitConfig<CharacteristicTrait, CharacteristicTraitMeta> characteristicConfig = new TraitConfig<>(
-      CharacteristicTrait.class,
-      CharacteristicTraitMeta.class);
+  private TraitConfig<GeneTrait> geneConfig = new TraitConfig<>(GeneTrait.class);
+  private TraitConfig<CharacteristicTrait> characteristicConfig = new TraitConfig<>(
+      CharacteristicTrait.class);
 
   private void loadAllTraits() {
     geneConfig.loadEnums(GeneticAttribute.class,GeneticAttribute.values());
@@ -45,11 +43,11 @@ public class EntityConfig extends GenericConfig {
     }, 3L);
   }
 
-  public TraitConfig<GeneTrait, GeneTraitMeta> geneConfig() {
+  public TraitConfig<GeneTrait> geneConfig() {
     return geneConfig;
   }
 
-  public TraitConfig<CharacteristicTrait, CharacteristicTraitMeta> characteristicConfig() {
+  public TraitConfig<CharacteristicTrait> characteristicConfig() {
     return characteristicConfig;
   }
 

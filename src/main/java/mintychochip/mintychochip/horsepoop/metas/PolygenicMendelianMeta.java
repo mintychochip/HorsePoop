@@ -5,11 +5,11 @@ import mintychochip.mintychochip.horsepoop.container.Trait;
 import java.util.HashSet;
 import java.util.List;
 
-public final class PolygenicMendelianMeta<U extends Trait> extends CrossableMendelianMeta<U> implements Polygenic {
+public class PolygenicMendelianMeta<U extends Trait> extends CrossableMendelianMeta<U> implements Polygenic {
     private List<Trait> requiredTraits;
 
-    public PolygenicMendelianMeta(U trait, boolean conserved, double chance, List<Trait> blacklist) {
-        super(trait, conserved, chance, blacklist);
+    public PolygenicMendelianMeta(U trait, double chance, List<String> blacklist) {
+        super(trait, chance, blacklist);
     }
 
     @Override

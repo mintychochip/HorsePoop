@@ -21,7 +21,6 @@ public class MendelianGeneration<U extends Trait> implements MetaValueGeneration
         }
         return new Gson().toJson(gene);
     }
-
     private MendelianAllele createAllele(double chance) { //higher chance means higher for r
         Random random = new Random();
         return random.nextDouble() <= chance ? MendelianAllele.DOMINANT : MendelianAllele.RECESSIVE;
