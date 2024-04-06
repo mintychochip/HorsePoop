@@ -27,7 +27,7 @@ public enum GenericGene implements Gene {
   }
 
   @Override
-  public String getShortDescription() {
+  public String getDescription() {
     return description;
   }
 

@@ -12,7 +12,7 @@ public class IntegerGeneration<U extends TraitEnum> implements MetaValueGenerati
     public String generateValue(Meta<U> meta) {
         String value = null;
         if(meta instanceof IntegerMeta<U> im) {
-            int child = new Random(System.currentTimeMillis()).nextInt(im.getMin(), im.getMax());
+            int child = (im.getMax() - im.getMin()) * new Random().nextInt() + im.getMin();
             if(child > im.getMax()) {
                 child = im.getMax();
             }

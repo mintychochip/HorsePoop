@@ -11,8 +11,6 @@ import mintychochip.mintychochip.horsepoop.config.configs.SettingsConfig;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ConfigManager extends GenericConfigManager {
-
-  private final Gson gson = HorsePoop.GSON;
   private final WeightedRandom<Rarity> randomWeight;
   private final EntityConfig entityConfig;
   private final SettingsConfig settingsConfig;
@@ -31,6 +29,7 @@ public class ConfigManager extends GenericConfigManager {
         .addItem(Rarity.ARTIFACT, 0.01);  // Artifact with a weight of 0.01
   }
 
+
   public void reload() {
     entityConfig.reload();
     settingsConfig.reload();
@@ -45,10 +44,6 @@ public class ConfigManager extends GenericConfigManager {
 
   public WeightedRandom<Rarity> getRandomWeight() {
     return randomWeight;
-  }
-
-  public Gson getGson() {
-    return gson;
   }
 
   public AnimalItemConfig getItemConfig() {

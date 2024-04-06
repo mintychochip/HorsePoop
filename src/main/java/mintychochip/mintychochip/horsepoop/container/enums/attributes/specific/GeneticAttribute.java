@@ -2,14 +2,16 @@ package mintychochip.mintychochip.horsepoop.container.enums.attributes.specific;
 
 import mintychochip.mintychochip.horsepoop.api.Gene;
 import mintychochip.mintychochip.horsepoop.container.enums.attributes.TraitType;
+import mintychochip.mintychochip.horsepoop.metas.MetaType;
 
 public enum GeneticAttribute implements Gene {
-  CONSTITUTION("constitution", MetaType.NUMERIC, "asd"),
-  SPEED("speed", MetaType.NUMERIC, "asd"),
+  CONSTITUTION("constitution", MetaType.DOUBLE, "asd"),
+  SPEED("speed", MetaType.DOUBLE, "asd"),
   PARTICLE("particle", MetaType.ENUM, "asd"),
-  STRENGTH("strength", MetaType.NUMERIC, "asd"),
-  JUMP_STRENGTH("jumping-strength", MetaType.NUMERIC, "asd"),
-  FIRE_RESISTANT("fire", MetaType.MENDELIAN, "asd"), //lava and fire walking
+  STRENGTH("strength", MetaType.CROSSABLE_DOUBLE, "asd"),
+  JUMP_STRENGTH("jumping", MetaType.DOUBLE, "asd"),
+  FIRE_RESISTANT("fire",  MetaType.MENDELIAN, "asd"), //lava and fire walking
+  LAVA_RESISTANT("lava",MetaType.POLYGENIC_MENDELIAN,"asd"),
   GLOW("glow", MetaType.MENDELIAN, "asd"), //enum
   REGEN("regeneration", MetaType.MENDELIAN, "asd"),
   ICE_WALKER("ice-walker", MetaType.MENDELIAN,
@@ -42,7 +44,7 @@ public enum GeneticAttribute implements Gene {
   }
 
   @Override
-  public String getShortDescription() {
+  public String getDescription() {
     return description;
   }
 

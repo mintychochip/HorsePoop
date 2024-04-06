@@ -12,6 +12,6 @@ public interface Genome {
 
   List<BaseTrait<Gene>> getGenes();
 
-  List<BaseTrait<Phenotypic>> getChars();
+  List<BaseTrait<Phenotypic>> getPhenotypics();
 
 }

@@ -4,17 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mintychochip.mintychochip.horsepoop.api.AnimalSetGenomeFields;
-import mintychochip.mintychochip.horsepoop.api.Fetcher;
-import mintychochip.mintychochip.horsepoop.api.Intrinsic;
 import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
-import mintychochip.mintychochip.horsepoop.container.ValueFetcher;
-import mintychochip.mintychochip.horsepoop.container.enums.Gender;
-import mintychochip.mintychochip.horsepoop.container.enums.characteristics.GenericCharacteristicTraitEnum;
 import mintychochip.mintychochip.horsepoop.container.grabber.GenomeGrasper;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.GenomeGenerator;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Breedable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
@@ -68,7 +62,7 @@ public class HorseCreationListener implements Listener { //monitor listeners onl
 //                return;
 //            }
 //            Fetcher<Intrinsic> fetcher = new ValueFetcher<>();
-//            if (fetcher.getEnumValue(fatherGene.getIntrinsics(), GenericCharacteristicTraitEnum.GENDER) instanceof
+//            if (fetcher.getEnumValue(fatherGene.getIntrinsics(), IntrinsicTraitEnum.GENDER) instanceof
 //                    ){ //if they are homo, then cancel
 //                event.setCancelled(true);
 //                f.setBreed(false);
@@ -99,12 +93,10 @@ public class HorseCreationListener implements Listener { //monitor listeners onl
             Bukkit.getPluginManager().callEvent(new AnimalSetGenomeFields(livingEntity, animalGenome));
             return;
         }
-
         animalGenome = genomeGenerator.instanceGenome(livingEntity.getType());
         if (animalGenome == null) {
             return;
         }
-        Bukkit.broadcastMessage("here");
         Bukkit.getPluginManager().callEvent(new AnimalSetGenomeFields(livingEntity,
                 animalGenome));
     }

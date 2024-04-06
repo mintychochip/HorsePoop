@@ -11,6 +11,7 @@ import mintychochip.mintychochip.horsepoop.api.Phenotypic;
 import mintychochip.mintychochip.horsepoop.container.TypeAdapters.Genome;
 import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.abstraction.GenomeCrosser;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.GenomeGenerator;
+import org.bukkit.Bukkit;
 
 public class AnimalGenome implements Genome {
 
@@ -26,31 +27,20 @@ public class AnimalGenome implements Genome {
     @Nullable
     private String name = null;
 
-    private AnimalGenome(List<BaseTrait<Gene>> genes, List<BaseTrait<Phenotypic>> chars, long birthTime) {
+    private AnimalGenome(List<BaseTrait<Gene>> genes, List<BaseTrait<Phenotypic>> chars, List<BaseTrait<Intrinsic>> intrinsics, long birthTime) {
         this.genes = genes;
         this.chars = chars;
+        this.intrinsics = intrinsics;
         this.birthTime = birthTime;
     }
 
-    private static boolean instancingLogic(List<BaseTrait<Gene>> genes, List<BaseTrait<Phenotypic>> chars) {
-        if (genes == null || genes.isEmpty()) {
-            return true;
-        }
-        return chars == null || chars.isEmpty();
+
+    public static AnimalGenome createInstance(List<BaseTrait<Gene>> genes, List<BaseTrait<Phenotypic>> chars, List<BaseTrait<Intrinsic>> intrinsics, GenomeCrosser crosser) {
+        return new AnimalGenome(genes, chars, intrinsics,System.currentTimeMillis());
     }
 
-    public static AnimalGenome createInstance(List<BaseTrait<Gene>> genes, List<BaseTrait<Phenotypic>> chars, GenomeCrosser crosser) {
-        if (instancingLogic(genes, chars)) {
-            return null;
-        }
-        return new AnimalGenome(genes, chars, System.currentTimeMillis());
-    }
-
-    public static AnimalGenome createInstance(List<BaseTrait<Gene>> genes, List<BaseTrait<Phenotypic>> chars, GenomeGenerator generator) {
-        if (instancingLogic(genes, chars)) {
-            return null;
-        }
-        return new AnimalGenome(genes, chars, System.currentTimeMillis());
+    public static AnimalGenome createInstance(List<BaseTrait<Gene>> genes, List<BaseTrait<Phenotypic>> chars,List<BaseTrait<Intrinsic>> intrinsics, GenomeGenerator generator) {
+        return new AnimalGenome(genes, chars, intrinsics, System.currentTimeMillis());
     }
 
     public void setName(@Nullable String name) {
@@ -72,7 +62,7 @@ public class AnimalGenome implements Genome {
     }
 
     @Override
-    public List<BaseTrait<Phenotypic>> getChars() {
+    public List<BaseTrait<Phenotypic>> getPhenotypics() {
         return chars;
     }
 

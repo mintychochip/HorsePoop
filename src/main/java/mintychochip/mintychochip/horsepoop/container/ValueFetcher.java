@@ -13,7 +13,7 @@ public class ValueFetcher<U extends TraitEnum> implements Fetcher<U> {
     private final TraitFetcher<U> fetcher = new TraitFetcher<>();
 
     @Override
-    public <Y extends Enum<Y>> Y getEnumValue(List<BaseTrait<U>> baseTraits, U trait) {
+    public <Y extends Enum<Y>> Y getEnumValue(List<BaseTrait<U>> baseTraits, U trait, Class<Y> enumClass) {
         if (!(trait.getMetaType() == MetaType.WEIGHTED_ENUM || trait.getMetaType() == MetaType.ENUM)) {
             return null;
         }
@@ -27,16 +27,7 @@ public class ValueFetcher<U extends TraitEnum> implements Fetcher<U> {
         if (value == null) {
             return null;
         }
-        try {
-            Class<?> aClass = Class.forName(enumClassString);
-            if (!Enum.class.isAssignableFrom(aClass)) {
-                Class<Y> enumType = (Class<Y>) aClass;
-                return Enum.valueOf(enumType, value);
-            }
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        return null;
+        return Enum.valueOf(enumClass,value);
     }
 
     @Override

@@ -2,6 +2,7 @@ package mintychochip.mintychochip.horsepoop.container.enums.attributes.specific;
 
 import mintychochip.mintychochip.horsepoop.api.Gene;
 import mintychochip.mintychochip.horsepoop.container.enums.attributes.TraitType;
+import mintychochip.mintychochip.horsepoop.metas.MetaType;
 
 public enum SheepGene implements Gene { //traits designed for sheep
   RED("red", MetaType.MENDELIAN,
@@ -36,7 +37,7 @@ public enum SheepGene implements Gene { //traits designed for sheep
   }
 
   @Override
-  public String getShortDescription() {
+  public String getDescription() {
     return description;
   }
 

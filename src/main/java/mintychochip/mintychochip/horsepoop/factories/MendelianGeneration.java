@@ -9,6 +9,7 @@ import mintychochip.mintychochip.horsepoop.metas.MendelianMeta;
 import mintychochip.mintychochip.horsepoop.metas.Meta;
 
 import java.util.Random;
+import org.bukkit.Bukkit;
 
 public class MendelianGeneration<U extends TraitEnum> implements MetaValueGeneration<U> {
 
@@ -18,8 +19,11 @@ public class MendelianGeneration<U extends TraitEnum> implements MetaValueGenera
         if(meta instanceof MendelianMeta<U> mm) {
             double chance = mm.getChance();
             gene = new Gson().toJson(new MendelianGene(this.createAllele(chance),this.createAllele(chance)));
+            if(gene == null) {
+                return null;
+            }
         }
-        return new Gson().toJson(gene);
+        return gene;
     }
     private MendelianAllele createAllele(double chance) { //higher chance means higher for r
         Random random = new Random();

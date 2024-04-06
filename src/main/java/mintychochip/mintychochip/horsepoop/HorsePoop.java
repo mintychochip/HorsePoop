@@ -1,5 +1,6 @@
 package mintychochip.mintychochip.horsepoop;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -11,7 +12,9 @@ import mintychochip.genesis.Genesis;
 import mintychochip.genesis.commands.abstraction.GenericMainCommandManager;
 import mintychochip.mintychochip.horsepoop.api.*;
 import mintychochip.mintychochip.horsepoop.config.ConfigManager;
-import mintychochip.mintychochip.horsepoop.container.TypeAdapters.TraitTypeAdapter;
+import mintychochip.mintychochip.horsepoop.config.configs.EntityConfig;
+import mintychochip.mintychochip.horsepoop.config.configs.TraitConfig;
+import mintychochip.mintychochip.horsepoop.container.TypeAdapters.TraitMetaAdapter;
 import mintychochip.mintychochip.horsepoop.container.grabber.GenomeGrasper;
 import mintychochip.mintychochip.horsepoop.container.grabber.GenomeGrasperImpl;
 import mintychochip.mintychochip.horsepoop.factories.*;
@@ -26,6 +29,7 @@ import mintychochip.mintychochip.horsepoop.listener.AnimalCreationListener;
 import mintychochip.mintychochip.horsepoop.listener.AnimalPlayerListener;
 import mintychochip.mintychochip.horsepoop.listener.HorseCreationListener;
 import mintychochip.mintychochip.horsepoop.listener.NativeMethodListener;
+import mintychochip.mintychochip.horsepoop.metas.Meta;
 import mintychochip.mintychochip.horsepoop.metas.MetaType;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
@@ -41,8 +45,6 @@ public final class HorsePoop extends JavaPlugin {
 
     public static NamespacedKey GENOME_KEY = null;
 
-    public static final Gson GSON = new GsonBuilder().registerTypeHierarchyAdapter(TraitEnum.class,
-            new TraitTypeAdapter()).create();
 
     private static HorsePoop INSTANCE;
     private GenomeGrasper genomeGrasper;
@@ -52,7 +54,6 @@ public final class HorsePoop extends JavaPlugin {
     @Override
     public void onEnable() {
         this.configManager = ConfigManager.instanceConfigManager(this);
-
         Generator<Gene> geneGenerator = this.getGenerator();
         Generator<Phenotypic> phenotypicGenerator = this.getGenerator();
         Generator<Intrinsic> intrinsicGenerator = this.getGenerator();
@@ -63,8 +64,8 @@ public final class HorsePoop extends JavaPlugin {
         GENOME_KEY = Genesis.getKey("genome");
         this.adventure = BukkitAudiences.create(this);
         List<Listener> listeners = new ArrayList<>();
-        this.genomeGrasper = new GenomeGrasperImpl(GSON, GENOME_KEY);
-        GenomeGenerator genomeGenerator = this.getGenomeGenerator(geneGenerator, phenotypicGenerator);
+        this.genomeGrasper = new GenomeGrasperImpl(this.getGson(configManager), GENOME_KEY);
+        GenomeGenerator genomeGenerator = this.getGenomeGenerator(geneGenerator, phenotypicGenerator,intrinsicGenerator);
         listeners.add(
                 new HorseCreationListener(configManager, genomeGenerator, genomeGrasper));
         listeners.add(new AnimalCreationListener(configManager, genomeGrasper));
@@ -73,6 +74,16 @@ public final class HorsePoop extends JavaPlugin {
         listeners.forEach(x -> {
             Bukkit.getPluginManager().registerEvents(x, this);
         });
+    }
+
+    private Gson getGson(ConfigManager configManager) {
+        EntityConfig entityConfig = configManager.getEntityConfig();
+        TraitConfig<Gene> geneConfig = entityConfig.getGeneConfig();
+        TraitConfig<Phenotypic> characteristicConfig = entityConfig.getCharacteristicConfig();
+        TraitConfig<Intrinsic> intrinsicConfig = entityConfig.getIntrinsicConfig();
+        return new GsonBuilder().registerTypeAdapter(new TypeToken<Meta<Gene>>(){}.getType(), new TraitMetaAdapter<>(geneConfig))
+            .registerTypeAdapter(new TypeToken<Meta<Phenotypic>>(){}.getType(),new TraitMetaAdapter<>(characteristicConfig))
+            .registerTypeAdapter(new TypeToken<Meta<Intrinsic>>(){}.getType(), new TraitMetaAdapter<>(intrinsicConfig)).create();
     }
 
     private <U extends TraitEnum> Generator<U> getGenerator() {
@@ -88,16 +99,18 @@ public final class HorsePoop extends JavaPlugin {
         generator.addMetaGenerationType(MetaType.CROSSABLE_MENDELIAN, new MendelianGeneration<>());
         return generator;
     }
-
-    private GenomeGenerator getGenomeGenerator(Generator<Gene> geneGenerator, Generator<Phenotypic> phenotypicGenerator) {
+    private GenomeGenerator getGenomeGenerator(Generator<Gene> geneGenerator, Generator<Phenotypic> phenotypicGenerator, Generator<Intrinsic> intrinsicGenerator) {
         List<InstancingStep<Gene>> steps = new ArrayList<>();
         steps.add(new InstanceConserved<>());
         steps.add(new MutationInstancingStep<>());
         List<InstancingStep<Phenotypic>> charSteps = new ArrayList<>();
         charSteps.add(new InstanceConserved<>());
-        GeneratorHolder<Gene> sequentialTraitGenerator = new SequentialTraitGenerator<>(steps, configManager.getEntityConfig().geneConfig(), geneGenerator);
-        GeneratorHolder<Phenotypic> sequentialTraitGenerator1 = new SequentialTraitGenerator<>(charSteps, configManager.getEntityConfig().characteristicConfig(), phenotypicGenerator);
-        return new SequentialGenomeGenerator(sequentialTraitGenerator, sequentialTraitGenerator1);
+        List<InstancingStep<Intrinsic>> intrinsicSteps = new ArrayList<>();
+        intrinsicSteps.add(new InstanceConserved<>());
+        GeneratorHolder<Intrinsic> intrinsicGeneratorHolder = new SequentialTraitGenerator<>(intrinsicSteps,configManager.getEntityConfig().getIntrinsicConfig(),intrinsicGenerator);
+        GeneratorHolder<Gene> sequentialTraitGenerator = new SequentialTraitGenerator<>(steps, configManager.getEntityConfig().getGeneConfig(), geneGenerator);
+        GeneratorHolder<Phenotypic> sequentialTraitGenerator1 = new SequentialTraitGenerator<>(charSteps, configManager.getEntityConfig().getCharacteristicConfig(), phenotypicGenerator);
+        return new SequentialGenomeGenerator(sequentialTraitGenerator, sequentialTraitGenerator1,intrinsicGeneratorHolder);
     }
 
     public static HorsePoop getInstance() {

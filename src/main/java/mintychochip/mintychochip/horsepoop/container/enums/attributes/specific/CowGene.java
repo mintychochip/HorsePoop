@@ -2,6 +2,7 @@ package mintychochip.mintychochip.horsepoop.container.enums.attributes.specific;
 
 import mintychochip.mintychochip.horsepoop.api.Gene;
 import mintychochip.mintychochip.horsepoop.container.enums.attributes.TraitType;
+import mintychochip.mintychochip.horsepoop.metas.MetaType;
 
 public enum CowGene implements Gene {
 
@@ -29,7 +30,7 @@ public enum CowGene implements Gene {
   }
 
   @Override
-  public String getShortDescription() {
+  public String getDescription() {
     return description;
   }
 

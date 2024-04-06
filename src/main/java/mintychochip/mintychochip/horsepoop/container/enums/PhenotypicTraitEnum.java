@@ -1,31 +1,36 @@
-package mintychochip.mintychochip.horsepoop.container.enums.characteristics;
+package mintychochip.mintychochip.horsepoop.container.enums;
 
-import mintychochip.mintychochip.horsepoop.api.Intrinsic;
+import mintychochip.mintychochip.horsepoop.api.Phenotypic;
 import mintychochip.mintychochip.horsepoop.metas.MetaType;
 
-public enum GenericCharacteristicTraitEnum implements Intrinsic {
-  GENDER("gender", MetaType.ENUM, "gender of the animal"),
-  RARITY("rarity", MetaType.WEIGHTED_ENUM,"rarity of the animal");
+public enum PhenotypicTraitEnum implements Phenotypic {
+  HEIGHT("height", MetaType.CROSSABLE_DOUBLE, "Arbitrary height of the animal");
+
   private final String key;
   private final String description;
   private final MetaType metaType;
-  GenericCharacteristicTraitEnum(String key, MetaType metaType, String description) {
+
+  PhenotypicTraitEnum(String key, MetaType metaType, String description) {
     this.key = key;
     this.metaType = metaType;
     this.description = description;
   }
+
   @Override
   public String getNamespacedKey() {
-    return key;
+    return null;
   }
+
   @Override
   public String getKey() {
     return key;
   }
+
   @Override
-  public String getShortDescription() {
+  public String getDescription() {
     return description;
   }
+
   @Override
   public MetaType getMetaType() {
     return metaType;

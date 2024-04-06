@@ -9,6 +9,7 @@ import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.api.Generator;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.InstancingStep;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.GeneratorHolder;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 
 public class SequentialTraitGenerator<U extends TraitEnum> implements
@@ -25,11 +26,6 @@ public class SequentialTraitGenerator<U extends TraitEnum> implements
         this.config = config;
         this.generator = generator;
     }
-
-    public SequentialTraitGenerator(TraitConfig<U> config, Generator<U> generator) {
-        this(new ArrayList<>(), config, generator);
-    }
-
     public List<BaseTrait<U>> instanceTraits(EntityType entityType) {
         if (steps.isEmpty()) {
             return null;
@@ -39,7 +35,7 @@ public class SequentialTraitGenerator<U extends TraitEnum> implements
             List<BaseTrait<U>> newTraits = step.instanceTrait(entityType, traits, config, generator);
             if (newTraits != null && !newTraits.isEmpty()) {
                 traits.addAll(newTraits);
-            }
+          }
         }
         return traits;
     }

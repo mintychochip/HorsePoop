@@ -15,7 +15,7 @@ public interface TraitEnum {
    *
    * @return Returns a String with short description on the trait
    */
-  String getShortDescription();
+  String getDescription();
 
   /**
    *

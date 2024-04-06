@@ -2,6 +2,7 @@ package mintychochip.mintychochip.horsepoop.container.grabber;
 
 import com.google.gson.Gson;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -30,7 +31,10 @@ public class GenomeGrasperImpl implements GenomeGrasper {
   @Override
   public void toss(LivingEntity livingEntity, AnimalGenome animalGenome) {
     PersistentDataContainer persistentDataContainer = livingEntity.getPersistentDataContainer();
-    persistentDataContainer.set(genomeKey, PersistentDataType.STRING, gson.toJson(animalGenome));
+    animalGenome.setName(null);
+    String json = gson.toJson(animalGenome);
+    Bukkit.broadcastMessage(json);
+    persistentDataContainer.set(genomeKey, PersistentDataType.STRING, json);
   }
 }
 

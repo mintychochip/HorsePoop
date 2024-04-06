@@ -25,7 +25,7 @@ public class MendelianGene { //could just do diploids
 
     @Override
     public String toString() {
-        return this.colorCodeAlleles(alleleA) + ChatColor.BLACK + "|" + this.colorCodeAlleles(alleleB);
+        return this.alleleA + " " + this.alleleB;
     }
 
     public MendelianGene cross(MendelianGene gene) {

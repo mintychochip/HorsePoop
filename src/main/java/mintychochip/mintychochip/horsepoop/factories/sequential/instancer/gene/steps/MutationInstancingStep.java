@@ -10,6 +10,7 @@ import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.api.Generator;
 import mintychochip.mintychochip.horsepoop.container.ValueFetcher;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.InstancingStep;
+import mintychochip.mintychochip.horsepoop.metas.MendelianMeta;
 import org.bukkit.entity.EntityType;
 
 public class MutationInstancingStep<U extends TraitEnum> implements InstancingStep<U> {
@@ -29,7 +30,7 @@ public class MutationInstancingStep<U extends TraitEnum> implements InstancingSt
   @Override
   public List<BaseTrait<U>> instanceTrait(EntityType entityType, List<BaseTrait<U>> baseTraits,
       TraitConfig<U> config, Generator<U> generator) {
-    int mutations = 1;
+    int mutations = 3;
     List<BaseTrait<U>> traits = new ArrayList<>();
 
     for(int i = 0; i < mutations; i++) {

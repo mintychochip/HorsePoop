@@ -4,14 +4,16 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import mintychochip.genesis.config.abstraction.GenericConfig;
 import mintychochip.genesis.util.EnumUtil;
+import mintychochip.mintychochip.horsepoop.api.Intrinsic;
 import mintychochip.mintychochip.horsepoop.api.Phenotypic;
 import mintychochip.mintychochip.horsepoop.api.Gene;
 import mintychochip.mintychochip.horsepoop.api.TraitEnum;
+import mintychochip.mintychochip.horsepoop.container.enums.PhenotypicTraitEnum;
 import mintychochip.mintychochip.horsepoop.container.enums.attributes.GenericGene;
 import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.CowGene;
 import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.GeneticAttribute;
 import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.SheepGene;
-import mintychochip.mintychochip.horsepoop.container.enums.characteristics.GenericCharacteristicTraitEnum;
+import mintychochip.mintychochip.horsepoop.container.enums.characteristics.IntrinsicTraitEnum;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,16 +21,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class EntityConfig extends GenericConfig {
 
   private Set<EntityType> enabledEntityTypes;
-  private TraitConfig<Gene> geneConfig = new TraitConfig<>(Gene.class);
-  private TraitConfig<Phenotypic> characteristicConfig = new TraitConfig<>(
+  private final TraitConfig<Gene> geneConfig = new TraitConfig<>(Gene.class);
+  private final TraitConfig<Phenotypic> characteristicConfig = new TraitConfig<>(
       Phenotypic.class);
+
+  private final TraitConfig<Intrinsic> intrinsicConfig = new TraitConfig<>(Intrinsic.class);
 
   private void loadAllTraits() {
     geneConfig.loadEnums(GeneticAttribute.class,GeneticAttribute.values());
     geneConfig.loadEnums(SheepGene.class, SheepGene.values());
     geneConfig.loadEnums(GenericGene.class, GenericGene.values());
     geneConfig.loadEnums(CowGene.class, CowGene.values());
-    characteristicConfig.loadEnums(GenericCharacteristicTraitEnum.class, GenericCharacteristicTraitEnum.values());
+    characteristicConfig.loadEnums(PhenotypicTraitEnum.class, PhenotypicTraitEnum.values());
+    intrinsicConfig.loadEnums(IntrinsicTraitEnum.class,IntrinsicTraitEnum.values());
   }
 
   private <T extends TraitEnum> boolean isEnumImpl(Class<T> enumClass, Class<?> interfaceClass) {
@@ -38,16 +43,18 @@ public class EntityConfig extends GenericConfig {
   public EntityConfig(String path, JavaPlugin plugin) {
     super(path, plugin);
     loadAllTraits();
-    Bukkit.getScheduler().runTaskLater(plugin, x -> {
-      reload();
-    }, 3L);
+    reload();
   }
 
-  public TraitConfig<Gene> geneConfig() {
+  public TraitConfig<Intrinsic> getIntrinsicConfig() {
+    return intrinsicConfig;
+  }
+
+  public TraitConfig<Gene> getGeneConfig() {
     return geneConfig;
   }
 
-  public TraitConfig<Phenotypic> characteristicConfig() {
+  public TraitConfig<Phenotypic> getCharacteristicConfig() {
     return characteristicConfig;
   }
 
@@ -65,6 +72,7 @@ public class EntityConfig extends GenericConfig {
     this.enabledEntityTypes = loadEnabledEntityTypes();
     this.geneConfig.loadTraitConfigs(this);
     this.characteristicConfig.loadTraitConfigs(this);
+    this.intrinsicConfig.loadTraitConfigs(this);
     //this.entityTypeTraitMap = resetEntityTypeTraitMap();
   }
 

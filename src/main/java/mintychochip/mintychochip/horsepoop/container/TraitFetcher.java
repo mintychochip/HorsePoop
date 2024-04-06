@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import mintychochip.mintychochip.horsepoop.api.TraitEnum;
-import mintychochip.mintychochip.horsepoop.container.TypeAdapters.TraitTypeAdapter;
 import mintychochip.mintychochip.horsepoop.metas.MetaType;
 
 public class TraitFetcher<U extends TraitEnum> {
@@ -20,8 +19,7 @@ public class TraitFetcher<U extends TraitEnum> {
     }
     return attributes;
   }
-  private final Gson gson = new GsonBuilder().registerTypeAdapter(TraitEnum.class,
-      new TraitTypeAdapter<U>()).create();
+  private final Gson gson = new Gson();
   public MendelianGene getMendelian(BaseTrait<U> trait) {
     MetaType metaType = trait.getMeta().getTrait().getMetaType();
     return metaType == MetaType.MENDELIAN || metaType == MetaType.CROSSABLE_MENDELIAN ? gson.fromJson(trait.getValue(), MendelianGene.class) : null;

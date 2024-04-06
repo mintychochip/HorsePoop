@@ -6,13 +6,14 @@ import mintychochip.mintychochip.horsepoop.metas.DoubleMeta;
 import mintychochip.mintychochip.horsepoop.metas.Meta;
 
 import java.util.Random;
+import org.bukkit.Bukkit;
 
 public class DoubleGeneration<U extends TraitEnum> implements MetaValueGeneration<U> {
     @Override
     public String generateValue(Meta<U> meta) {
         String value = null;
         if(meta instanceof DoubleMeta<U> dm) {
-            double child = new Random().nextDouble(dm.getMin(), dm.getMax());
+            double child = (dm.getMax() - dm.getMin()) * new Random().nextDouble() + dm.getMin();
             if(child > dm.getMax()) {
                 child = dm.getMax();
             }

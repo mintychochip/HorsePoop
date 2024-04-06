@@ -117,6 +117,7 @@ public class NativeMethodListener implements
     if (rightClicked instanceof AbstractHorse abstractHorse && player.isSneaking()) { //ghetto fixc
       event.setCancelled(true);
     }
+    Bukkit.broadcastMessage("here");
     this.callEvent(fawnyInteractEntityEvent);
   }
 

@@ -16,10 +16,10 @@ public class TraitGeneratorImpl<U extends TraitEnum> implements
 
     private final Map<MetaType, MetaValueGeneration<U>> typeGenerationMap = new HashMap<>();
     @Override
-    public BaseTrait<U> createInstance(U trait, EntityType entityType, TraitConfig<U> traitConfig) {
-        Meta<U> meta = traitConfig.getMeta(trait, entityType);
+    public BaseTrait<U> createInstance(U traitEnum, EntityType entityType, TraitConfig<U> traitConfig) {
+        Meta<U> meta = traitConfig.getMeta(traitEnum, entityType);
 
-        String value = this.typeGenerationMap.get(trait.getMetaType()).generateValue(meta);
+        String value = this.typeGenerationMap.get(traitEnum.getMetaType()).generateValue(meta);
         if (value == null) {
             return null;
         }
