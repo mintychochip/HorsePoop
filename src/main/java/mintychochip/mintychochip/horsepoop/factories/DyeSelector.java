@@ -9,7 +9,7 @@ import mintychochip.mintychochip.horsepoop.api.Fetcher;
 import mintychochip.mintychochip.horsepoop.api.Gene;
 import mintychochip.mintychochip.horsepoop.container.ValueFetcher;
 import mintychochip.mintychochip.horsepoop.container.enums.MendelianType;
-import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.SheepGene;
+import mintychochip.mintychochip.horsepoop.container.enums.traits.SheepGene;
 import org.bukkit.DyeColor;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;

@@ -1,23 +1,37 @@
 package mintychochip.mintychochip.horsepoop.metas;
 
 import mintychochip.mintychochip.horsepoop.api.TraitEnum;
-public class DoubleMeta<U extends TraitEnum> extends AbstractMeta<U> { //by default does not cross
-    protected double max;
+import mintychochip.mintychochip.horsepoop.util.Unit;
 
-    protected double min;
+public class DoubleMeta<U extends TraitEnum> extends AbstractMeta<U> implements
+    Units { //by default does not cross
 
-    public DoubleMeta(U trait, double max, double min) {
-        super(trait);
-        this.max = max;
-        this.min = min;
-    }
+  protected double max;
 
-    public double getMax() {
-        return max;
-    }
+  protected double min;
 
-    public double getMin() {
-        return min;
-    }
+  protected Unit unit;
 
+  public DoubleMeta(U trait, double max, double min) {
+    super(trait);
+    this.max = max;
+    this.min = min;
+  }
+
+  public double getMax() {
+    return max;
+  }
+
+  public double getMin() {
+    return min;
+  }
+
+  @Override
+  public Unit getUnit() {
+    return unit;
+  }
+  @Override
+  public void setUnits(Unit unit) {
+    this.unit = unit;
+  }
 }

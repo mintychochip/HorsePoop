@@ -50,29 +50,28 @@ public class AnimalPlayerListener implements Listener {
       AnimalGenome genome = event.getAnimalGenome();
       DisplayBook displayBook = new DisplayBook(event.getEntityType(), genome);
       Audience player1 = audiences.player(player);
-      this.displayBook(player1,displayBook);
+      this.displayBook(player1,displayBook, genome);
     }
   }
   private final Map<String, Integer> pageNumbers = new HashMap<>();
 
 
-  public void displayBook(@NonNull Audience target, DisplayBook animalDisplayInfo) {
+  public void displayBook(@NonNull Audience target, DisplayBook animalDisplayInfo, AnimalGenome genome) {
     Component bookTitle = Component.text("Encyclopedia of cats");
     Component bookAuthor = Component.text("kashike");
     Collection<Component> bookPages = new ArrayList<>();
-    AnimalGenome animalGenome = animalDisplayInfo.getAnimalGenome();
 
-    bookPages.add(animalDisplayInfo.createBookPage("Genes",animalGenome.getGenes()));
-    bookPages.add(animalDisplayInfo.createBookPage("Phenotypics",animalGenome.getPhenotypics()));
-    bookPages.add(animalDisplayInfo.createBookPage("Intrinsics",animalGenome.getIntrinsics()));
+    bookPages.add(animalDisplayInfo.createBookPage("[Genes]",genome.getGenes()));
+    bookPages.add(animalDisplayInfo.createBookPage("[Phenotypics]",genome.getPhenotypics()));
+    bookPages.add(animalDisplayInfo.createBookPage("[Intrinsics]",genome.getIntrinsics()));
     Collection<Component> bookPage = new ArrayList<>();
     bookPage.add(animalDisplayInfo.getEntityTypeComponentImage(3)
         .append(Component.newline())
-        .append(animalDisplayInfo.pageButtonComponent("Genes"))
+        .append(animalDisplayInfo.pageButtonComponent("[Genes]"))
         .append(Component.newline())
-        .append(animalDisplayInfo.pageButtonComponent("Phenotypics"))
+        .append(animalDisplayInfo.pageButtonComponent("[Phenotypics]"))
         .append(Component.newline())
-        .append(animalDisplayInfo.pageButtonComponent("Intrinsics")));
+        .append(animalDisplayInfo.pageButtonComponent("[Intrinsics]")));
     bookPage.addAll(bookPages);
     Book book = Book.book(bookTitle, bookAuthor, bookPage);
     target.openBook(book);

@@ -17,9 +17,7 @@ public class SequentialGenomeGenerator implements
 
   private final GeneratorHolder<Gene> geneGenerator;
   private final GeneratorHolder<Phenotypic> charGenerator;
-
   private final GeneratorHolder<Intrinsic> intrinsicGenerator;
-
   public SequentialGenomeGenerator(
       GeneratorHolder<Gene> geneGenerator, GeneratorHolder<Phenotypic> charGenerator,
       GeneratorHolder<Intrinsic> intrinsicGenerator) {

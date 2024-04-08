@@ -11,7 +11,7 @@ public enum FeatherColor {
   SILVER("silver-feather"),
   RUST("rusted-feather");
 
-  private String featherKey; //returns the key for the config for the feather
+  private final String featherKey; //returns the key for the config for the feather
 
   FeatherColor(String featherKey) {
     this.featherKey = featherKey;

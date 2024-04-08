@@ -1,7 +1,7 @@
-package mintychochip.mintychochip.horsepoop.container.enums.attributes.specific;
+package mintychochip.mintychochip.horsepoop.container.enums.traits;
 
 import mintychochip.mintychochip.horsepoop.api.Gene;
-import mintychochip.mintychochip.horsepoop.container.enums.attributes.TraitType;
+import mintychochip.mintychochip.horsepoop.container.enums.TraitType;
 import mintychochip.mintychochip.horsepoop.metas.MetaType;
 
 public enum SheepGene implements Gene { //traits designed for sheep
@@ -17,7 +17,6 @@ public enum SheepGene implements Gene { //traits designed for sheep
 
   // numeric
   private final String key;
-
   private final MetaType metaType;
   private final String description;
 
@@ -28,7 +27,7 @@ public enum SheepGene implements Gene { //traits designed for sheep
   }
   @Override
   public String getNamespacedKey() {
-    return TraitType.SHEEP.getKey() + ":" + key;
+    return key;
   }
 
   @Override

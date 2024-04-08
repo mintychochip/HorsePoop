@@ -9,12 +9,16 @@ import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
 import mintychochip.mintychochip.horsepoop.api.Fetcher;
 import mintychochip.mintychochip.horsepoop.container.ValueFetcher;
+import mintychochip.mintychochip.horsepoop.container.enums.FeatherColor;
 import mintychochip.mintychochip.horsepoop.container.enums.Gender;
-import mintychochip.mintychochip.horsepoop.container.enums.attributes.specific.GeneticAttribute;
-import mintychochip.mintychochip.horsepoop.container.enums.characteristics.IntrinsicTraitEnum;
+import mintychochip.mintychochip.horsepoop.container.enums.traits.PhenotypicTraitEnum;
+import mintychochip.mintychochip.horsepoop.container.enums.traits.GeneticAttribute;
+import mintychochip.mintychochip.horsepoop.container.enums.traits.IntrinsicTraitEnum;
 import mintychochip.mintychochip.horsepoop.container.grabber.GenomeGrasper;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Parrot;
+import org.bukkit.entity.Parrot.Variant;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -33,6 +37,7 @@ public class AnimalCreationListener implements Listener {
     this.configManager = configManager;
     this.genomeGrasper = genomeGrasper;
   }
+
   @EventHandler(priority = EventPriority.MONITOR)
   private void setGlow(final AnimalSetGenomeFields event) {
     AnimalGenome genome = event.getGenome();
@@ -41,7 +46,7 @@ public class AnimalCreationListener implements Listener {
     }
     BaseTrait<Gene> glow = fetcher.getTraitFromList(genome.getGenes(),
         GeneticAttribute.GLOW);
-    if(glow == null) {
+    if (glow == null) {
       return;
     }
     event.getLivingEntity().setGlowing(true);
@@ -55,7 +60,7 @@ public class AnimalCreationListener implements Listener {
   @EventHandler(priority = EventPriority.MONITOR)
   private void setAndGenerateName(final AnimalSetGenomeFields event) {
     AnimalGenome genome = event.getGenome();
-    if(genome == null) {
+    if (genome == null) {
       return;
     }
     Gender enumValue = intrinsicFetcher.getEnumValue(genome.getIntrinsics(),
@@ -64,16 +69,28 @@ public class AnimalCreationListener implements Listener {
     String unicode = LegacyComponentSerializer.legacySection().serialize(enumValue.getUnicode());
     String name = genome.getName();
     LivingEntity livingEntity = event.getLivingEntity();
-    if(name == null) {
-      name = configManager.getSettingsConfig().getRandomName(enumValue,3,false) + " " + unicode;
-      genome.setName(name);
+    if (name == null) {
+      name = configManager.getSettingsConfig().getRandomName(enumValue, 3, false) + " " + unicode;
     }
     livingEntity.setCustomName(name);
   }
 
   @EventHandler(priority = EventPriority.MONITOR)
   private void setVariants(final AnimalSetGenomeFields event) {
-
+    LivingEntity livingEntity = event.getLivingEntity();
+    AnimalGenome genome = event.getGenome();
+    if (livingEntity instanceof Parrot parrot) {
+      FeatherColor parrotFeatherColor = charFetcher.getEnumValue(genome.getPhenotypics(),
+          PhenotypicTraitEnum.PARROT_FEATHER_COLOR, FeatherColor.class);
+      Variant variant = switch (parrotFeatherColor) {
+        case AUTUMN, RED -> Variant.RED;
+        case BLUE -> Variant.BLUE;
+        case EMERALD -> Variant.GREEN;
+        case SILVER, RUST, FADED -> Variant.GRAY;
+        case ORANGE, CYAN -> Variant.CYAN;
+      };
+      parrot.setVariant(variant);
+    }
   }
 //  @EventHandler(priority = EventPriority.MONITOR)
 //  private void setFieldsOnAnimalCreation(

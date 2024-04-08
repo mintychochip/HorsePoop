@@ -1,7 +1,7 @@
-package mintychochip.mintychochip.horsepoop.container.enums.attributes.specific;
+package mintychochip.mintychochip.horsepoop.container.enums.traits;
 
 import mintychochip.mintychochip.horsepoop.api.Gene;
-import mintychochip.mintychochip.horsepoop.container.enums.attributes.TraitType;
+import mintychochip.mintychochip.horsepoop.container.enums.TraitType;
 import mintychochip.mintychochip.horsepoop.metas.MetaType;
 
 public enum GeneticAttribute implements Gene {
@@ -35,7 +35,7 @@ public enum GeneticAttribute implements Gene {
 
   @Override
   public String getNamespacedKey() {
-    return TraitType.HORSE.getKey() + ":" + key;
+    return key;
   }
 
   @Override

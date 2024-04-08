@@ -16,6 +16,7 @@ import org.bukkit.entity.EntityType;
 public class MutationInstancingStep<U extends TraitEnum> implements InstancingStep<U> {
 
   private final Random random = new Random(System.currentTimeMillis());
+
   private U getRandomTrait(List<U> allTraits) {
     int index = random.nextInt(allTraits.size());
     return allTraits.get(index);
@@ -30,17 +31,20 @@ public class MutationInstancingStep<U extends TraitEnum> implements InstancingSt
   @Override
   public List<BaseTrait<U>> instanceTrait(EntityType entityType, List<BaseTrait<U>> baseTraits,
       TraitConfig<U> config, Generator<U> generator) {
-    int mutations = 3;
+    List<U> allTraits = config.getAllEntityTraits(entityType);
     List<BaseTrait<U>> traits = new ArrayList<>();
 
-    for(int i = 0; i < mutations; i++) {
-      List<U> allTraits = config.getAllEntityTraits(entityType);
-      U randomTrait = this.getRandomTrait(allTraits);
+    if (!allTraits.isEmpty()) {
+      int mutations = 3;
 
-      if(randomTrait != null && !this.traitIsInList(randomTrait,baseTraits,traits)) {
-        BaseTrait<U> instance = generator.createInstance(randomTrait, entityType, config);
-        if(instance != null) {
-          traits.add(instance);
+      for (int i = 0; i < mutations; i++) {
+        U randomTrait = this.getRandomTrait(allTraits);
+
+        if (randomTrait != null && !this.traitIsInList(randomTrait, baseTraits, traits)) {
+          BaseTrait<U> instance = generator.createInstance(randomTrait, entityType, config);
+          if (instance != null) {
+            traits.add(instance);
+          }
         }
       }
     }

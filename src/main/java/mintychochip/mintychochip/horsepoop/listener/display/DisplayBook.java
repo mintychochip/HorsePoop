@@ -22,29 +22,21 @@ public class DisplayBook {
 
   @NonNull
   private final EntityType entityType;
-  @NonNull
-  private final AnimalGenome animalGenome;
   private final Map<String, Integer> headerIntegerMap = new HashMap<>();
   private int lastPageNum = 2;
-
-  public AnimalGenome getAnimalGenome() {
-    return animalGenome;
-  }
-
   public DisplayBook(@NotNull EntityType entityType, @NotNull AnimalGenome animalGenome) {
     this.entityType = entityType;
-    this.animalGenome = animalGenome;
   }
 
   private <U extends TraitEnum> Component getTraitComponent(List<BaseTrait<U>> traits) {
-    return new Componentifier<U>().getComponent(traits);
+    return new Componentifier<U>(traits).getComponent();
   }
 
   public <U extends TraitEnum> Component createBookPage(String header, List<BaseTrait<U>> traits) {
     headerIntegerMap.put(header, lastPageNum++);
     return Component.empty().append(
-            Component.text(header).hoverEvent(HoverEvent.showText(Component.text("Click to go back to Title Page")))
-                .clickEvent(ClickEvent.changePage(1))).append(Component.text(": "))
+            Component.text(header).hoverEvent(HoverEvent.showText(Component.text("Navigate to: [Main]")))
+                .clickEvent(ClickEvent.changePage(1)))
         .append(Component.newline()).append(this.getTraitComponent(traits));
   }
 
@@ -52,7 +44,7 @@ public class DisplayBook {
     int i = headerIntegerMap.get(header);
     return Component.empty()
         .append(Component.text(header).clickEvent(ClickEvent.changePage(i)).hoverEvent(
-            HoverEvent.showText(Component.text("Navigate to: "))));
+            HoverEvent.showText(Component.text("Navigate to: " + header))));
   }
 
   public Component getEntityTypeComponentImage(int padding) {

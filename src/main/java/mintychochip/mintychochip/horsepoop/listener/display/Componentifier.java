@@ -6,24 +6,28 @@ import mintychochip.genesis.util.Colorful;
 import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
 import mintychochip.mintychochip.horsepoop.container.MendelianGene;
+import mintychochip.mintychochip.horsepoop.metas.EnumMeta;
 import mintychochip.mintychochip.horsepoop.metas.Meta;
 import mintychochip.mintychochip.horsepoop.metas.MetaType;
+import mintychochip.mintychochip.horsepoop.metas.Polygenic;
+import mintychochip.mintychochip.horsepoop.metas.Units;
+import mintychochip.mintychochip.horsepoop.util.Unit;
 import mintychochip.mintychochip.horsepoop.util.math.Round;
 import mintychochip.mintychochip.horsepoop.util.string.StringManipulation;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.event.HoverEvent.Action;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
-import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 public class Componentifier<U extends TraitEnum> {
-
   private static final int DECIMAL_PLACES = 3;
 
-  public Component getComponent(List<BaseTrait<U>> traits) {
+  private final List<BaseTrait<U>> traits;
+  public Componentifier(List<BaseTrait<U>> traits) {
+    this.traits = traits;
+  }
+  public Component getComponent() {
     Component component = Component.text("");
     for (BaseTrait<U> trait : traits) {
       component = component.append(this.getIndividualComponent(trait)).append(Component.newline());
@@ -42,23 +46,54 @@ public class Componentifier<U extends TraitEnum> {
     return Component.text(StringManipulation.capitalizeFirstLetter(traitEnum.getKey())).color(color)
         .hoverEvent(HoverEvent.showText(Component.text(traitEnum.getDescription())));
   }
+
   private Component createIndividualValueComponent(BaseTrait<U> trait) {
     Meta<U> meta = trait.getMeta();
     MetaType metaType = meta.getTrait().getMetaType();
     String value = trait.getValue();
-    value = switch (metaType) {
+    String text = switch (metaType) {
       case DOUBLE, CROSSABLE_DOUBLE -> this.roundStringIfDecimal(value);
       case MENDELIAN, CROSSABLE_MENDELIAN, POLYGENIC_MENDELIAN -> new Gson().fromJson(value,
           MendelianGene.class).toString();
-      default -> trait.getValue();
+      case ENUM, WEIGHTED_ENUM -> StringManipulation.capitalizeFirstLetter(value.toLowerCase());
+      default -> value;
     };
+    Component component = Component.text(text);
+    if (meta instanceof EnumMeta<U> em) {
+      TextColor textColorFromEnum = this.getTextColorFromEnum(em, value);
+      component = component.color(textColorFromEnum);
+    }
+    if (meta instanceof Units units) {
+      Unit unit = units.getUnit();
+      component = this.appendUnit(component, unit);
+    }
+    if (meta instanceof Polygenic<?>) {
+      Polygenic<U> polygenicMeta = (Polygenic<U>) meta;
+      PolygenicDisplay<U> uPolygenicDisplay = new PolygenicDisplay<>(traits);
+      component = component.hoverEvent(HoverEvent.showText(uPolygenicDisplay.getHoverText(polygenicMeta)));
+    }
+    return component;
+  }
+  private Component appendUnit(Component component, Unit unit) {
+    if (unit == null) {
+      return component;
+    }
+    return component.append(Component.text(" " + unit.getAbbreviation()).hoverEvent(
+        HoverEvent.showText(Component.text(
+            StringManipulation.capitalizeFirstLetter(unit.toString().toLowerCase())))));
+  }
 
-    TextComponent text = Component.text(value);
-//    if (meta.getTrait() instanceof Colorful colorful) {
-//      TextColor textColor = colorful.getTextColor();
-//      return text.color(textColor);
-//    }
-    return text;
+  private TextColor getTextColorFromEnum(EnumMeta<U> meta, String value) {
+    try {
+      Class<?> aClass = Class.forName(meta.getEnumClass());
+      if (Colorful.class.isAssignableFrom(aClass)) {
+        Colorful colorful = (Colorful) Enum.valueOf((Class<? extends Enum>) aClass, value);
+        return colorful.getTextColor();
+      }
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+    return null;
   }
 
   private String roundStringIfDecimal(String value) {

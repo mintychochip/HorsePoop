@@ -19,26 +19,27 @@ import org.bukkit.entity.EntityType;
 
 public class TraitConfig<U extends TraitEnum> {
 
-  private final List<U> traitEnums = new ArrayList<>();
 
   private final Map<String, U> mapKeyTraitEnum = new HashMap<>();
   private Class<U> tClass;
 
+  public Class<U> gettClass() {
+    return tClass;
+  }
+
   private final Map<EntityType, List<Meta<U>>> entityTypeMetaMap = new HashMap<>();
+
   public TraitConfig(Class<U> tClass) {
     this.tClass = tClass;
   }
-
-  public <Y extends U> void loadEnums(Class<Y> enumClass, Y[] values) {
-    if (tClass.isAssignableFrom(enumClass) && enumClass.isEnum()) {
-      Arrays.stream(values).forEach(x -> mapKeyTraitEnum.put(x.getKey(), x));
-      Collections.addAll(traitEnums, values);
-    }
+  public <Y extends U> void loadEnums(Y[] values) {
+    Arrays.stream(values).forEach(val -> mapKeyTraitEnum.put(val.getKey(), val));
   }
 
   public U getTraitFromString(String key) {
     return mapKeyTraitEnum.get(key);
   }
+
   public void loadTraitConfigs(GenericConfig config) {
     Type type = new TypeToken<Meta<U>>() {
     }.getType();
@@ -57,16 +58,13 @@ public class TraitConfig<U extends TraitEnum> {
     }
   }
 
-  public List<U> getTraitEnums() {
-    return traitEnums;
-  }
-
   public List<U> getAllEntityTraits(EntityType entityType) {
-    if(!entityTypeMetaMap.containsKey(entityType)) {
+    if (!entityTypeMetaMap.containsKey(entityType)) {
       return null;
     }
     return entityTypeMetaMap.get(entityType).stream().map(Meta::getTrait).toList();
   }
+
   public Meta<U> getMeta(U trait, EntityType entityType) {
     List<Meta<U>> metas = entityTypeMetaMap.get(entityType);
     return metas.stream().filter(x -> x.getTrait() == trait).findFirst().orElse(null);

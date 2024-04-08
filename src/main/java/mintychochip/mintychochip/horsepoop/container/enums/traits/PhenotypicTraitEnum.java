@@ -1,11 +1,11 @@
-package mintychochip.mintychochip.horsepoop.container.enums;
+package mintychochip.mintychochip.horsepoop.container.enums.traits;
 
 import mintychochip.mintychochip.horsepoop.api.Phenotypic;
 import mintychochip.mintychochip.horsepoop.metas.MetaType;
 
 public enum PhenotypicTraitEnum implements Phenotypic {
-  HEIGHT("height", MetaType.CROSSABLE_DOUBLE, "Arbitrary height of the animal");
-
+  HEIGHT("height", MetaType.CROSSABLE_DOUBLE, "Arbitrary height of the animal"),
+  PARROT_FEATHER_COLOR("feather-color",MetaType.ENUM,"Parrot feather color");
   private final String key;
   private final String description;
   private final MetaType metaType;

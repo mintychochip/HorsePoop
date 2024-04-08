@@ -1,9 +1,13 @@
 package mintychochip.mintychochip.horsepoop.metas;
 
 import mintychochip.mintychochip.horsepoop.api.TraitEnum;
-public class IntegerMeta<U extends TraitEnum> extends AbstractMeta<U> {
+import mintychochip.mintychochip.horsepoop.util.Unit;
+
+public class IntegerMeta<U extends TraitEnum> extends AbstractMeta<U> implements Units{
     protected int max;
     protected int min;
+
+    protected Unit unit;
 
     public IntegerMeta(U trait, int max, int min) {
         super(trait);
@@ -17,5 +21,15 @@ public class IntegerMeta<U extends TraitEnum> extends AbstractMeta<U> {
 
     public int getMin() {
         return min;
+    }
+
+    @Override
+    public Unit getUnit() {
+        return unit;
+    }
+
+    @Override
+    public void setUnits(Unit unit) {
+        this.unit = unit;
     }
 }

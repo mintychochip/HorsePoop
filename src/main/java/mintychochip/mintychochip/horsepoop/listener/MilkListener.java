@@ -1,66 +1,93 @@
 package mintychochip.mintychochip.horsepoop.listener;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import mintychochip.genesis.config.abstraction.GenesisConfigurationSection;
+import mintychochip.genesis.items.container.AbstractItem;
+import mintychochip.genesis.items.container.AppraisableItemData;
+import mintychochip.genesis.util.WeightedRandom;
+import mintychochip.mintychochip.horsepoop.HorsePoop;
+import mintychochip.mintychochip.horsepoop.api.Fetcher;
+import mintychochip.mintychochip.horsepoop.api.Gene;
+import mintychochip.mintychochip.horsepoop.api.events.FawnyMilkEvent;
+import mintychochip.mintychochip.horsepoop.config.ConfigManager;
+import mintychochip.mintychochip.horsepoop.config.configs.AnimalItemConfig;
+import mintychochip.mintychochip.horsepoop.config.configs.SettingsConfig;
+import mintychochip.mintychochip.horsepoop.config.configs.SettingsConfig.Marker;
+import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
+import mintychochip.mintychochip.horsepoop.container.BaseTrait;
+import mintychochip.mintychochip.horsepoop.container.MendelianGene;
+import mintychochip.mintychochip.horsepoop.container.enums.MendelianType;
+import mintychochip.mintychochip.horsepoop.container.enums.traits.CowGene;
+import mintychochip.mintychochip.horsepoop.factories.DyeSelector;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.entity.Player;
 
 public class MilkListener implements Listener {
 
-//  private final ConfigManager configManager;
-//
-//  private final TraitFetcher traitFetcher;
-//
-//  private final DyeSelector dyeSelector;
-//
-//  public MilkListener(ConfigManager configManager, TraitFetcher traitFetcher) {
-//    this.configManager = configManager;
-//    this.traitFetcher = traitFetcher;
-//    this.dyeSelector = new DyeSelector(traitFetcher);
-//  }
-//  private List<ItemStack> dropTable = new ArrayList<>(); //add more orthodox way to add
-//
-//  private Random random = new Random(System.currentTimeMillis());
-//
-//  @EventHandler(priority = EventPriority.HIGHEST)
-//  private void onFawnyMilkEvent(final FawnyMilkEvent event) {
-//    if (event.isCancelled()) {
-//      return;
-//    }
-//    ItemStack bucket = event.getBucket();
-//    Player player = event.getPlayer();
-//
-//    if (player.getGameMode() == GameMode.SURVIVAL) {
-//      bucket.setAmount(bucket.getAmount() - 1);
-//    }
-//    AnimalGenome animalGenome = event.getAnimalGenome();
-//
-//    SettingsConfig settingsConfig = configManager.getSettingsConfig();
-//    ItemStack itemStack = new ItemStack(Material.MILK_BUCKET);
-//    Gene milkTrait = traitFetcher.getGeneFromList(animalGenome,
-//        CowGeneTrait.STRAWBERRY_MILK);
-//    MendelianGene mendelian = traitFetcher.getMendelian(milkTrait);
-//    if (mendelian.getPhenotype() == MendelianType.MENDELIAN_RECESSIVE) {
-//      AnimalItemConfig itemConfig = configManager.getItemConfig();
-//      WeightedRandom<GenesisConfigurationSection> weightedRandom = new WeightedRandom<>();
-//      GenesisConfigurationSection strawberry = itemConfig.getMainConfigurationSection(
-//          "strawberry-milk");
-//      if (strawberry.isNull()) {
-//        throw new RuntimeException(
-//            "Strawberry milk section is null, and the trait is enabled check the config.");
-//      }
-//      GenesisConfigurationSection golden = itemConfig.getMainConfigurationSection(
-//          "golden-milk");
-//      if (golden.isNull()) {
-//        throw new RuntimeException(
-//            "Golden milk section is null, and the trait is enabled check the config.");
-//      }
-//      weightedRandom.addItem(strawberry, settingsConfig.getDouble(Marker.STRAWBERRY_WEIGHT))
-//          .addItem(golden, settingsConfig.getDouble(Marker.GOLDEN_WEIGHT));
-//      itemStack = new AbstractItem.EmbeddedDataBuilder(
-//          HorsePoop.getInstance(), weightedRandom.chooseOne(), false,
-//          new AppraisableItemData()).defaultBuild()
-//          .getItemStack(); //both configSections are notnull
-//    }
-//    dropTable.add(itemStack);
-//  }
+  private final ConfigManager configManager;
+
+  private final Fetcher<Gene> geneFetcher;
+
+  private final DyeSelector dyeSelector;
+
+  public MilkListener(ConfigManager configManager, Fetcher<Gene> geneFetcher, DyeSelector dyeSelector) {
+    this.configManager = configManager;
+    this.geneFetcher=  geneFetcher;
+    this.dyeSelector = dyeSelector;
+  }
+  private List<ItemStack> dropTable = new ArrayList<>(); //add more orthodox way to add
+  @EventHandler(priority = EventPriority.HIGHEST)
+  private void onFawnyMilkEvent(final FawnyMilkEvent event) {
+    Bukkit.broadcastMessage("milk");
+
+    if (event.isCancelled()) {
+      return;
+    }
+    ItemStack bucket = event.getBucket();
+    Player player = event.getPlayer();
+
+    if (player.getGameMode() == GameMode.SURVIVAL) {
+      bucket.setAmount(bucket.getAmount() - 1);
+    }
+    AnimalGenome animalGenome = event.getAnimalGenome();
+
+    SettingsConfig settingsConfig = configManager.getSettingsConfig();
+    ItemStack itemStack = new ItemStack(Material.MILK_BUCKET);
+    BaseTrait<Gene> strawberryTrait = geneFetcher.getTraitFromList(animalGenome.getGenes(),
+        CowGene.STRAWBERRY_MILK);
+    MendelianGene mendelian = geneFetcher.getMendelian(strawberryTrait);
+    if (mendelian.getPhenotype() == MendelianType.MENDELIAN_RECESSIVE) {
+      AnimalItemConfig itemConfig = configManager.getItemConfig();
+      WeightedRandom<GenesisConfigurationSection> weightedRandom = new WeightedRandom<>();
+      GenesisConfigurationSection strawberry = itemConfig.getMainConfigurationSection(
+          "strawberry-milk");
+      if (strawberry.isNull()) {
+        throw new RuntimeException(
+            "Strawberry milk section is null, and the trait is enabled check the config.");
+      }
+      GenesisConfigurationSection golden = itemConfig.getMainConfigurationSection(
+          "golden-milk");
+      if (golden.isNull()) {
+        throw new RuntimeException(
+            "Golden milk section is null, and the trait is enabled check the config.");
+      }
+      weightedRandom.addItem(strawberry, settingsConfig.getDouble(Marker.STRAWBERRY_WEIGHT))
+          .addItem(golden, settingsConfig.getDouble(Marker.GOLDEN_WEIGHT));
+      itemStack = new AbstractItem.EmbeddedDataBuilder(
+          HorsePoop.getInstance(), weightedRandom.chooseOne(), false,
+          new AppraisableItemData()).defaultBuild()
+          .getItemStack(); //both configSections are notnull
+    }
+    dropTable.add(itemStack);
+  }
 //  @EventHandler
 //  private void onShearParrotEvent(final FawnyShearEvent event) {
 //    if (event.isCancelled()) {
@@ -133,17 +160,17 @@ public class MilkListener implements Listener {
 //  private void onShearSheepEvent(final FawnyShearEvent event) {
 //
 //  }
-//  @EventHandler(priority = EventPriority.MONITOR)
-//  private void selectOneItemToAddToPlayer(final FawnyMilkEvent event) {
-//    if (event.isCancelled()) {
-//      return;
-//    }
-//    if (dropTable.isEmpty()) {
-//      return;
-//    }
-//    event.getPlayer().getInventory().addItem(dropTable.get(random.nextInt(dropTable.size())));
-//    dropTable.clear();
-//  }
+  @EventHandler(priority = EventPriority.MONITOR)
+  private void selectOneItemToAddToPlayer(final FawnyMilkEvent event) {
+    if (event.isCancelled()) {
+      return;
+    }
+    if (dropTable.isEmpty()) {
+      return;
+    }
+    event.getPlayer().getInventory().addItem(dropTable.get(new Random().nextInt(dropTable.size())));
+    dropTable.clear();
+  }
 //  @EventHandler
 //  private void onFauwnyShearSheepEvent(final FawnyShearEvent event) {
 //    AnimalGenome animalGenome = event.getAnimalGenome();

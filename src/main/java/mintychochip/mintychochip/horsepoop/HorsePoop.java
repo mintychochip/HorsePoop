@@ -15,6 +15,7 @@ import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.config.configs.EntityConfig;
 import mintychochip.mintychochip.horsepoop.config.configs.TraitConfig;
 import mintychochip.mintychochip.horsepoop.container.TypeAdapters.TraitMetaAdapter;
+import mintychochip.mintychochip.horsepoop.container.ValueFetcher;
 import mintychochip.mintychochip.horsepoop.container.grabber.GenomeGrasper;
 import mintychochip.mintychochip.horsepoop.container.grabber.GenomeGrasperImpl;
 import mintychochip.mintychochip.horsepoop.factories.*;
@@ -28,6 +29,8 @@ import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.s
 import mintychochip.mintychochip.horsepoop.listener.AnimalCreationListener;
 import mintychochip.mintychochip.horsepoop.listener.AnimalPlayerListener;
 import mintychochip.mintychochip.horsepoop.listener.HorseCreationListener;
+import mintychochip.mintychochip.horsepoop.listener.IntermittentListener;
+import mintychochip.mintychochip.horsepoop.listener.MilkListener;
 import mintychochip.mintychochip.horsepoop.listener.NativeMethodListener;
 import mintychochip.mintychochip.horsepoop.metas.Meta;
 import mintychochip.mintychochip.horsepoop.metas.MetaType;
@@ -57,7 +60,9 @@ public final class HorsePoop extends JavaPlugin {
         Generator<Gene> geneGenerator = this.getGenerator();
         Generator<Phenotypic> phenotypicGenerator = this.getGenerator();
         Generator<Intrinsic> intrinsicGenerator = this.getGenerator();
-        Random random = new Random(System.currentTimeMillis());
+        Fetcher<Gene> geneFetcher = new ValueFetcher<>();
+        Fetcher<Intrinsic> intrinsicFetcher = new ValueFetcher<>();
+        Fetcher<Phenotypic> phenotypicFetcher = new ValueFetcher<>();
         EventCreator eventCreator = new EventCreator();
         INSTANCE = this;
         // Plugin startup logic
@@ -71,6 +76,8 @@ public final class HorsePoop extends JavaPlugin {
         listeners.add(new AnimalCreationListener(configManager, genomeGrasper));
         listeners.add(new NativeMethodListener(configManager, genomeGrasper));
         listeners.add(new AnimalPlayerListener(configManager, adventure));
+        listeners.add(new IntermittentListener(configManager,geneFetcher,intrinsicFetcher,new EventCreator()));
+        listeners.add(new MilkListener(configManager,geneFetcher,new DyeSelector()));
         listeners.forEach(x -> {
             Bukkit.getPluginManager().registerEvents(x, this);
         });

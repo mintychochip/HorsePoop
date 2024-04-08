@@ -1,31 +1,35 @@
-package mintychochip.mintychochip.horsepoop.container.enums.characteristics;
+package mintychochip.mintychochip.horsepoop.container.enums.traits;
 
-import mintychochip.mintychochip.horsepoop.api.Intrinsic;
+import mintychochip.mintychochip.horsepoop.api.Gene;
+import mintychochip.mintychochip.horsepoop.container.enums.TraitType;
 import mintychochip.mintychochip.horsepoop.metas.MetaType;
 
-public enum IntrinsicTraitEnum implements Intrinsic {
-  GENDER("gender", MetaType.ENUM, "gender of the animal"),
-  RARITY("rarity", MetaType.WEIGHTED_ENUM,"rarity of the animal");
+public enum GenericGene implements Gene {
+  YIELD("yield", MetaType.CROSSABLE_INTEGER, "Determines the yield, based on the mob type for mob drops or farmable items.");
   private final String key;
   private final String description;
   private final MetaType metaType;
-  IntrinsicTraitEnum(String key, MetaType metaType, String description) {
+
+  GenericGene(String key, MetaType metaType, String description) {
     this.key = key;
-    this.metaType = metaType;
     this.description = description;
+    this.metaType = metaType;
   }
   @Override
   public String getNamespacedKey() {
     return key;
   }
+
   @Override
   public String getKey() {
     return key;
   }
+
   @Override
   public String getDescription() {
     return description;
   }
+
   @Override
   public MetaType getMetaType() {
     return metaType;

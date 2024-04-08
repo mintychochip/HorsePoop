@@ -8,45 +8,56 @@ import mintychochip.mintychochip.horsepoop.container.enums.MendelianType;
 import org.bukkit.ChatColor;
 
 public class MendelianGene { //could just do diploids
-    private final MendelianAllele alleleA;
 
-    private final MendelianAllele alleleB;
-    public MendelianGene(MendelianAllele alleleA, MendelianAllele alleleB) {
-        this.alleleA = alleleA;
-        this.alleleB = alleleB;
-    }
-    public MendelianAllele getAlleleA() {
-        return alleleA;
-    }
+  private final MendelianAllele alleleA;
 
-    public MendelianAllele getAlleleB() {
-        return alleleB;
-    }
+  private final MendelianAllele alleleB;
 
-    @Override
-    public String toString() {
-        return this.alleleA + " " + this.alleleB;
-    }
+  public MendelianGene(MendelianAllele alleleA, MendelianAllele alleleB) {
+    this.alleleA = alleleA;
+    this.alleleB = alleleB;
+  }
+  public MendelianAllele getAlleleA() {
+    return alleleA;
+  }
 
-    public MendelianGene cross(MendelianGene gene) {
-        Random random = new Random(System.currentTimeMillis());
-        MendelianAllele a = random.nextBoolean() ? this.alleleA : gene.alleleA;
-        MendelianAllele b = random.nextBoolean() ? this.alleleB : gene.alleleB;
-        return new MendelianGene(a,b);
-    }
-    private String colorCodeAlleles(MendelianAllele allele) {
-        ChatColor color = allele == MendelianAllele.RECESSIVE ? ChatColor.GREEN: ChatColor.RED;
-        return color + allele.toString();
-    }
-    public MendelianType getPhenotype() {
-        return alleleA == MendelianAllele.RECESSIVE && alleleB == MendelianAllele.RECESSIVE ? MendelianType.MENDELIAN_RECESSIVE : MendelianType.MENDELIAN_DOMINANT;
-    }
+  public MendelianAllele getAlleleB() {
+    return alleleB;
+  }
 
-    public MendelianType getGenotype() {
-        if(this.getPhenotype() == MendelianType.MENDELIAN_RECESSIVE) {
-            return MendelianType.MENDELIAN_RECESSIVE;
-        }
-        return alleleA == MendelianAllele.DOMINANT && alleleB == MendelianAllele.DOMINANT ? MendelianType.MENDELIAN_DOMINANT : MendelianType.MENDELIAN_HETEROZYGOUS;
+  @Override
+  public String toString() {
+    return this.alleleA + " " + this.alleleB;
+  }
+
+  public boolean equals(MendelianGene gene) {
+    return (gene.getAlleleB() == this.getAlleleA() && gene.getAlleleA() == this.getAlleleB()) ||
+        (gene.getAlleleA() == this.getAlleleA() && gene.getAlleleB() == this.getAlleleB());
+  }
+
+  public MendelianGene cross(MendelianGene gene) {
+    Random random = new Random(System.currentTimeMillis());
+    MendelianAllele a = random.nextBoolean() ? this.alleleA : gene.alleleA;
+    MendelianAllele b = random.nextBoolean() ? this.alleleB : gene.alleleB;
+    return new MendelianGene(a, b);
+  }
+
+  private String colorCodeAlleles(MendelianAllele allele) {
+    ChatColor color = allele == MendelianAllele.RECESSIVE ? ChatColor.GREEN : ChatColor.RED;
+    return color + allele.toString();
+  }
+
+  public MendelianType getPhenotype() {
+    return alleleA == MendelianAllele.RECESSIVE && alleleB == MendelianAllele.RECESSIVE
+        ? MendelianType.MENDELIAN_RECESSIVE : MendelianType.MENDELIAN_DOMINANT;
+  }
+
+  public MendelianType getGenotype() {
+    if (this.getPhenotype() == MendelianType.MENDELIAN_RECESSIVE) {
+      return MendelianType.MENDELIAN_RECESSIVE;
     }
+    return alleleA == MendelianAllele.DOMINANT && alleleB == MendelianAllele.DOMINANT
+        ? MendelianType.MENDELIAN_DOMINANT : MendelianType.MENDELIAN_HETEROZYGOUS;
+  }
 
 }
