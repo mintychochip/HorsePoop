@@ -2,13 +2,11 @@ package mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.
 
 import java.util.List;
 import java.util.stream.Collectors;
-
+import mintychochip.mintychochip.horsepoop.api.Generator;
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.config.configs.TraitConfig;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
-import mintychochip.mintychochip.horsepoop.api.TraitEnum;
-import mintychochip.mintychochip.horsepoop.api.Generator;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.InstancingStep;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 
 public class InstanceConserved<U extends TraitEnum> implements InstancingStep<U> {

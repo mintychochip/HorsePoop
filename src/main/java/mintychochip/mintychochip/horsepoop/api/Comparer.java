@@ -1,9 +1,8 @@
 package mintychochip.mintychochip.horsepoop.api;
 
-import mintychochip.mintychochip.horsepoop.container.BaseTrait;
-
 import java.util.List;
 import java.util.Set;
+import mintychochip.mintychochip.horsepoop.container.BaseTrait;
 
 public interface Comparer<U extends TraitEnum> { //compares sets of traits
 

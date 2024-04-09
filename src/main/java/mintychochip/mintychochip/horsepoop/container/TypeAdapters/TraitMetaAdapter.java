@@ -5,14 +5,12 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
-import mintychochip.mintychochip.horsepoop.config.configs.TraitConfig;
 import mintychochip.mintychochip.horsepoop.api.TraitEnum;
+import mintychochip.mintychochip.horsepoop.config.configs.TraitConfig;
 import mintychochip.mintychochip.horsepoop.container.MendelianGene;
 import mintychochip.mintychochip.horsepoop.container.enums.MendelianAllele;
 import mintychochip.mintychochip.horsepoop.metas.Crossable;
@@ -30,7 +28,6 @@ import mintychochip.mintychochip.horsepoop.metas.PolygenicMendelianMeta;
 import mintychochip.mintychochip.horsepoop.metas.Units;
 import mintychochip.mintychochip.horsepoop.metas.WeightedEnumMeta;
 import mintychochip.mintychochip.horsepoop.util.Unit;
-import org.bukkit.Bukkit;
 
 public class TraitMetaAdapter<U extends TraitEnum> extends TypeAdapter<Meta<U>> {
   private final TraitConfig<U> config;

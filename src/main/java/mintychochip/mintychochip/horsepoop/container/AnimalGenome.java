@@ -1,17 +1,14 @@
 package mintychochip.mintychochip.horsepoop.container;
 
 import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 import javax.annotation.Nullable;
-
 import mintychochip.mintychochip.horsepoop.api.Gene;
 import mintychochip.mintychochip.horsepoop.api.Intrinsic;
 import mintychochip.mintychochip.horsepoop.api.Phenotypic;
 import mintychochip.mintychochip.horsepoop.container.TypeAdapters.Genome;
 import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.abstraction.GenomeCrosser;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.GenomeGenerator;
-import org.bukkit.Bukkit;
 
 public class AnimalGenome implements Genome {
 

@@ -1,9 +1,7 @@
 package mintychochip.mintychochip.horsepoop.factories;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import org.bukkit.Bukkit;
 
 public final class WeightedRandoms<T> {
 

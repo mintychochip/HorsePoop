@@ -1,13 +1,5 @@
 package mintychochip.mintychochip.horsepoop.horse;
 
-import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import java.util.HashMap;
-import java.util.Map;
-
 public class HorseLifeTimeManager {
 
 //    private final Map<LivingEntity, AnimalGenome> tameableAnimalGeneticDataMap = new HashMap<>();

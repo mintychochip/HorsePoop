@@ -1,12 +1,10 @@
 package mintychochip.mintychochip.horsepoop.factories;
 
+import java.util.Random;
 import mintychochip.mintychochip.horsepoop.api.MetaValueGeneration;
 import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.metas.IntegerMeta;
 import mintychochip.mintychochip.horsepoop.metas.Meta;
-
-import java.util.Random;
-import org.bukkit.Bukkit;
 
 public class IntegerGeneration<U extends TraitEnum> implements MetaValueGeneration<U> {
     @Override

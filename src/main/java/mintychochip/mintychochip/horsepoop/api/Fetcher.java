@@ -1,10 +1,9 @@
 package mintychochip.mintychochip.horsepoop.api;
 
-import mintychochip.mintychochip.horsepoop.container.BaseTrait;
-import mintychochip.mintychochip.horsepoop.container.MendelianGene;
-
 import java.util.List;
 import java.util.Map;
+import mintychochip.mintychochip.horsepoop.container.BaseTrait;
+import mintychochip.mintychochip.horsepoop.container.MendelianGene;
 
 
 public interface Fetcher<U extends TraitEnum> {

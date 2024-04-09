@@ -1,9 +1,7 @@
 package mintychochip.mintychochip.horsepoop.container;
 
-import mintychochip.genesis.Genesis;
-import mintychochip.mintychochip.horsepoop.container.enums.MendelianAllele;
-
 import java.util.Random;
+import mintychochip.mintychochip.horsepoop.container.enums.MendelianAllele;
 import mintychochip.mintychochip.horsepoop.container.enums.MendelianType;
 import org.bukkit.ChatColor;
 

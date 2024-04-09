@@ -1,19 +1,19 @@
 package mintychochip.mintychochip.horsepoop.listener;
 
 import mintychochip.mintychochip.horsepoop.api.AnimalSetGenomeFields;
+import mintychochip.mintychochip.horsepoop.api.Fetcher;
 import mintychochip.mintychochip.horsepoop.api.Gene;
 import mintychochip.mintychochip.horsepoop.api.Intrinsic;
 import mintychochip.mintychochip.horsepoop.api.Phenotypic;
 import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
-import mintychochip.mintychochip.horsepoop.api.Fetcher;
 import mintychochip.mintychochip.horsepoop.container.ValueFetcher;
 import mintychochip.mintychochip.horsepoop.container.enums.FeatherColor;
 import mintychochip.mintychochip.horsepoop.container.enums.Gender;
-import mintychochip.mintychochip.horsepoop.container.enums.traits.PhenotypicTraitEnum;
 import mintychochip.mintychochip.horsepoop.container.enums.traits.GeneticAttribute;
 import mintychochip.mintychochip.horsepoop.container.enums.traits.IntrinsicTraitEnum;
+import mintychochip.mintychochip.horsepoop.container.enums.traits.PhenotypicTraitEnum;
 import mintychochip.mintychochip.horsepoop.container.grabber.GenomeGrasper;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.LivingEntity;

@@ -1,24 +1,21 @@
 package mintychochip.mintychochip.horsepoop.config.configs;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import mintychochip.genesis.config.abstraction.GenericConfig;
 import mintychochip.genesis.util.EnumUtil;
+import mintychochip.mintychochip.horsepoop.api.Gene;
 import mintychochip.mintychochip.horsepoop.api.Intrinsic;
 import mintychochip.mintychochip.horsepoop.api.Phenotypic;
-import mintychochip.mintychochip.horsepoop.api.Gene;
 import mintychochip.mintychochip.horsepoop.api.TraitEnum;
-import mintychochip.mintychochip.horsepoop.container.enums.TraitType;
-import mintychochip.mintychochip.horsepoop.container.enums.traits.PhenotypicTraitEnum;
-import mintychochip.mintychochip.horsepoop.container.enums.traits.GenericGene;
 import mintychochip.mintychochip.horsepoop.container.enums.traits.CowGene;
+import mintychochip.mintychochip.horsepoop.container.enums.traits.GenericGene;
 import mintychochip.mintychochip.horsepoop.container.enums.traits.GeneticAttribute;
-import mintychochip.mintychochip.horsepoop.container.enums.traits.SheepGene;
 import mintychochip.mintychochip.horsepoop.container.enums.traits.IntrinsicTraitEnum;
+import mintychochip.mintychochip.horsepoop.container.enums.traits.PhenotypicTraitEnum;
+import mintychochip.mintychochip.horsepoop.container.enums.traits.SheepGene;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
 

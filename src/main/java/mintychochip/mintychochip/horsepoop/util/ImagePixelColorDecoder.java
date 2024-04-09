@@ -3,13 +3,9 @@ package mintychochip.mintychochip.horsepoop.util;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import javax.imageio.ImageIO;
 import mintychochip.mintychochip.horsepoop.HorsePoop;
 import mintychochip.mintychochip.horsepoop.listener.display.RGB;
-import net.kyori.adventure.util.RGBLike;
-import org.bukkit.Bukkit;
 
 public class ImagePixelColorDecoder {
 

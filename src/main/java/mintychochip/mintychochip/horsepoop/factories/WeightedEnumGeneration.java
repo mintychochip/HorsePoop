@@ -1,14 +1,11 @@
 package mintychochip.mintychochip.horsepoop.factories;
 
 import java.util.Arrays;
-import java.util.Random;
+import java.util.List;
 import mintychochip.mintychochip.horsepoop.api.MetaValueGeneration;
 import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.metas.Meta;
 import mintychochip.mintychochip.horsepoop.metas.WeightedEnumMeta;
-
-import java.util.List;
-import org.bukkit.Bukkit;
 
 public class WeightedEnumGeneration<U extends TraitEnum> implements MetaValueGeneration<U> {
 

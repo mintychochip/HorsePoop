@@ -2,7 +2,6 @@ package mintychochip.mintychochip.horsepoop.listener;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import mintychochip.mintychochip.horsepoop.api.AnimalSetGenomeFields;
 import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;

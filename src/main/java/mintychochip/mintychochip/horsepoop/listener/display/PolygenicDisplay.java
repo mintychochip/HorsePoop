@@ -7,7 +7,6 @@ import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
 import mintychochip.mintychochip.horsepoop.container.MendelianGene;
 import mintychochip.mintychochip.horsepoop.container.ValueFetcher;
-import mintychochip.mintychochip.horsepoop.metas.Meta;
 import mintychochip.mintychochip.horsepoop.metas.Polygenic;
 import mintychochip.mintychochip.horsepoop.util.string.StringManipulation;
 import net.kyori.adventure.text.Component;
@@ -16,9 +15,9 @@ import net.kyori.adventure.text.format.TextColor;
 
 public class PolygenicDisplay<U extends TraitEnum> {
 
-  private List<BaseTrait<U>> traits;
+  private final List<BaseTrait<U>> traits;
 
-  private Fetcher<U> fetcher = new ValueFetcher<>();
+  private final Fetcher<U> fetcher = new ValueFetcher<>();
 
   public PolygenicDisplay(List<BaseTrait<U>> traits) {
     this.traits = traits;

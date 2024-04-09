@@ -1,15 +1,13 @@
 package mintychochip.mintychochip.horsepoop.factories;
 
 import com.google.gson.Gson;
-import mintychochip.mintychochip.horsepoop.container.MendelianGene;
+import java.util.Random;
 import mintychochip.mintychochip.horsepoop.api.MetaValueGeneration;
 import mintychochip.mintychochip.horsepoop.api.TraitEnum;
+import mintychochip.mintychochip.horsepoop.container.MendelianGene;
 import mintychochip.mintychochip.horsepoop.container.enums.MendelianAllele;
 import mintychochip.mintychochip.horsepoop.metas.MendelianMeta;
 import mintychochip.mintychochip.horsepoop.metas.Meta;
-
-import java.util.Random;
-import org.bukkit.Bukkit;
 
 public class MendelianGeneration<U extends TraitEnum> implements MetaValueGeneration<U> {
 

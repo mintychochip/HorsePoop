@@ -3,14 +3,17 @@ package mintychochip.mintychochip.horsepoop;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import mintychochip.genesis.Genesis;
-import mintychochip.genesis.commands.abstraction.GenericMainCommandManager;
-import mintychochip.mintychochip.horsepoop.api.*;
+import mintychochip.mintychochip.horsepoop.api.EventCreator;
+import mintychochip.mintychochip.horsepoop.api.Fetcher;
+import mintychochip.mintychochip.horsepoop.api.Gene;
+import mintychochip.mintychochip.horsepoop.api.Generator;
+import mintychochip.mintychochip.horsepoop.api.Intrinsic;
+import mintychochip.mintychochip.horsepoop.api.Phenotypic;
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.config.configs.EntityConfig;
 import mintychochip.mintychochip.horsepoop.config.configs.TraitConfig;
@@ -18,7 +21,13 @@ import mintychochip.mintychochip.horsepoop.container.TypeAdapters.TraitMetaAdapt
 import mintychochip.mintychochip.horsepoop.container.ValueFetcher;
 import mintychochip.mintychochip.horsepoop.container.grabber.GenomeGrasper;
 import mintychochip.mintychochip.horsepoop.container.grabber.GenomeGrasperImpl;
-import mintychochip.mintychochip.horsepoop.factories.*;
+import mintychochip.mintychochip.horsepoop.factories.DoubleGeneration;
+import mintychochip.mintychochip.horsepoop.factories.DyeSelector;
+import mintychochip.mintychochip.horsepoop.factories.EnumGeneration;
+import mintychochip.mintychochip.horsepoop.factories.IntegerGeneration;
+import mintychochip.mintychochip.horsepoop.factories.MendelianGeneration;
+import mintychochip.mintychochip.horsepoop.factories.TraitGeneratorImpl;
+import mintychochip.mintychochip.horsepoop.factories.WeightedEnumGeneration;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.SequentialGenomeGenerator;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.SequentialTraitGenerator;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.GeneratorHolder;

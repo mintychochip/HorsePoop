@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
-
-import mintychochip.mintychochip.horsepoop.config.configs.TraitConfig;
-import mintychochip.mintychochip.horsepoop.container.BaseTrait;
 import mintychochip.mintychochip.horsepoop.api.Comparer;
 import mintychochip.mintychochip.horsepoop.api.Fetcher;
-import mintychochip.mintychochip.horsepoop.api.TraitEnum;
-import mintychochip.mintychochip.horsepoop.api.TraitCrosser;
 import mintychochip.mintychochip.horsepoop.api.Generator;
+import mintychochip.mintychochip.horsepoop.api.TraitCrosser;
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
+import mintychochip.mintychochip.horsepoop.config.configs.TraitConfig;
+import mintychochip.mintychochip.horsepoop.container.BaseTrait;
 import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.abstraction.GenomeCrossingStep;
 import mintychochip.mintychochip.horsepoop.metas.Crossable;
 import org.bukkit.entity.EntityType;

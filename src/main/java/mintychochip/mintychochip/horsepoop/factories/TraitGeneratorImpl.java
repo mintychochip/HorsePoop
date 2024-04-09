@@ -1,12 +1,12 @@
 package mintychochip.mintychochip.horsepoop.factories;
 
-import java.util.*;
-
+import java.util.HashMap;
+import java.util.Map;
 import mintychochip.mintychochip.horsepoop.api.Generator;
 import mintychochip.mintychochip.horsepoop.api.MetaValueGeneration;
 import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.config.configs.TraitConfig;
-import mintychochip.mintychochip.horsepoop.container.*;
+import mintychochip.mintychochip.horsepoop.container.BaseTrait;
 import mintychochip.mintychochip.horsepoop.metas.Meta;
 import mintychochip.mintychochip.horsepoop.metas.MetaType;
 import org.bukkit.entity.EntityType;

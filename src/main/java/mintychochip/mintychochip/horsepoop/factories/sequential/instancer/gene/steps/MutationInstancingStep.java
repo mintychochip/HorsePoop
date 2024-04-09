@@ -3,14 +3,13 @@ package mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import mintychochip.mintychochip.horsepoop.api.Fetcher;
+import mintychochip.mintychochip.horsepoop.api.Generator;
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.config.configs.TraitConfig;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
-import mintychochip.mintychochip.horsepoop.api.Fetcher;
-import mintychochip.mintychochip.horsepoop.api.TraitEnum;
-import mintychochip.mintychochip.horsepoop.api.Generator;
 import mintychochip.mintychochip.horsepoop.container.ValueFetcher;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.InstancingStep;
-import mintychochip.mintychochip.horsepoop.metas.MendelianMeta;
 import org.bukkit.entity.EntityType;
 
 public class MutationInstancingStep<U extends TraitEnum> implements InstancingStep<U> {

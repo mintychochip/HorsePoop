@@ -4,14 +4,11 @@ import mintychochip.mintychochip.horsepoop.api.events.FawnyInteractEntityEvent;
 import mintychochip.mintychochip.horsepoop.api.events.FawnyMilkEvent;
 import mintychochip.mintychochip.horsepoop.api.events.FawnyRidingMoveEvent;
 import mintychochip.mintychochip.horsepoop.api.events.FawnyShearEvent;
-import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class EventCreator {// find a better name
   public FawnyMilkEvent instanceMilkEvent(AnimalGenome animalGenome, EntityType entityType,

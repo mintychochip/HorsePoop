@@ -2,11 +2,10 @@ package mintychochip.mintychochip.horsepoop.metas;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import mintychochip.mintychochip.horsepoop.api.TraitEnum;
-
-import java.util.List;
 import mintychochip.mintychochip.horsepoop.container.MendelianGene;
 
 public class PolygenicMendelianMeta<U extends TraitEnum> extends

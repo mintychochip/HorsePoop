@@ -1,15 +1,18 @@
 package mintychochip.mintychochip.horsepoop.container;
 
 import com.google.gson.Gson;
-import mintychochip.mintychochip.horsepoop.api.Fetcher;
-import mintychochip.mintychochip.horsepoop.api.TraitCrosser;
-import mintychochip.mintychochip.horsepoop.api.TraitEnum;
-import mintychochip.mintychochip.horsepoop.metas.*;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import mintychochip.mintychochip.horsepoop.api.Fetcher;
+import mintychochip.mintychochip.horsepoop.api.TraitCrosser;
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
+import mintychochip.mintychochip.horsepoop.metas.Crossable;
+import mintychochip.mintychochip.horsepoop.metas.DoubleMeta;
+import mintychochip.mintychochip.horsepoop.metas.IntegerMeta;
+import mintychochip.mintychochip.horsepoop.metas.MendelianMeta;
+import mintychochip.mintychochip.horsepoop.metas.Meta;
 
 public class GeneTraitCrosserImpl<U extends TraitEnum> implements TraitCrosser<U> {
 

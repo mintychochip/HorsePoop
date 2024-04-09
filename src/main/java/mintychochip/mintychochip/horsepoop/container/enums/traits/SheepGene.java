@@ -1,7 +1,6 @@
 package mintychochip.mintychochip.horsepoop.container.enums.traits;
 
 import mintychochip.mintychochip.horsepoop.api.Gene;
-import mintychochip.mintychochip.horsepoop.container.enums.TraitType;
 import mintychochip.mintychochip.horsepoop.metas.MetaType;
 
 public enum SheepGene implements Gene { //traits designed for sheep

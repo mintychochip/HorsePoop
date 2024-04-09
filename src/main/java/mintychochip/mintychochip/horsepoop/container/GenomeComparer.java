@@ -1,14 +1,13 @@
 package mintychochip.mintychochip.horsepoop.container;
 
-import mintychochip.mintychochip.horsepoop.api.Comparer;
-import mintychochip.mintychochip.horsepoop.api.Fetcher;
-import mintychochip.mintychochip.horsepoop.api.TraitEnum;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import mintychochip.mintychochip.horsepoop.api.Comparer;
+import mintychochip.mintychochip.horsepoop.api.Fetcher;
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 
 public class GenomeComparer<U extends TraitEnum> implements Comparer<U> {
     @Override

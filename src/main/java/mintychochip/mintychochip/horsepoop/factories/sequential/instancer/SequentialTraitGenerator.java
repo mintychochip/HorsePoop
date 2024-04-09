@@ -2,14 +2,12 @@ package mintychochip.mintychochip.horsepoop.factories.sequential.instancer;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import mintychochip.mintychochip.horsepoop.api.Generator;
+import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.config.configs.TraitConfig;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
-import mintychochip.mintychochip.horsepoop.api.TraitEnum;
-import mintychochip.mintychochip.horsepoop.api.Generator;
-import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.InstancingStep;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.GeneratorHolder;
-import org.bukkit.Bukkit;
+import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.InstancingStep;
 import org.bukkit.entity.EntityType;
 
 public class SequentialTraitGenerator<U extends TraitEnum> implements

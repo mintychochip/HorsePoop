@@ -1,15 +1,12 @@
 package mintychochip.mintychochip.horsepoop.config.configs;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import mintychochip.genesis.config.abstraction.GenericConfig;
 import mintychochip.genesis.config.abstraction.GenesisConfigurationSection;
 import mintychochip.genesis.util.Rarity;
 import mintychochip.mintychochip.horsepoop.container.enums.Gender;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class SettingsConfig extends GenericConfig {

@@ -1,12 +1,11 @@
 package mintychochip.mintychochip.horsepoop.container;
 
+import java.util.List;
+import java.util.Map;
 import mintychochip.mintychochip.horsepoop.api.Fetcher;
 import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.metas.EnumMeta;
 import mintychochip.mintychochip.horsepoop.metas.MetaType;
-
-import java.util.List;
-import java.util.Map;
 
 public class ValueFetcher<U extends TraitEnum> implements Fetcher<U> {
 

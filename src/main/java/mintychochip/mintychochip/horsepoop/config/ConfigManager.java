@@ -1,10 +1,6 @@
 package mintychochip.mintychochip.horsepoop.config;
 
-import com.google.gson.Gson;
 import mintychochip.genesis.manager.GenericConfigManager;
-import mintychochip.genesis.util.Rarity;
-import mintychochip.genesis.util.WeightedRandom;
-import mintychochip.mintychochip.horsepoop.HorsePoop;
 import mintychochip.mintychochip.horsepoop.config.configs.AnimalItemConfig;
 import mintychochip.mintychochip.horsepoop.config.configs.EntityConfig;
 import mintychochip.mintychochip.horsepoop.config.configs.SettingsConfig;

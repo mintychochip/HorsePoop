@@ -1,10 +1,9 @@
 package mintychochip.mintychochip.horsepoop.factories.sequential.crosser.abstraction;
 
 import java.util.List;
-
-import mintychochip.mintychochip.horsepoop.container.BaseTrait;
 import mintychochip.mintychochip.horsepoop.api.Comparer;
 import mintychochip.mintychochip.horsepoop.api.TraitEnum;
+import mintychochip.mintychochip.horsepoop.container.BaseTrait;
 import org.bukkit.entity.EntityType;
 
 public interface TraitCrosserHolder<U extends TraitEnum> {

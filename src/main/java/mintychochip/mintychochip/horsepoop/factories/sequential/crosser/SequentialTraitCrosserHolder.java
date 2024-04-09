@@ -2,15 +2,16 @@ package mintychochip.mintychochip.horsepoop.factories.sequential.crosser;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import mintychochip.mintychochip.horsepoop.api.Comparer;
 import mintychochip.mintychochip.horsepoop.api.Fetcher;
 import mintychochip.mintychochip.horsepoop.api.TraitCrosser;
 import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.config.configs.TraitConfig;
-import mintychochip.mintychochip.horsepoop.container.*;
-import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.abstraction.TraitCrosserHolder;
+import mintychochip.mintychochip.horsepoop.container.BaseTrait;
+import mintychochip.mintychochip.horsepoop.container.GeneTraitCrosserImpl;
+import mintychochip.mintychochip.horsepoop.container.ValueFetcher;
 import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.abstraction.GenomeCrossingStep;
+import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.abstraction.TraitCrosserHolder;
 import org.bukkit.entity.EntityType;
 
 public class SequentialTraitCrosserHolder<U extends TraitEnum> implements
