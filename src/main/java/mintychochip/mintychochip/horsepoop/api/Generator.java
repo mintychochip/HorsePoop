@@ -7,7 +7,6 @@ import org.bukkit.entity.EntityType;
 
 public interface Generator<U extends TraitEnum>
 {
-
     /**
      *
      * @param traitEnum Enum value that is a member of type U

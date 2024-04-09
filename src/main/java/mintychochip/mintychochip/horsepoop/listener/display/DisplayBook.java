@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import mintychochip.mintychochip.horsepoop.api.TraitEnum;
+import mintychochip.mintychochip.horsepoop.config.configs.EntityConfig;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
 import mintychochip.mintychochip.horsepoop.util.ImagePixelColorDecoder;
@@ -22,12 +23,12 @@ public class DisplayBook {
   private final EntityType entityType;
   private final Map<String, Integer> headerIntegerMap = new HashMap<>();
   private int lastPageNum = 2;
-  public DisplayBook(@NotNull EntityType entityType, @NotNull AnimalGenome animalGenome) {
+  public DisplayBook(@NotNull EntityType entityType, @NotNull EntityConfig entityConfig) {
     this.entityType = entityType;
   }
 
   private <U extends TraitEnum> Component getTraitComponent(List<BaseTrait<U>> traits) {
-    return new Componentifier<U>(traits).getComponent();
+    return new Componentifier<>(traits).getComponent();
   }
 
   public <U extends TraitEnum> Component createBookPage(String header, List<BaseTrait<U>> traits) {

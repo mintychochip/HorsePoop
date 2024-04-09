@@ -9,7 +9,6 @@ import mintychochip.mintychochip.horsepoop.container.MendelianGene;
 import mintychochip.mintychochip.horsepoop.metas.EnumMeta;
 import mintychochip.mintychochip.horsepoop.metas.Meta;
 import mintychochip.mintychochip.horsepoop.metas.MetaType;
-import mintychochip.mintychochip.horsepoop.metas.Polygenic;
 import mintychochip.mintychochip.horsepoop.metas.Units;
 import mintychochip.mintychochip.horsepoop.util.Unit;
 import mintychochip.mintychochip.horsepoop.util.math.Round;
@@ -20,13 +19,16 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.jetbrains.annotations.NotNull;
 
-public class Componentifier<U extends TraitEnum> {
-  private static final int DECIMAL_PLACES = 3;
+public class Componentifier<U extends TraitEnum> implements Componentify<U> {
 
+
+  private static final int DECIMAL_PLACES = 3;
   private final List<BaseTrait<U>> traits;
+
   public Componentifier(List<BaseTrait<U>> traits) {
     this.traits = traits;
   }
+
   public Component getComponent() {
     Component component = Component.text("");
     for (BaseTrait<U> trait : traits) {
@@ -34,7 +36,6 @@ public class Componentifier<U extends TraitEnum> {
     }
     return component;
   }
-
   private Component getIndividualComponent(BaseTrait<U> trait) {
     return Component.empty().append(this.createIndividualKeyComponent(trait))
         .append(Component.text(": ").append(this.createIndividualValueComponent(trait)));
@@ -67,13 +68,10 @@ public class Componentifier<U extends TraitEnum> {
       Unit unit = units.getUnit();
       component = this.appendUnit(component, unit);
     }
-    if (meta instanceof Polygenic<?>) {
-      Polygenic<U> polygenicMeta = (Polygenic<U>) meta;
-      PolygenicDisplay<U> uPolygenicDisplay = new PolygenicDisplay<>(traits);
-      component = component.hoverEvent(HoverEvent.showText(uPolygenicDisplay.getHoverText(polygenicMeta)));
-    }
+    component = component.hoverEvent(HoverEvent.showText(this.getHoverText(meta)));
     return component;
   }
+
   private Component appendUnit(Component component, Unit unit) {
     if (unit == null) {
       return component;
@@ -103,5 +101,17 @@ public class Componentifier<U extends TraitEnum> {
     } catch (NumberFormatException ex) {
       return value;
     }
+  }
+
+  @Override
+  public Component getHoverText(Meta<U> meta) {
+    Display<U> strategy = switch (meta.getTrait().getMetaType()) {
+      case INTEGER, CROSSABLE_INTEGER -> new IntegerStrategy<>();
+      case DOUBLE, CROSSABLE_DOUBLE -> new DoubleOrIntegerDisplay<>();
+      case ENUM, WEIGHTED_ENUM -> new EnumStrategy<>();
+      case POLYGENIC_MENDELIAN -> new PolygenicDisplay<>(traits);
+      case MENDELIAN, CROSSABLE_MENDELIAN -> new MendelianDisplay<>();
+    };
+    return strategy.getHoverText(meta);
   }
 }
