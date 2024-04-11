@@ -6,12 +6,9 @@ import mintychochip.mintychochip.horsepoop.container.BaseTrait;
 import mintychochip.mintychochip.horsepoop.container.MendelianGene;
 import net.kyori.adventure.text.Component;
 
-public class MendelianTextDisplay<U extends TraitEnum>  implements TextValueDisplay {
-    public MendelianTextDisplay(BaseTrait<U> trait) {
-        super(trait);
-    }
+public class MendelianTextDisplay<U extends TraitEnum> implements TextValueDisplay<U>  {
     @Override
-    public Component getTextValue() {
+    public Component getTextValue(BaseTrait<U> trait) {
         MendelianGene mendelianGene = new Gson().fromJson(trait.getValue(), MendelianGene.class);
         return Component.text(mendelianGene.toString());
     }

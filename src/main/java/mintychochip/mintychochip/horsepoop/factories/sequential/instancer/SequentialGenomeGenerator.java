@@ -1,9 +1,9 @@
 package mintychochip.mintychochip.horsepoop.factories.sequential.instancer;
 
 import java.util.List;
-import mintychochip.mintychochip.horsepoop.api.Gene;
-import mintychochip.mintychochip.horsepoop.api.Intrinsic;
-import mintychochip.mintychochip.horsepoop.api.Phenotypic;
+import mintychochip.mintychochip.horsepoop.api.markers.Gene;
+import mintychochip.mintychochip.horsepoop.api.markers.Intrinsic;
+import mintychochip.mintychochip.horsepoop.api.markers.Phenotypic;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.GeneratorHolder;

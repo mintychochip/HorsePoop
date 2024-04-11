@@ -1,21 +1,10 @@
 package mintychochip.mintychochip.horsepoop.listener.display;
 
-import com.google.gson.Gson;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import mintychochip.genesis.util.Colorful;
 import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
-import mintychochip.mintychochip.horsepoop.container.MendelianGene;
-import mintychochip.mintychochip.horsepoop.listener.display.hoverdisplays.*;
-import mintychochip.mintychochip.horsepoop.listener.display.text.TextValueDisplay;
-import mintychochip.mintychochip.horsepoop.metas.Meta;
 import mintychochip.mintychochip.horsepoop.metas.MetaType;
-import mintychochip.mintychochip.horsepoop.metas.Units;
-import mintychochip.mintychochip.horsepoop.util.Unit;
 import mintychochip.mintychochip.horsepoop.util.string.StringManipulation;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -24,11 +13,12 @@ import net.kyori.adventure.text.format.TextColor;
 import org.jetbrains.annotations.NotNull;
 
 public class Componentifier<U extends TraitEnum> implements Componentify<U> {
-    private static final int DECIMAL_PLACES = 3;
     private final List<BaseTrait<U>> traits;
 
+    private DisplayStrategySelector<U> strategySelector;
     public Componentifier(List<BaseTrait<U>> traits) {
         this.traits = traits;
+        this.strategySelector = new DisplayStrategySelectorImpl<>(traits);
     }
 
     public Component getComponent() {
@@ -52,40 +42,19 @@ public class Componentifier<U extends TraitEnum> implements Componentify<U> {
     }
 
     private Component createIndividualValueComponent(BaseTrait<U> trait) {
-        Meta<U> meta = trait.getMeta();
-        MetaType metaType = meta.getTrait().getMetaType();
-        String value = trait.getValue();
-        String text = switch (metaType) {
-            case DOUBLE, CROSSABLE_DOUBLE -> this.roundStringIfDecimal(value);
-            case MENDELIAN, CROSSABLE_MENDELIAN, POLYGENIC_MENDELIAN -> new Gson().fromJson(value,
-                    MendelianGene.class).toString();
-            case ENUM, WEIGHTED_ENUM -> StringManipulation.capitalizeFirstLetter(value.toLowerCase());
-            default -> value;
-        };
-        Component component = Component.text(text);
-        if (meta instanceof Units units) {
-            Unit unit = units.getUnit();
-            component = this.appendUnit(component, unit);
-        }
-        HoverDisplay<U> hoverDisplay = this.getHoverDisplayStrategy(trait);
-
-        component = component.hoverEvent(HoverEvent.showText(this.getHoverText(hoverDisplay, 3)));
-        return component;
+        MetaType metaType = trait.getMetaType();
+        Component textValue = strategySelector.getTextStrategy(metaType).getTextValue(trait);
+        return textValue.hoverEvent(HoverEvent.showText(this.getHoverText(trait)));
     }
 
-    private Component getHoverText(HoverDisplay<U> hoverDisplay, int padding) {
-        return hoverDisplay.getHeader().append(Component.newline()).append(hoverDisplay.getBody(padding));
+    private Component getHoverText(BaseTrait<U> trait) {
+        HoverDisplay<U> hoverTextStrategy = strategySelector.getHoverTextStrategy(
+            trait.getMetaType());
+        return hoverTextStrategy.getHeader(trait).append(Component.newline())
+            .append(hoverTextStrategy.getBody(trait,3));
     }
-
-    public TextValueDisplay
-    public HoverDisplay<U> getHoverDisplayStrategy(BaseTrait<U> trait) {
-        MetaType metaType = trait.getMeta().getTrait().getMetaType();
-        return switch (metaType) {
-            case ENUM, WEIGHTED_ENUM -> new EnumHoverDisplay<>();
-            case DOUBLE, CROSSABLE_DOUBLE, INTEGER, CROSSABLE_INTEGER -> new NumericHoverDisplay<>(trait);
-            case POLYGENIC_MENDELIAN -> new PolygenicHoverDisplay<>(trait, this.traits);
-            case MENDELIAN, CROSSABLE_MENDELIAN -> new MendelianHoverDisplay<>();
-        };
+    @Override
+    public void setStrategySelector(DisplayStrategySelector<U> strategySelector) {
+        this.strategySelector = strategySelector;
     }
-
 }

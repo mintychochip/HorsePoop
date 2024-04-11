@@ -9,5 +9,5 @@ import net.kyori.adventure.text.Component;
 
 public interface Componentify<U extends TraitEnum> {
 
-  Component getHoverText(Meta<U> meta);
+  void setStrategySelector(DisplayStrategySelector<U> strategySelector);
 }

@@ -9,7 +9,7 @@ import mintychochip.genesis.items.container.AppraisableItemData;
 import mintychochip.genesis.util.WeightedRandom;
 import mintychochip.mintychochip.horsepoop.HorsePoop;
 import mintychochip.mintychochip.horsepoop.api.Fetcher;
-import mintychochip.mintychochip.horsepoop.api.Gene;
+import mintychochip.mintychochip.horsepoop.api.markers.Gene;
 import mintychochip.mintychochip.horsepoop.api.events.FawnyMilkEvent;
 import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.config.configs.AnimalItemConfig;

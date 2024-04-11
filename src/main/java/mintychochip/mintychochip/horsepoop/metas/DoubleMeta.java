@@ -4,7 +4,7 @@ import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.util.Unit;
 
 public class DoubleMeta<U extends TraitEnum> extends AbstractMeta<U> implements
-        Units, Numeric {
+    UnitHolder, Numeric {
 
     protected double max;
 

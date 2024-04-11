@@ -25,7 +25,7 @@ import mintychochip.mintychochip.horsepoop.metas.Meta;
 import mintychochip.mintychochip.horsepoop.metas.MetaType;
 import mintychochip.mintychochip.horsepoop.metas.Polygenic;
 import mintychochip.mintychochip.horsepoop.metas.PolygenicMendelianMeta;
-import mintychochip.mintychochip.horsepoop.metas.Units;
+import mintychochip.mintychochip.horsepoop.metas.UnitHolder;
 import mintychochip.mintychochip.horsepoop.metas.WeightedEnumMeta;
 import mintychochip.mintychochip.horsepoop.util.Unit;
 
@@ -45,9 +45,9 @@ public class TraitMetaAdapter<U extends TraitEnum> extends TypeAdapter<Meta<U>> 
     }
 
     jsonWriter.name("trait").value(uMeta.getTrait().getKey());
-    if(uMeta instanceof Units units) {
-      if(units.getUnit() != null) {
-        jsonWriter.name("units").value(units.getUnit().toString());
+    if(uMeta instanceof UnitHolder unitHolder) {
+      if(unitHolder.getUnit() != null) {
+        jsonWriter.name("units").value(unitHolder.getUnit().toString());
       }
     }
     if(uMeta instanceof Crossable crossable) {
@@ -228,9 +228,9 @@ public class TraitMetaAdapter<U extends TraitEnum> extends TypeAdapter<Meta<U>> 
         if (meta instanceof Crossable) {
           ((Crossable) meta).setCrossable(crossable);
         }
-        if(meta instanceof Units) {
+        if(meta instanceof UnitHolder) {
           if(unit != null) {
-            ((Units) meta).setUnits(unit);
+            ((UnitHolder) meta).setUnits(unit);
           }
         }
         if(meta instanceof Polygenic<?> poly) {

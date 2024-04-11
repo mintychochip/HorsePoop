@@ -5,6 +5,7 @@ import mintychochip.mintychochip.horsepoop.api.Generator;
 import mintychochip.mintychochip.horsepoop.api.TraitCrosser;
 import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.metas.Meta;
+import mintychochip.mintychochip.horsepoop.metas.MetaType;
 
 public final class BaseTrait<U extends TraitEnum> {
   @SerializedName("value")
@@ -28,5 +29,9 @@ public final class BaseTrait<U extends TraitEnum> {
 
   public String getValue() {
     return value;
+  }
+
+  public MetaType getMetaType() {
+    return this.meta.getTrait().getMetaType();
   }
 }

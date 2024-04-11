@@ -3,7 +3,7 @@ package mintychochip.mintychochip.horsepoop.metas;
 import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.util.Unit;
 
-public class IntegerMeta<U extends TraitEnum> extends AbstractMeta<U> implements Units, Numeric {
+public class IntegerMeta<U extends TraitEnum> extends AbstractMeta<U> implements UnitHolder, Numeric {
     protected double max;
     protected double min;
 

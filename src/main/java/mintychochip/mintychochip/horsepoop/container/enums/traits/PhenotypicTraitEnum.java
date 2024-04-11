@@ -1,6 +1,6 @@
 package mintychochip.mintychochip.horsepoop.container.enums.traits;
 
-import mintychochip.mintychochip.horsepoop.api.Phenotypic;
+import mintychochip.mintychochip.horsepoop.api.markers.Phenotypic;
 import mintychochip.mintychochip.horsepoop.metas.MetaType;
 
 public enum PhenotypicTraitEnum implements Phenotypic {

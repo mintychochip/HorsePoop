@@ -1,6 +1,6 @@
 package mintychochip.mintychochip.horsepoop.container.enums.traits;
 
-import mintychochip.mintychochip.horsepoop.api.Intrinsic;
+import mintychochip.mintychochip.horsepoop.api.markers.Intrinsic;
 import mintychochip.mintychochip.horsepoop.metas.MetaType;
 
 public enum IntrinsicTraitEnum implements Intrinsic {

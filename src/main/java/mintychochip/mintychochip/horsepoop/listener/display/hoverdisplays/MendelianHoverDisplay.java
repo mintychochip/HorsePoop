@@ -7,7 +7,7 @@ import mintychochip.mintychochip.horsepoop.metas.MendelianMeta;
 import mintychochip.mintychochip.horsepoop.metas.Meta;
 import net.kyori.adventure.text.Component;
 
-public class MendelianHoverDisplay<U extends TraitEnum> implements HoverDisplay<U> {
+public final class MendelianHoverDisplay<U extends TraitEnum> implements HoverDisplay<U> {
   @Override
   public Component getBody(BaseTrait<U> trait, int padding) {
     Component component = Component.empty();
@@ -20,6 +20,6 @@ public class MendelianHoverDisplay<U extends TraitEnum> implements HoverDisplay<
 
   @Override
   public Component getHeader(BaseTrait<U> trait) {
-    return Component.text("Mendelian:");
+    return Component.text("Mendelian Trait:");
   }
 }
