@@ -1,12 +1,11 @@
 package mintychochip.mintychochip.horsepoop.factories;
 
+import java.util.Random;
 import mintychochip.mintychochip.horsepoop.api.MetaValueGeneration;
 import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.metas.DoubleMeta;
 import mintychochip.mintychochip.horsepoop.metas.IntegerMeta;
 import mintychochip.mintychochip.horsepoop.metas.Meta;
-
-import java.util.Random;
 
 public final class NumericGeneration<U extends TraitEnum> implements MetaValueGeneration<U> {
     @Override

@@ -1,6 +1,5 @@
 package mintychochip.mintychochip.horsepoop.listener.display.hoverdisplays;
 
-import java.util.List;
 import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
 import mintychochip.mintychochip.horsepoop.listener.display.HoverDisplay;

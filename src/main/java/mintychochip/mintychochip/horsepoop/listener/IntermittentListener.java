@@ -2,9 +2,9 @@ package mintychochip.mintychochip.horsepoop.listener;
 
 import mintychochip.mintychochip.horsepoop.api.EventCreator;
 import mintychochip.mintychochip.horsepoop.api.Fetcher;
+import mintychochip.mintychochip.horsepoop.api.events.FawnyInteractEntityEvent;
 import mintychochip.mintychochip.horsepoop.api.markers.Gene;
 import mintychochip.mintychochip.horsepoop.api.markers.Intrinsic;
-import mintychochip.mintychochip.horsepoop.api.events.FawnyInteractEntityEvent;
 import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;

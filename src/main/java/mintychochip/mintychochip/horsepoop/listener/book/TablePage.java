@@ -1,12 +1,10 @@
 package mintychochip.mintychochip.horsepoop.listener.book;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
-import org.bukkit.Bukkit;
 
 public class TablePage implements Page {
 

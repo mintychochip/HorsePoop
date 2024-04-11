@@ -1,20 +1,15 @@
 package mintychochip.mintychochip.horsepoop.listener;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import mintychochip.mintychochip.horsepoop.api.events.FawnyInteractEntityEvent;
 import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import mintychochip.mintychochip.horsepoop.listener.display.DisplayBook;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.inventory.Book;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class AnimalPlayerListener implements Listener {
   private final ConfigManager configManager;
