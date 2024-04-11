@@ -5,7 +5,8 @@ import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 public class CrossableIntegerMeta<U extends TraitEnum> extends IntegerMeta<U> implements Crossable {
 
     protected boolean crossable = false;
-    public CrossableIntegerMeta(U trait, int max, int min) {
+
+    public CrossableIntegerMeta(U trait, double max, double min) {
         super(trait, max, min);
     }
 

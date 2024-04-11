@@ -6,7 +6,7 @@ import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.metas.EnumMeta;
 import mintychochip.mintychochip.horsepoop.metas.Meta;
 
-public class EnumGeneration<U extends TraitEnum> implements MetaValueGeneration<U> {
+public final class EnumGeneration<U extends TraitEnum> implements MetaValueGeneration<U> {
   @Override
   public String generateValue(Meta<U> meta) {
     String value = null;

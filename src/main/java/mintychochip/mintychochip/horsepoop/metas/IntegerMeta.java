@@ -4,22 +4,22 @@ import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.util.Unit;
 
 public class IntegerMeta<U extends TraitEnum> extends AbstractMeta<U> implements Units, Numeric {
-    protected int max;
-    protected int min;
+    protected double max;
+    protected double min;
 
     protected Unit unit;
 
-    public IntegerMeta(U trait, int max, int min) {
+    public IntegerMeta(U trait, double max, double min) {
         super(trait);
         this.max = max;
         this.min = min;
     }
-
-    public int getMax() {
+    @Override
+    public double getMax() {
         return max;
     }
 
-    public int getMin() {
+    public double getMin() {
         return min;
     }
 

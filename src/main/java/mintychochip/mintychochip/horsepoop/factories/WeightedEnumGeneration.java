@@ -7,7 +7,7 @@ import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.metas.Meta;
 import mintychochip.mintychochip.horsepoop.metas.WeightedEnumMeta;
 
-public class WeightedEnumGeneration<U extends TraitEnum> implements MetaValueGeneration<U> {
+public final class WeightedEnumGeneration<U extends TraitEnum> implements MetaValueGeneration<U> {
 
   @Override
   public String generateValue(Meta<U> meta) {

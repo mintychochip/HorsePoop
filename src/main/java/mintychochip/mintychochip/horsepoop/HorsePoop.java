@@ -21,10 +21,9 @@ import mintychochip.mintychochip.horsepoop.container.TypeAdapters.TraitMetaAdapt
 import mintychochip.mintychochip.horsepoop.container.ValueFetcher;
 import mintychochip.mintychochip.horsepoop.container.grabber.GenomeGrasper;
 import mintychochip.mintychochip.horsepoop.container.grabber.GenomeGrasperImpl;
-import mintychochip.mintychochip.horsepoop.factories.DoubleGeneration;
 import mintychochip.mintychochip.horsepoop.factories.DyeSelector;
 import mintychochip.mintychochip.horsepoop.factories.EnumGeneration;
-import mintychochip.mintychochip.horsepoop.factories.IntegerGeneration;
+import mintychochip.mintychochip.horsepoop.factories.NumericGeneration;
 import mintychochip.mintychochip.horsepoop.factories.MendelianGeneration;
 import mintychochip.mintychochip.horsepoop.factories.TraitGeneratorImpl;
 import mintychochip.mintychochip.horsepoop.factories.WeightedEnumGeneration;
@@ -104,12 +103,12 @@ public final class HorsePoop extends JavaPlugin {
 
     private <U extends TraitEnum> Generator<U> getGenerator() {
         Generator<U> generator = new TraitGeneratorImpl<>();
-        generator.addMetaGenerationType(MetaType.DOUBLE, new DoubleGeneration<>());
-        generator.addMetaGenerationType(MetaType.CROSSABLE_DOUBLE, new DoubleGeneration<>());
+        generator.addMetaGenerationType(MetaType.DOUBLE, new NumericGeneration<>());
+        generator.addMetaGenerationType(MetaType.CROSSABLE_DOUBLE, new NumericGeneration<>());
         generator.addMetaGenerationType(MetaType.ENUM, new EnumGeneration<>());
         generator.addMetaGenerationType(MetaType.WEIGHTED_ENUM, new WeightedEnumGeneration<>());
-        generator.addMetaGenerationType(MetaType.INTEGER, new IntegerGeneration<>());
-        generator.addMetaGenerationType(MetaType.CROSSABLE_INTEGER, new IntegerGeneration<>());
+        generator.addMetaGenerationType(MetaType.INTEGER, new NumericGeneration<>());
+        generator.addMetaGenerationType(MetaType.CROSSABLE_INTEGER, new NumericGeneration<>());
         generator.addMetaGenerationType(MetaType.MENDELIAN, new MendelianGeneration<>());
         generator.addMetaGenerationType(MetaType.POLYGENIC_MENDELIAN, new MendelianGeneration<>());
         generator.addMetaGenerationType(MetaType.CROSSABLE_MENDELIAN, new MendelianGeneration<>());

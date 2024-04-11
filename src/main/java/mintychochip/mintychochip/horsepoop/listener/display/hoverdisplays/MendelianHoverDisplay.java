@@ -7,16 +7,11 @@ import mintychochip.mintychochip.horsepoop.metas.MendelianMeta;
 import mintychochip.mintychochip.horsepoop.metas.Meta;
 import net.kyori.adventure.text.Component;
 
-public class MendelianHoverDisplay<U extends TraitEnum> implements HoverDisplay {
-  private final BaseTrait<U> trait;
-
-  public MendelianHoverDisplay(BaseTrait<U> trait) {
-    this.trait = trait;
-  }
+public class MendelianHoverDisplay<U extends TraitEnum> implements HoverDisplay<U> {
   @Override
-  public Component getBody(int padding) {
+  public Component getBody(BaseTrait<U> trait, int padding) {
     Component component = Component.empty();
-    Meta<U> meta = this.trait.getMeta();
+    Meta<U> meta = trait.getMeta();
     if(meta instanceof MendelianMeta<U> mm) {
       component = component.append(Component.text("Allele Chance: " + mm.getChance()));
     }
@@ -24,7 +19,7 @@ public class MendelianHoverDisplay<U extends TraitEnum> implements HoverDisplay 
   }
 
   @Override
-  public Component getHeader() {
+  public Component getHeader(BaseTrait<U> trait) {
     return Component.text("Mendelian:");
   }
 }

@@ -199,7 +199,7 @@ public class TraitMetaAdapter<U extends TraitEnum> extends TypeAdapter<Meta<U>> 
           meta = new MendelianMeta<>(trait, chance, blacklist);
           break;
         case INTEGER:
-          meta = new IntegerMeta<>(trait, (int) max, (int) min);
+          meta = new IntegerMeta<>(trait, max, min);
           break;
         case WEIGHTED_ENUM:
           meta = new WeightedEnumMeta<>(trait, enumClass, weights);
@@ -214,7 +214,7 @@ public class TraitMetaAdapter<U extends TraitEnum> extends TypeAdapter<Meta<U>> 
           meta = new CrossableDoubleMeta<>(trait, max, min);
           break;
         case CROSSABLE_INTEGER:
-          meta = new CrossableIntegerMeta<>(trait, (int) max, (int) min);
+          meta = new CrossableIntegerMeta<>(trait, max, min);
           break;
         case CROSSABLE_MENDELIAN:
           meta = new CrossableMendelianMeta<>(trait, chance, blacklist);

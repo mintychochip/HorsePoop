@@ -2,18 +2,20 @@ package mintychochip.mintychochip.horsepoop.listener.display;
 
 import com.google.gson.Gson;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import mintychochip.genesis.util.Colorful;
 import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
 import mintychochip.mintychochip.horsepoop.container.MendelianGene;
 import mintychochip.mintychochip.horsepoop.listener.display.hoverdisplays.*;
+import mintychochip.mintychochip.horsepoop.listener.display.text.TextValueDisplay;
 import mintychochip.mintychochip.horsepoop.metas.Meta;
 import mintychochip.mintychochip.horsepoop.metas.MetaType;
 import mintychochip.mintychochip.horsepoop.metas.Units;
 import mintychochip.mintychochip.horsepoop.util.Unit;
-import mintychochip.mintychochip.horsepoop.util.math.Round;
 import mintychochip.mintychochip.horsepoop.util.string.StringManipulation;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -22,8 +24,6 @@ import net.kyori.adventure.text.format.TextColor;
 import org.jetbrains.annotations.NotNull;
 
 public class Componentifier<U extends TraitEnum> implements Componentify<U> {
-
-
     private static final int DECIMAL_PLACES = 3;
     private final List<BaseTrait<U>> traits;
 
@@ -67,28 +67,25 @@ public class Componentifier<U extends TraitEnum> implements Componentify<U> {
             Unit unit = units.getUnit();
             component = this.appendUnit(component, unit);
         }
-        HoverDisplay hoverDisplay = this.getHoverDisplayStrategy(trait);
+        HoverDisplay<U> hoverDisplay = this.getHoverDisplayStrategy(trait);
 
         component = component.hoverEvent(HoverEvent.showText(this.getHoverText(hoverDisplay, 3)));
         return component;
     }
 
-    private Component getHoverText(HoverDisplay hoverDisplay, int padding) {
+    private Component getHoverText(HoverDisplay<U> hoverDisplay, int padding) {
         return hoverDisplay.getHeader().append(Component.newline()).append(hoverDisplay.getBody(padding));
     }
 
-
-
-
-
-    public HoverDisplay getHoverDisplayStrategy(BaseTrait<U> trait) {
+    public TextValueDisplay
+    public HoverDisplay<U> getHoverDisplayStrategy(BaseTrait<U> trait) {
         MetaType metaType = trait.getMeta().getTrait().getMetaType();
         return switch (metaType) {
-            case INTEGER, CROSSABLE_INTEGER -> new IntegerHover<>(trait);
-            case ENUM, WEIGHTED_ENUM -> new EnumHover<>(trait);
-            case DOUBLE, CROSSABLE_DOUBLE -> new NumericHoverDisplay<>();
+            case ENUM, WEIGHTED_ENUM -> new EnumHoverDisplay<>();
+            case DOUBLE, CROSSABLE_DOUBLE, INTEGER, CROSSABLE_INTEGER -> new NumericHoverDisplay<>(trait);
             case POLYGENIC_MENDELIAN -> new PolygenicHoverDisplay<>(trait, this.traits);
-            case MENDELIAN, CROSSABLE_MENDELIAN -> new MendelianHoverDisplay<>(trait);
+            case MENDELIAN, CROSSABLE_MENDELIAN -> new MendelianHoverDisplay<>();
         };
     }
+
 }

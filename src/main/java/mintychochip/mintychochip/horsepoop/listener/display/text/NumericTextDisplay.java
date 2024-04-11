@@ -5,6 +5,7 @@ import mintychochip.mintychochip.horsepoop.container.BaseTrait;
 import mintychochip.mintychochip.horsepoop.metas.DoubleMeta;
 import mintychochip.mintychochip.horsepoop.metas.IntegerMeta;
 import mintychochip.mintychochip.horsepoop.metas.Meta;
+import mintychochip.mintychochip.horsepoop.metas.Units;
 import mintychochip.mintychochip.horsepoop.util.Unit;
 import mintychochip.mintychochip.horsepoop.util.math.Round;
 import mintychochip.mintychochip.horsepoop.util.string.StringManipulation;
@@ -23,18 +24,15 @@ public class NumericTextDisplay<U extends TraitEnum> implements TextValueDisplay
         Meta<U> meta = this.trait.getMeta();
         double max;
         double min;
-
         String text = this.trait.getValue();
-        if(meta instanceof DoubleMeta<U> dm) {
-            max = dm.getMax();
-            min = dm.getMin();
+        if(meta instanceof DoubleMeta<U>) {
             text = this.roundStringIfDecimal(text);
         }
-        if(meta instanceof IntegerMeta<U> im) {
-            max = im.getMax();
-            min = im.getMin();
+        Component component = Component.text(text);
+        if(meta instanceof Units unit) {
+            component = component.append(Component.text(unit.getUnit().getAbbreviation()));
         }
-
+        return component;
     }
     private String roundStringIfDecimal(String value) {
         try {
@@ -44,11 +42,4 @@ public class NumericTextDisplay<U extends TraitEnum> implements TextValueDisplay
             return value;
         }
     }
-    private net.kyori.adventure.text.Component appendUnit(net.kyori.adventure.text.Component component, Unit unit) {
-        return unit != null ? component
-                .append(net.kyori.adventure.text.Component.text(" " + unit.getAbbreviation())
-                        .hoverEvent(HoverEvent.showText(net.kyori.adventure.text.Component.text(StringManipulation.capitalizeFirstLetter(unit.toString().toLowerCase())))))
-                : component;
-    }
-
 }

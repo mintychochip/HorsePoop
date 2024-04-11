@@ -8,20 +8,13 @@ import mintychochip.mintychochip.horsepoop.metas.Meta;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 
-public final class EnumHover<U extends TraitEnum> implements HoverDisplay {
-
-  private final BaseTrait<U> trait;
-
-  public EnumHover(BaseTrait<U> trait) {
-    this.trait = trait;
-  }
-    private TextColor getTextColorFromEnum() {
-        Meta<U> meta = this.trait.getMeta();
+public final class EnumHoverDisplay<U extends TraitEnum> implements HoverDisplay<U> {
+    private TextColor getTextColorFromEnum(Meta<U> meta, String value) {
         if (meta instanceof EnumMeta<U> em) {
             try {
                 Class<?> aClass = Class.forName(em.getEnumClass());
                 if (Colorful.class.isAssignableFrom(aClass)) {
-                    Colorful colorful = (Colorful) Enum.valueOf((Class<? extends Enum>) aClass, this.trait.getValue());
+                    Colorful colorful = (Colorful) Enum.valueOf((Class<? extends Enum>) aClass, value);
                     return colorful.getTextColor();
                 }
             } catch (ClassNotFoundException e) {
@@ -32,17 +25,17 @@ public final class EnumHover<U extends TraitEnum> implements HoverDisplay {
     }
 
     @Override
-    public Component getBody(int padding) {
-      Meta<U> meta = this.trait.getMeta();
+    public Component getBody(BaseTrait<U> trait, int padding) {
+      Meta<U> meta = trait.getMeta();
       Component component = Component.empty();
       if(meta instanceof EnumMeta<U> em) {
-        component = component.append(Component.text(this.trait.getValue()));
+        component = component.append(Component.text(trait.getValue()));
       }
       return component;
     }
 
     @Override
-    public Component getHeader() {
+    public Component getHeader(BaseTrait<U> trait) {
         return Component.text("Enum:");
     }
 }

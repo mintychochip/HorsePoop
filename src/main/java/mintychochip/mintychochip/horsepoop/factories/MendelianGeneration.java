@@ -9,7 +9,7 @@ import mintychochip.mintychochip.horsepoop.container.enums.MendelianAllele;
 import mintychochip.mintychochip.horsepoop.metas.MendelianMeta;
 import mintychochip.mintychochip.horsepoop.metas.Meta;
 
-public class MendelianGeneration<U extends TraitEnum> implements MetaValueGeneration<U> {
+public final class MendelianGeneration<U extends TraitEnum> implements MetaValueGeneration<U> {
 
     @Override
     public String generateValue(Meta<U> meta) {
