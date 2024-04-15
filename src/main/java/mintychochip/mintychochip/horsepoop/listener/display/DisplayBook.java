@@ -13,7 +13,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.entity.EntityType;
 
 public class DisplayBook {
-  private static int MAX_LINES = 3;
+  private static int MAX_LINES = 13;
   private final List<Page> pages;
   private final String title;
   private final String author;

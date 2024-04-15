@@ -5,12 +5,15 @@ import java.util.List;
 import java.util.Random;
 import mintychochip.genesis.config.abstraction.GenesisConfigurationSection;
 import mintychochip.genesis.items.container.AbstractItem;
+import mintychochip.genesis.items.container.AbstractItem.ItemBuilder;
 import mintychochip.genesis.items.container.AppraisableItemData;
 import mintychochip.genesis.util.WeightedRandom;
 import mintychochip.mintychochip.horsepoop.HorsePoop;
 import mintychochip.mintychochip.horsepoop.api.Fetcher;
-import mintychochip.mintychochip.horsepoop.api.events.FawnyMilkEvent;
+import mintychochip.mintychochip.horsepoop.api.events.finalevents.FawnyMilkEvent;
+import mintychochip.mintychochip.horsepoop.api.events.finalevents.FawnyShearEvent;
 import mintychochip.mintychochip.horsepoop.api.markers.Gene;
+import mintychochip.mintychochip.horsepoop.api.markers.Phenotypic;
 import mintychochip.mintychochip.horsepoop.config.ConfigManager;
 import mintychochip.mintychochip.horsepoop.config.configs.AnimalItemConfig;
 import mintychochip.mintychochip.horsepoop.config.configs.SettingsConfig;
@@ -18,17 +21,28 @@ import mintychochip.mintychochip.horsepoop.config.configs.SettingsConfig.Marker;
 import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
 import mintychochip.mintychochip.horsepoop.container.BaseTrait;
 import mintychochip.mintychochip.horsepoop.container.MendelianGene;
+import mintychochip.mintychochip.horsepoop.container.ValueFetcher;
 import mintychochip.mintychochip.horsepoop.container.enums.MendelianType;
 import mintychochip.mintychochip.horsepoop.container.enums.traits.CowGene;
+import mintychochip.mintychochip.horsepoop.container.enums.traits.GenericGene;
 import mintychochip.mintychochip.horsepoop.factories.DyeSelector;
+import mintychochip.mintychochip.horsepoop.util.math.RandomYield;
 import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.World;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Sheep;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class MilkListener implements Listener {
 
@@ -37,6 +51,8 @@ public class MilkListener implements Listener {
   private final Fetcher<Gene> geneFetcher;
 
   private final DyeSelector dyeSelector;
+
+  private final Fetcher<Phenotypic> phenotypicFetcher = new ValueFetcher<>();
 
   public MilkListener(ConfigManager configManager, Fetcher<Gene> geneFetcher, DyeSelector dyeSelector) {
     this.configManager = configManager;
@@ -51,7 +67,7 @@ public class MilkListener implements Listener {
     if (event.isCancelled()) {
       return;
     }
-    ItemStack bucket = event.getBucket();
+    ItemStack bucket = event.getInstrument();
     Player player = event.getPlayer();
 
     if (player.getGameMode() == GameMode.SURVIVAL) {
@@ -88,46 +104,7 @@ public class MilkListener implements Listener {
     }
     dropTable.add(itemStack);
   }
-//  @EventHandler
-//  private void onShearParrotEvent(final FawnyShearEvent event) {
-//    if (event.isCancelled()) {
-//      return;
-//    }
-//    ItemStack shears = event.getShears();
-//    LivingEntity livingEntity = event.getLivingEntity();
-//    if(livingEntity.getType() != EntityType.PARROT) {
-//      return;
-//    }
-//    int damage = 1;
-//    if(livingEntity.getType() == EntityType.PARROT) {
-//      damage = 2;
-//    }
-//    livingEntity.damage(damage,event.getPlayer());
-//    AnimalGenome animalGenome = event.getAnimalGenome();
-//    Gene featherColor = traitFetcher.getGeneFromList(animalGenome,GenericGeneTrait.FEATHER_COLOR);
-//    if(featherColor == null) {
-//      return;
-//    }
-//    String featherKey = FeatherColor.valueOf(featherColor.getValue()).getFeatherKey();
-//    GenesisConfigurationSection featherSection = configManager.getItemConfig()
-//        .getMainConfigurationSection(featherKey
-//            );
-//    if(featherSection.isNull()) {
-//      throw new RuntimeException("Feather section: " + featherKey + " is null.");
-//    }
-//    ItemStack itemStack = new EmbeddedDataBuilder(HorsePoop.getInstance(), featherSection, false,
-//        new AppraisableItemData()).defaultBuild().getItemStack();
-//    Gene yield = traitFetcher.getGeneFromList(animalGenome,GenericGeneTrait.YIELD);
-//    int max = yield != null ? Integer.parseInt(yield.getValue()) : 1;
-//    itemStack.setAmount(this.calculateRandomYield(max,shears));
-//
-//    Location location = event.getLivingEntity().getLocation();
-//    World world = location.getWorld();
-//    if(world == null) {
-//      return;
-//    }
-//    world.dropItem(location,itemStack);
-//  }
+
 //  @EventHandler
 //  private void onShearChickenEvent(final FawnyShearEvent event) {
 //    if(event.isCancelled()) {
@@ -171,54 +148,27 @@ public class MilkListener implements Listener {
     event.getPlayer().getInventory().addItem(dropTable.get(new Random().nextInt(dropTable.size())));
     dropTable.clear();
   }
-//  @EventHandler
-//  private void onFauwnyShearSheepEvent(final FawnyShearEvent event) {
-//    AnimalGenome animalGenome = event.getAnimalGenome();
-//    LivingEntity livingEntity = event.getLivingEntity();
-//    if(livingEntity.getType() != EntityType.SHEEP) {
-//      return;
-//    }
-//    ItemStack tool = event.getShears();
-//    ItemMeta itemMeta = tool.getItemMeta();
-//    if (itemMeta instanceof Damageable damageable) {
-//      damageable.setDamage(damageable.getDamage() + 1);
-//      tool.setItemMeta(itemMeta);
-//    }
-//    Gene yield = traitFetcher.getGeneFromList(animalGenome, GenericGeneTrait.YIELD);
-//    Sheep sheep = (Sheep) livingEntity;
-//    sheep.setSheared(true);
-//
-//    DyeColor dyeColor = dyeSelector.calculateDyeColor(animalGenome, livingEntity);
-//    if(dyeColor == null) {
-//      return;
-//    }
-//
-//    ItemStack wool = new ItemStack(Material.valueOf(dyeColor + "_WOOL"));
-//    wool.setAmount(this.calculateRandomYield(new Gson().fromJson(yield.getValue(),int.class),event.getShears()));
-//    Location location = livingEntity.getLocation();
-//    World world = location.getWorld();
-//    world.playSound(location, Sound.ENTITY_SHEEP_SHEAR,1,1);
-//    world.dropItem(location,wool);
-//  }
-//  private int calculateRandomYield(int max , int min, ItemStack itemStack) {
-//    Integer fortuneLevel = itemStack.getEnchantments().get(Enchantment.LOOT_BONUS_BLOCKS);
-//    if (fortuneLevel != null) {
-//      min = calculateMaxYield(fortuneLevel, min);
-//      max = calculateMaxYield(fortuneLevel, max);
-//      if (min < 1) {
-//        min = 1;
-//      }
-//    }
-//    if (min >= max) {
-//      max = min + 1;
-//    }
-//    return Genesis.RANDOM.nextInt(min, max);
-//  }
-//  private int calculateRandomYield(int max, ItemStack itemStack) {
-//    return this.calculateRandomYield(max,1,itemStack);
-//  }
-//
-//  private int calculateMaxYield(int fortuneLevel, int i) {
-//    return (int) (i * (((double) 1 / (fortuneLevel + 2)) + ((double) (fortuneLevel + 1) / 2)));
-//  }
+  @EventHandler
+  private void onFauwnyShearSheepEvent(final FawnyShearEvent event) {
+    AnimalGenome animalGenome = event.getAnimalGenome();
+    LivingEntity livingEntity = event.getLivingEntity();
+    ItemStack shears = event.getInstrument();
+    if(livingEntity instanceof Sheep sheep && !sheep.isSheared()) {
+      double numeric = geneFetcher.getNumeric(animalGenome.getGenes(), GenericGene.YIELD);
+      int max = numeric != 0 ? (int) numeric : 1;
+      sheep.setSheared(true);
+
+      DyeColor dyeColor = dyeSelector.calculateDyeColor(animalGenome, livingEntity);
+      if(dyeColor == null) {
+        return;
+      }
+      AbstractItem abstractItem = new ItemBuilder(HorsePoop.getInstance(),
+          Material.valueOf(dyeColor + "_WOOL"), false).setAmount(
+          RandomYield.calculateRandomYield(max, shears)).build();
+      Location location = livingEntity.getLocation();
+      World world = location.getWorld();
+      world.playSound(location, Sound.ENTITY_SHEEP_SHEAR,1,1);
+      world.dropItem(location,abstractItem.getItemStack());
+    }
+  }
 }

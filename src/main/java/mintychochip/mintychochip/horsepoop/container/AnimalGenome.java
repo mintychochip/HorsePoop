@@ -6,12 +6,10 @@ import javax.annotation.Nullable;
 import mintychochip.mintychochip.horsepoop.api.markers.Gene;
 import mintychochip.mintychochip.horsepoop.api.markers.Intrinsic;
 import mintychochip.mintychochip.horsepoop.api.markers.Phenotypic;
-import mintychochip.mintychochip.horsepoop.container.TypeAdapters.Genome;
 import mintychochip.mintychochip.horsepoop.factories.sequential.crosser.abstraction.GenomeCrosser;
 import mintychochip.mintychochip.horsepoop.factories.sequential.instancer.gene.abstraction.GenomeGenerator;
 
 public class AnimalGenome implements Genome {
-
     @SerializedName("genes")
     private List<BaseTrait<Gene>> genes;
     @SerializedName("chars")

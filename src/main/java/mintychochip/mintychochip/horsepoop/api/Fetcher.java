@@ -18,6 +18,8 @@ public interface Fetcher<U extends TraitEnum> {
    */
   <Y extends Enum<Y>> Y getEnumValue(List<BaseTrait<U>> traits, U trait, Class<Y> enumClass);
 
+  double getNumeric(List<BaseTrait<U>> traits, U trait);
+
   /**
    *
    * @param trait

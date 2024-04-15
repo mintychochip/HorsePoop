@@ -40,11 +40,17 @@ import mintychochip.mintychochip.horsepoop.listener.HorseCreationListener;
 import mintychochip.mintychochip.horsepoop.listener.IntermittentListener;
 import mintychochip.mintychochip.horsepoop.listener.MilkListener;
 import mintychochip.mintychochip.horsepoop.listener.NativeMethodListener;
+import mintychochip.mintychochip.horsepoop.listener.perks.FrogListener;
+import mintychochip.mintychochip.horsepoop.listener.perks.GenericGeneListener;
+import mintychochip.mintychochip.horsepoop.listener.perks.GenericPhenotypicListener;
+import mintychochip.mintychochip.horsepoop.listener.perks.parrot.DeathListener;
+import mintychochip.mintychochip.horsepoop.listener.perks.parrot.ShearListener;
 import mintychochip.mintychochip.horsepoop.metas.Meta;
 import mintychochip.mintychochip.horsepoop.metas.MetaType;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Frog;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -86,6 +92,11 @@ public final class HorsePoop extends JavaPlugin {
         listeners.add(new AnimalPlayerListener(configManager, adventure));
         listeners.add(new IntermittentListener(configManager,geneFetcher,intrinsicFetcher,new EventCreator()));
         listeners.add(new MilkListener(configManager,geneFetcher,new DyeSelector()));
+        listeners.add(new GenericPhenotypicListener(genomeGrasper,configManager.getPerkConfig()));
+        listeners.add(new GenericGeneListener(genomeGrasper));
+        listeners.add(new ShearListener(configManager));
+        listeners.add(new DeathListener(genomeGrasper));
+        listeners.add(new FrogListener());
         listeners.forEach(x -> {
             Bukkit.getPluginManager().registerEvents(x, this);
         });
@@ -120,6 +131,7 @@ public final class HorsePoop extends JavaPlugin {
         steps.add(new MutationInstancingStep<>());
         List<InstancingStep<Phenotypic>> charSteps = new ArrayList<>();
         charSteps.add(new InstanceConserved<>());
+        charSteps.add(new MutationInstancingStep<>());
         List<InstancingStep<Intrinsic>> intrinsicSteps = new ArrayList<>();
         intrinsicSteps.add(new InstanceConserved<>());
         GeneratorHolder<Intrinsic> intrinsicGeneratorHolder = new SequentialTraitGenerator<>(intrinsicSteps,configManager.getEntityConfig().getIntrinsicConfig(),intrinsicGenerator);

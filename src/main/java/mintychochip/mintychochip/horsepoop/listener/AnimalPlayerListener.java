@@ -24,16 +24,14 @@ public class AnimalPlayerListener implements Listener {
   @EventHandler
   private void onPlayerRightClick(final FawnyInteractEntityEvent event) {
     Player player = event.getPlayer();
-    Bukkit.broadcastMessage("here");
-
     if (player.isSneaking()) {
       AnimalGenome genome = event.getAnimalGenome();
-      DisplayBook displayBook = new DisplayBook.PageBuilder().addTitlePage(event.getEntityType())
+      DisplayBook displayBook = new DisplayBook.PageBuilder().addTitlePage(event.getLivingEntity().getType())
           .addTableOfContentsPage()
           .addTraitPages("[Genes]",genome.getGenes())
           .addTraitPages("[Phenotypics]",genome.getPhenotypics())
           .addTraitPages("[Intrinsics]",genome.getIntrinsics())
-          .create("pp","pp",true);
+          .create("pp","pp",false);
       Audience player1 = audiences.player(player);
       player1.openBook(displayBook.getBook());
     }

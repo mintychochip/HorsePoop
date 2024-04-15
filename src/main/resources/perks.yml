@@ -1,0 +1,10 @@
+falling:
+  high:
+    threshold: 150
+    reduction: 1.0
+  medium:
+    threshold: 100
+    reduction: 0.2
+  low:
+    threshold: 50
+    reduction: 0.1

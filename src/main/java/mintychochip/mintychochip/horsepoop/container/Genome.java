@@ -1,4 +1,4 @@
-package mintychochip.mintychochip.horsepoop.container.TypeAdapters;
+package mintychochip.mintychochip.horsepoop.container;
 
 import java.util.List;
 import mintychochip.mintychochip.horsepoop.api.markers.Gene;

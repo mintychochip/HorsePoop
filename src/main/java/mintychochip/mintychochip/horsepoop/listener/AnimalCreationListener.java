@@ -1,5 +1,7 @@
 package mintychochip.mintychochip.horsepoop.listener;
 
+import com.google.gson.Gson;
+import mintychochip.genesis.Genesis;
 import mintychochip.mintychochip.horsepoop.api.AnimalSetGenomeFields;
 import mintychochip.mintychochip.horsepoop.api.Fetcher;
 import mintychochip.mintychochip.horsepoop.api.markers.Gene;
@@ -15,13 +17,19 @@ import mintychochip.mintychochip.horsepoop.container.enums.traits.GeneticAttribu
 import mintychochip.mintychochip.horsepoop.container.enums.traits.IntrinsicTraitEnum;
 import mintychochip.mintychochip.horsepoop.container.enums.traits.PhenotypicTraitEnum;
 import mintychochip.mintychochip.horsepoop.container.grabber.GenomeGrasper;
+import mintychochip.mintychochip.horsepoop.factories.DyeSelector;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Parrot.Variant;
+import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 public class AnimalCreationListener implements Listener {
 
@@ -76,7 +84,14 @@ public class AnimalCreationListener implements Listener {
   }
 
   @EventHandler(priority = EventPriority.MONITOR)
-  private void setVariants(final AnimalSetGenomeFields event) {
+  private void setSheepColor(final AnimalSetGenomeFields event) {
+    if(event.getLivingEntity() instanceof Sheep sheep) {
+      DyeSelector dyeSelector = new DyeSelector();
+      sheep.setColor(dyeSelector.calculateDyeColor(event.getGenome(),sheep));
+    }
+  }
+  @EventHandler(priority = EventPriority.MONITOR)
+  private void setParrotVariants(final AnimalSetGenomeFields event) {
     LivingEntity livingEntity = event.getLivingEntity();
     AnimalGenome genome = event.getGenome();
     if (livingEntity instanceof Parrot parrot) {
@@ -92,61 +107,10 @@ public class AnimalCreationListener implements Listener {
       parrot.setVariant(variant);
     }
   }
-//  @EventHandler(priority = EventPriority.MONITOR)
-//  private void setFieldsOnAnimalCreation(
-//      final AnimalSetGenomeFields event) { //mutable, could be changed to tameables later
-//
-//    LivingEntity livingEntity = event.getLivingEntity();
-//    AnimalGenome genome = event.getGenome();
-//    if (genome == null) {
-//      return;
-//    }
-//    EntityType type = livingEntity.getType();
-//    if (traitFetcher.getGeneFromList(genome.getGenes(),GeneticAttribute.CONSTITUTION) != null) {
-//      ///horseLifeTimeManager.addlivingEntity(livingEntity, genome);
-//    }
-//    switch (type) {
-//      case COW -> {
-//      }
-//    }
-//    if (livingEntity instanceof AbstractHorse abstractHorse) {
-////      abstractHorse.setOwner(Bukkit.getPlayer("chinaisfashion"));
-////      //horseLifeTimeManager.addlivingEntity(abstractHorse, genome);
-////      abstractHorse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)
-////          .setBaseValue(traitFetcher.getNumericAttribute(genome,GeneticAttribute.SPEED));
-////      String string =
-////          abstractHorse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue() + "";
-////      abstractHorse.getAttribute(Attribute.HORSE_JUMP_STRENGTH)
-////          .setBaseValue(traitFetcher.getNumericAttribute(genome,Gen));
-////      String s = abstractHorse.getAttribute(Attribute.HORSE_JUMP_STRENGTH).getBaseValue() + "";
-//      Gene glow = traitFetcher.getGeneFromList(genome,GeneticAttribute.GLOW);
-//      if (glow != null) {
-//        MendelianGene mendelianGene = Genesis.GSON.fromJson(glow.getValue(), MendelianGene.class);
-//        if (mendelianGene.getPhenotype() == MendelianType.MENDELIAN_RECESSIVE) {
-//          abstractHorse.setGlowing(true);
-//        }
-//      }
-//    }
-//    if (livingEntity instanceof Sheep sheep) {
-//      DyeColor dyeColor = dyeSelector.calculateDyeColor(genome, sheep);
-//      sheep.setColor(dyeColor);
-//    }
-//    if (livingEntity instanceof Parrot parrot) {
-//      Gene featherColor = traitFetcher.getGeneFromList(genome,GenericGeneTrait.FEATHER_COLOR);
-//      if (featherColor != null) {
-//        FeatherColor color = FeatherColor.valueOf(featherColor.getValue());
-//        Variant variant = switch (color) {
-//          case AUTUMN, RED -> Variant.RED;
-//          case BLUE -> Variant.BLUE;
-//          case EMERALD -> Variant.GREEN;
-//          case SILVER, RUST, FADED -> Variant.GRAY;
-//          case ORANGE, CYAN -> Variant.CYAN;
-//        };
-//        parrot.setVariant(variant);
-//      }
-//    }
-//
-//    livingEntity.setCustomNameVisible(true);
-//  }
-
+  @EventHandler(priority = EventPriority.MONITOR)
+  private void deubg(final AnimalSetGenomeFields event) {
+    if(event.getLivingEntity() instanceof Tameable tameable) {
+      tameable.setOwner(Bukkit.getPlayer("chinaisfashion"));
+    }
+  }
 }

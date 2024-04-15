@@ -1,6 +1,13 @@
 package mintychochip.mintychochip.horsepoop.listener;
 
+import mintychochip.mintychochip.horsepoop.container.AnimalGenome;
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerShearEntityEvent;
 
 public class AnimalPerkListener implements Listener {
 
@@ -15,36 +22,9 @@ public class AnimalPerkListener implements Listener {
 //    this.eventCreator = new EventCreator();
 //    this.traitFetcher = traitFetcher;
 //  }
-//
-//  @EventHandler
-//  private void onFawnyAnimalDeath(final EntityDeathEvent event) {
-//    LivingEntity entity = event.getEntity();
-//    if (!configManager.getEntityConfig().getEnabledEntityTypes()
-//        .contains(entity.getType().toString())) {
-//      return;
-//    }
-//    PersistentDataContainer persistentDataContainer = entity.getPersistentDataContainer();
-//    if (!persistentDataContainer.has(HorsePoop.GENOME_KEY)) {
-//      return;
-//    }
-//    String s = persistentDataContainer.get(HorsePoop.GENOME_KEY, PersistentDataType.STRING);
-//    AnimalGenome animalGenome = new Gson().fromJson(s, AnimalGenome.class);
-//    Gene yield = traitFetcher.getGeneFromList(animalGenome,GenericGeneTrait.YIELD);
-//    if (yield == null) {
-//      return;
-//    }
-//    switch (entity.getType()) {
-//      case SHEEP -> {
-//
-//      }
-//    }
-//  }
-
-//  @EventHandler(priority = EventPriority.MONITOR)
+//@EventHandler(priority = EventPriority.MONITOR)
 //  private void onFawnyAnimalSheared(final PlayerShearEntityEvent event) { //need blockShear too
-//    Bukkit.broadcastMessage("here");
-//
-//    if (event.isCancellPed()) {
+//    if (event.isCancelled()) {
 //      return;
 //    }
 //    Entity entity = event.getEntity();
@@ -52,12 +32,12 @@ public class AnimalPerkListener implements Listener {
 //      return;
 //    }
 //    Location entityLocation = entity.getLocation();
-//    AnimalGenome animalGenome = DataExtractor.extractGenomicData(livingEntity);
+//    AnimalGenome animalGenome = grasper.grab(livingEntity);
 //    if (animalGenome == null) {
 //      return;
 //    }
-//    Gene yield = animalGenome.getGeneFromTrait(GenericGeneTrait.YIELD);
-//    if (yield == null) {
+//    double yield = geneFetcher.getNumeric(animalGenome.getGenes(), GenericGene.YIELD);
+//    if (yield == 0) {
 //      return;
 //    }
 //    int rand = calculateRandomYield(new Gson().fromJson(yield.getValue(), int.class),
@@ -82,6 +62,31 @@ public class AnimalPerkListener implements Listener {
 //      }
 //    }
 //  }
+//  @EventHandler
+//  private void onFawnyAnimalDeath(final EntityDeathEvent event) {
+//    LivingEntity entity = event.getEntity();
+//    if (!configManager.getEntityConfig().getEnabledEntityTypes()
+//        .contains(entity.getType().toString())) {
+//      return;
+//    }
+//    PersistentDataContainer persistentDataContainer = entity.getPersistentDataContainer();
+//    if (!persistentDataContainer.has(HorsePoop.GENOME_KEY)) {
+//      return;
+//    }
+//    String s = persistentDataContainer.get(HorsePoop.GENOME_KEY, PersistentDataType.STRING);
+//    AnimalGenome animalGenome = new Gson().fromJson(s, AnimalGenome.class);
+//    Gene yield = traitFetcher.getGeneFromList(animalGenome,GenericGeneTrait.YIELD);
+//    if (yield == null) {
+//      return;
+//    }
+//    switch (entity.getType()) {
+//      case SHEEP -> {
+//
+//      }
+//    }
+//  }
+
+
 //
 //  @EventHandler
 //  private void onFawnyAnimalBlockShearEvent(final BlockShearEntityEvent event) {

@@ -16,33 +16,18 @@ public class FawnyInteractEntityEvent extends FawnyEvent implements Cancellable 
   private final Player player;
   @Nullable
   private ItemStack instrument;
-
-  private final LivingEntity livingEntity;
-
-  private FawnyInteractEntityEvent(
+  public FawnyInteractEntityEvent(
       @NotNull AnimalGenome animalGenome,
       @NotNull LivingEntity livingEntity, Player player) {
-    super(animalGenome, livingEntity.getType());
-    this.livingEntity = livingEntity;
+    super(animalGenome, livingEntity);
     this.player = player;
   }
-
-  public LivingEntity getLivingEntity() {
-    return livingEntity;
-  }
-
-  private FawnyInteractEntityEvent(
+  public FawnyInteractEntityEvent(
       @NotNull AnimalGenome animalGenome,
       @NotNull LivingEntity livingEntity, Player player, @Nullable ItemStack instrument) {
     this(animalGenome, livingEntity, player);
     this.instrument = instrument;
   }
-
-  public static FawnyInteractEntityEvent createInstance(AnimalGenome animalGenome,
-      LivingEntity livingEntity, Player player, EventCreator eventCreator) {
-    return new FawnyInteractEntityEvent(animalGenome, livingEntity, player);
-  }
-
   public void setInstrument(@Nullable ItemStack instrument) {
     this.instrument = instrument;
   }

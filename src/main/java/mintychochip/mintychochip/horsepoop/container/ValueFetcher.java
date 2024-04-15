@@ -6,6 +6,7 @@ import mintychochip.mintychochip.horsepoop.api.Fetcher;
 import mintychochip.mintychochip.horsepoop.api.TraitEnum;
 import mintychochip.mintychochip.horsepoop.metas.EnumMeta;
 import mintychochip.mintychochip.horsepoop.metas.MetaType;
+import mintychochip.mintychochip.horsepoop.metas.Numeric;
 
 public class ValueFetcher<U extends TraitEnum> implements Fetcher<U> {
 
@@ -27,6 +28,20 @@ public class ValueFetcher<U extends TraitEnum> implements Fetcher<U> {
             return null;
         }
         return Enum.valueOf(enumClass,value);
+    }
+
+    @Override
+    public double getNumeric(List<BaseTrait<U>> baseTraits, U trait) {
+        BaseTrait<U> traitFromList = this.getTraitFromList(baseTraits, trait);
+        if(traitFromList == null || !(traitFromList.getMeta() instanceof Numeric)) {
+            return 0;
+        }
+        String value = traitFromList.getValue();
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+          return 0;
+        }
     }
 
     @Override
